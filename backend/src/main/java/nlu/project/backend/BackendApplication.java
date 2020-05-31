@@ -2,7 +2,9 @@ package nlu.project.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+@EntityScan("nlu.project.backend.model")
 @SpringBootApplication
 public class BackendApplication {
 
