@@ -32,6 +32,8 @@ public class Issue {
     private String code;
     @Column(name = "name")
     private String name;
+    @Column(name = "description")
+    private String description;
     @Column(name = "hours")
     private Double hours;
     @ManyToOne
