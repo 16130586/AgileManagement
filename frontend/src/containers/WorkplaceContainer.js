@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom';
-import YourWork from './Workplace/YourWorkContainer'
+import YourWork from './workplace/YourWorkContainer'
 let WorkplaceContainer = function(props){
     return (
         <div className={props.className}>

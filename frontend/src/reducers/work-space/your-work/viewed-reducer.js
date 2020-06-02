@@ -1,7 +1,6 @@
-import {WorkSpace_Viewed_Init} from '../init/index'
-import {ASYNC as AsynTypes} from '../../constants/index'
-const viewdReducer = (state = WorkSpace_Viewed_Init , action) => {
-    console.log(action)
+import {WorkSpace_YourWork_Viewed_Init} from '../../init/index'
+import {ASYNC as AsynTypes} from '../../../constants/index'
+const viewdReducer = (state = WorkSpace_YourWork_Viewed_Init , action) => {
     let nextState = state
     switch(action.type){
         case AsynTypes.FULL_FILLED.MORE_VIEWED: 

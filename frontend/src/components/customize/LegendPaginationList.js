@@ -58,13 +58,11 @@ let defaultLegendStyle = {
 }
 
 let LegendPaginationList = function (props) {
-    console.log(props)
     let getItemLegend = function (data) {
         return "NONE LEGEND"
     }
     getItemLegend = props.getItemLegend ? props.getItemLegend : getItemLegend
     let LoadMoreComponent = null
-    console.log(LoadMoreComponent)
     if (props.data) {
         LoadMoreComponent = props.LoadMoreComponent || DefaultLoadMoreBtn
         let build =   props.data.map((element, index) => {
@@ -76,7 +74,6 @@ let LegendPaginationList = function (props) {
             }
             else if (index < props.data.length) {
                 let previousLegenTitle = getItemLegend(props.data[index-1]) || "NONE LEGEND"
-                console.log({index,currentLegendTitle, previousLegenTitle})
                 if (currentLegendTitle != previousLegenTitle) {
                     LegendComponent = function(){return (<h6 style={defaultLegendStyle}>{currentLegendTitle}</h6>)}
                 }

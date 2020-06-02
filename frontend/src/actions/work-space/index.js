@@ -10,3 +10,6 @@ export const fullFilledAssignedItem = (items) => ({type : AsyncTypes.FULL_FILLED
 
 export const fetchStarredItem = (page,pageSize) => ({type: AsyncTypes.LOAD_MORE.STARRED , payload : {page, pageSize}})
 export const fullFilledStarredItem = (items) => ({type : AsyncTypes.FULL_FILLED.STARRED , payload: {data : items}})
+
+export const fetchTotalAssignToMe = () => ({type : AsyncTypes.LOAD_MORE.TOTAL_ASSIGN_TO_ME})
+export const fullFilledTotalAssignToMe = (total) => ({type : AsyncTypes.FULL_FILLED.TOTAL_ASSIGN_TO_ME , payload: {data : total}})

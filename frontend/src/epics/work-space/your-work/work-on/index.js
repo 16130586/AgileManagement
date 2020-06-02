@@ -1,8 +1,8 @@
 import {of as rxjsOf} from 'rxjs';
 import { mergeMap , delay , map} from 'rxjs/operators';
 import { ofType } from 'redux-observable';
-import { ASYNC as AsyncTypes } from '../../../constants/index'
-import { fullFilledWorkOnItem } from '../../../actions/work-space/index'
+import { ASYNC as AsyncTypes } from '../../../../constants/index'
+import { fullFilledWorkOnItem } from '../../../../actions/work-space/index'
 
 
 let remoteData = [

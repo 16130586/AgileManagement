@@ -588,3 +588,15 @@ code {
   height: 100%;
   width: 100%;
 }
+.bubble-text{
+  background-color: rgb(223, 225, 230);
+  color: rgb(23, 43, 77);
+  border-radius: 2em;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1;
+  min-width: 1px;
+  padding: 0.166667em 0.5em;
+  text-align: center;
+}

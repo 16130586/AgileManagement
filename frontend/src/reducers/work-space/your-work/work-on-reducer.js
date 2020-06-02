@@ -1,7 +1,6 @@
-import {WorkSpace_WorkOn_Init} from '../init/index'
-import {ASYNC as AsynTypes} from '../../constants/index'
-const workOnReducer = (state = WorkSpace_WorkOn_Init , action) => {
-    console.log(action)
+import {WorkSpace_YourWork_WorkOn_Init} from '../../init/index'
+import {ASYNC as AsynTypes} from '../../../constants/index'
+const workOnReducer = (state = WorkSpace_YourWork_WorkOn_Init , action) => {
     let nextState = state
     switch(action.type){
         case AsynTypes.FULL_FILLED.WORK_ON: 
