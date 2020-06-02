@@ -23,4 +23,9 @@ public class SampleController {
         sampleBusiness.saveEntityDemo();
         return "saved";
     }
+
+    @GetMapping("/auth/test")
+    public String testInterceptor() {
+        return "failure!";
+    }
 }

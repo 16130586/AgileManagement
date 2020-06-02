@@ -3,6 +3,7 @@ package nlu.project.backend.exception;
 import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.exception.custom.InvalidInputException;
 import nlu.project.backend.exception.custom.NotFoundException;
+import nlu.project.backend.exception.custom.UnauthorizedException;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.util.Header;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,15 @@ public class CustomHandleGlobalException extends ResponseEntityExceptionHandler 
     @ExceptionHandler(InvalidInputException.class)
     protected ResponseEntity<Object> handleInvalidInputException(RuntimeException ex, WebRequest request) {
         ApiResponse apiResponse = new ApiResponse(HttpServletResponse.SC_BAD_REQUEST, null, ex.getMessage(), null);
+        return new ResponseEntity<>(apiResponse, header.getHeaders(), HttpStatus.OK);
+    }
+
+    /**
+     * Handle when throw custom UnauthorizedException
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    protected ResponseEntity<Object> handleUnauthorizedException(RuntimeException ex, WebRequest request) {
+        ApiResponse apiResponse = new ApiResponse(HttpServletResponse.SC_UNAUTHORIZED, null, ex.getMessage(), null);
         return new ResponseEntity<>(apiResponse, header.getHeaders(), HttpStatus.OK);
     }
 
