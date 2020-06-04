@@ -1,0 +1,23 @@
+title Assign Subtask
+
+actor User
+
+User ->ReactUI: click on Subtask Assign
+
+ReactUI ->User: pop-up Subtask Assign Form
+
+User ->ReactUI: fill-in Subtask Assign Form
+
+ReactUI ->ReactUI: validate data
+
+ReactUI ->Jira Backend: send subtask assign request
+
+Jira Backend ->Jira Backend: validate data
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification

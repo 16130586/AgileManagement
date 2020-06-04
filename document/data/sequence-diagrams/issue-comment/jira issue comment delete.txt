@@ -1,0 +1,19 @@
+title Delete Comment Issue
+
+actor User
+
+User ->ReactUI: click on Delete Comment
+
+ReactUI ->User: pop-up Confirmation Alert
+
+User ->ReactUI: confirm
+
+ReactUI ->Jira Backend: send delete comment request
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification

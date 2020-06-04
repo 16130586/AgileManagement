@@ -1,0 +1,19 @@
+title Delete Project
+
+actor User
+
+User ->ReactUI: click on Delete Project
+
+ReactUI ->User: pop-up Confirmation Arlert
+
+User ->ReactUI: confirm
+
+ReactUI ->Jira Backend: send delete project request
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification

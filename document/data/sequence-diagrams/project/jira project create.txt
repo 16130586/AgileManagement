@@ -1,0 +1,23 @@
+title Create Project
+
+actor User
+
+User ->ReactUI: click on create Project
+
+ReactUI ->User: pop-up Project Form
+
+User ->ReactUI: fill-in Project Form
+
+ReactUI ->ReactUI: validate data
+
+ReactUI ->Jira Backend: send create project request
+
+Jira Backend ->Jira Backend: validate data
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification

@@ -1,0 +1,23 @@
+title Create Issue
+
+actor User
+
+User ->ReactUI: click on create Issue
+
+ReactUI ->User: pop-up Issue Form
+
+User ->ReactUI: fill-in Issue Form
+
+ReactUI ->ReactUI: validate data
+
+ReactUI ->Jira Backend: send create issue request
+
+Jira Backend ->Jira Backend: validate data
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification

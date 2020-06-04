@@ -1,0 +1,23 @@
+title Assign Issue
+
+actor User
+
+User ->ReactUI: click on Issue Assign
+
+ReactUI ->User: pop-up Issue Assign Form
+
+User ->ReactUI: fill-in Issue Assign Form
+
+ReactUI ->ReactUI: validate data
+
+ReactUI ->Jira Backend: send issue assign request
+
+Jira Backend ->Jira Backend: validate data
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification

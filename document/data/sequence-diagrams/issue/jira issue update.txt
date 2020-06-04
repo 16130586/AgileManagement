@@ -1,0 +1,23 @@
+title Update Issue
+
+actor User
+
+User ->ReactUI: click on Update Issue
+
+ReactUI ->User: pop-up Issue Update Form
+
+User ->ReactUI: fill-in Issue Update Form
+
+ReactUI ->ReactUI: validate data
+
+ReactUI ->Jira Backend: send update issue request
+
+Jira Backend ->Jira Backend: validate data
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification

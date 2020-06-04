@@ -1,0 +1,23 @@
+title Update Subtask
+
+actor User
+
+User ->ReactUI: click on Update Subtask
+
+ReactUI ->User: pop-up Update Subtask Form
+
+User ->ReactUI: fill-in Update Subtask Form
+
+ReactUI ->ReactUI: validate data
+
+ReactUI ->Jira Backend: send update subtask request
+
+Jira Backend ->Jira Backend: validate data
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification
