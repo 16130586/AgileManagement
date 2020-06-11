@@ -5,19 +5,19 @@ let Index = function (props) {
     let [currentTab, setCurrentTab] = useState(Object.keys(props.tabs)[0])
     let TabComponent = props.tabs[currentTab]
     return (
-        <div className="your-work">
-            <div className="your-work__header">
-                <div className="your-work__header__title">
+        <div className="body">
+            <div className="header">
+                <div className="header__title">
                     Your work
                 </div>
-                <div className="your-work__header__list-btns">
+                <div className="header__list-btns">
                     <button className="your-work__header__list-btns__feedback">
                         <FeedbackIcon />
                         <span className="ml-1">Give feedback</span>
                     </button>
                 </div>
             </div>
-            <div className="your-work__body">
+            <div className="content">
                 <div className="tab-header">
                     <div className="tab-header_item"
                         onClick={() => setCurrentTab('0')}>
