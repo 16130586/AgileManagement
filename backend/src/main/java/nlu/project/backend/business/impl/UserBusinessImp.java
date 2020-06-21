@@ -1,5 +1,8 @@
 package nlu.project.backend.business.impl;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.business.UserBusiness;
 import nlu.project.backend.entry.user.LoginParams;
@@ -54,6 +57,16 @@ public class UserBusinessImp implements UserBusiness {
         toSave.setPassword(new BCryptPasswordEncoder().encode(registryParams.password));
         userRepository.save(toSave);
         return toSave;
+    }
+
+    @Override
+    public boolean validateToken(String token) {
+        try{
+            DecodedJWT decodedJWT = tokenProvider.validateToken(token);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     @Override

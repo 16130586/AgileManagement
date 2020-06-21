@@ -27,4 +27,12 @@ public class UserController {
             return ApiResponse.OnBadRequest("Username or password is incorrect!");
         return ApiResponse.OnSuccess(loginResult , "Login sucess!");
     }
+
+    @PostMapping("/validateToken")
+    public ApiResponse validateToken(@RequestBody String token) {
+        boolean validateResult = userBusiness.validateToken(token);
+        if(!validateResult)
+            return ApiResponse.OnBadRequest("Token expired!");
+        return ApiResponse.OnSuccess(token , "Token is valid!");
+    }
 }
