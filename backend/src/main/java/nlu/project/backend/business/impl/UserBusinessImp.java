@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -50,7 +51,7 @@ public class UserBusinessImp implements UserBusiness {
         User toSave = new User();
         toSave.setEmail(registryParams.email);
         toSave.setUserName(registryParams.userName);
-        toSave.setPassword(registryParams.password);
+        toSave.setPassword(new BCryptPasswordEncoder().encode(registryParams.password));
         userRepository.save(toSave);
         return toSave;
     }
