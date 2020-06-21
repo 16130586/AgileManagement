@@ -1,10 +1,13 @@
 package nlu.project.backend.controller;
 
 import nlu.project.backend.business.UserBusiness;
+import nlu.project.backend.entry.ValidateTokenParams;
 import nlu.project.backend.entry.user.LoginParams;
 import nlu.project.backend.entry.user.RegistryParams;
+import nlu.project.backend.model.User;
 import nlu.project.backend.model.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -26,5 +29,13 @@ public class UserController {
         if(loginParams == null)
             return ApiResponse.OnBadRequest("Username or password is incorrect!");
         return ApiResponse.OnSuccess(loginResult , "Login sucess!");
+    }
+
+    @PostMapping("/validateToken")
+    public ApiResponse validateToken(@RequestBody ValidateTokenParams validateTokenParams) {
+        User validateResult = userBusiness.validateToken(validateTokenParams.token);
+        if(validateResult == null)
+            return ApiResponse.OnBadRequest("Token expired!");
+        return ApiResponse.OnSuccess(validateResult, "Token is valid!");
     }
 }
