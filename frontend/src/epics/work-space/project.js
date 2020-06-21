@@ -3,7 +3,6 @@ import { mergeMap, delay, map } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import { ASYNC as AsyncTypes } from '../../constants/index'
 import { fullFilledDeleteProject, fullFilledProjectGrid } from '../../actions/project'
-
 let remoteData = [{
     "id": 1,
     "name": "name 1",

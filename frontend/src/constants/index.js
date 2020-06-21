@@ -22,6 +22,11 @@ export const ASYNC = {
    
 }
 export const Router = {
-    Redirect : "redirect-to",
-    ClearRedirectUrl : "clear-redirect-url"
+    REDIRECT : "redirect-to",
+    CLEAR_REDIRECT_URL : "clear-redirect-url"
+}
+export const Auth = {
+    VALIDATE_TOKEN : "validate-token",
+    TOKEN_VALID : "token-valid",
+    TOKEN_IN_VALID : "token-in-valid"
 }
