@@ -1,5 +1,6 @@
 package nlu.project.backend.business.impl;
 
+import lombok.NoArgsConstructor;
 import nlu.project.backend.business.SampleBusiness;
 import nlu.project.backend.exception.custom.NotFoundException;
 import nlu.project.backend.model.LogTransaction;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@NoArgsConstructor
 public class SampleBusinessImpl implements SampleBusiness {
     @Autowired
     LogTransactionRepository logTransactionRepository;
