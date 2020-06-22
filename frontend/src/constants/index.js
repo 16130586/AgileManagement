@@ -17,7 +17,8 @@ export const ASYNC = {
         PROJECT_GRID : 'full-filled.projec-grid'
     },
     REQUEST: {
-        DELETE_PROJECT : 'request.delete-project'
+        DELETE_PROJECT : 'request.delete-project',
+        FAILED : 'request.failed'
     }
    
 }
@@ -26,7 +27,10 @@ export const Router = {
     CLEAR_REDIRECT_URL : "clear-redirect-url"
 }
 export const Auth = {
-    VALIDATE_TOKEN : "validate-token",
-    TOKEN_VALID : "token-valid",
-    TOKEN_IN_VALID : "token-in-valid"
+    VALIDATE_TOKEN : "auth-validate-token",
+    TOKEN_VALID : "auth-token-valid",
+    TOKEN_IN_VALID : "auth-token-in-valid",
+    LOGIN : "auth-login",
+    LOGIN_SUCCESS : "auth-login-success",
+    LOGIN_FAILED : "auth-login-failed"
 }

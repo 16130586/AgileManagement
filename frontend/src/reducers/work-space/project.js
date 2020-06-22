@@ -1,6 +1,5 @@
 import { ASYNC as AsyncEventTypes } from '../../constants/index'
 const Project = (state = { isLoadGrid: false, gridData: [] }, action) => {
-    console.log(action)
     let nextState = state
     switch (action.type) {
         case AsyncEventTypes.FULL_FILLED.PROJECT_GRID:
