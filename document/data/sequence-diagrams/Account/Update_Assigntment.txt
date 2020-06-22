@@ -1,0 +1,23 @@
+title Update Account Assignment
+
+actor User
+
+User ->ReactUI: click on Update Account Assignment
+
+ReactUI ->User: pop-up Update Assignment Form
+
+User ->ReactUI: fill-in Update Assignment Form
+
+ReactUI ->ReactUI: validate data
+
+ReactUI ->Jira Backend: send update account assigment request
+
+Jira Backend ->Jira Backend: validate data
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification
