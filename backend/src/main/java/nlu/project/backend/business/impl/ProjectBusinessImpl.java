@@ -8,11 +8,8 @@ import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import nlu.project.backend.util.constraint.ConstraintRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Service
 public class ProjectBusinessImpl implements ProjectBusiness {
@@ -32,7 +29,6 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     BacklogRepository backlogRepository;
 
     @Override
-    @Secured("ROLE_USER")
     public Project create(ProjectParams projectParams, UserDetails userDetails) {
         if (projectRepository.existsByName(projectParams.name))
             throw new InvalidInputException("Project's Name already exists");
@@ -74,7 +70,6 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    @Secured("ROLE_USER")
     public Project update(ProjectParams projectParams) {
         Project project = projectRepository.findById(projectParams.id).get();
         // Check New Name != Old Name && Existed
