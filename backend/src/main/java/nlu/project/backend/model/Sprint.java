@@ -1,7 +1,8 @@
 package nlu.project.backend.model;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,7 +11,8 @@ import java.util.List;
 @Entity
 @Table(name = "sprint")
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Sprint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

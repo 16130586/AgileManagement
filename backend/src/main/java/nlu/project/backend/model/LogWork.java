@@ -1,7 +1,8 @@
 package nlu.project.backend.model;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,7 +10,8 @@ import java.util.Date;
 @Entity
 @Table(name = "logwork")
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LogWork {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

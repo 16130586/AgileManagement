@@ -1,7 +1,8 @@
 package nlu.project.backend.model;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,7 +10,8 @@ import java.util.List;
 @Entity
 @Table(name = "workflow")
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class WorkFlow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
