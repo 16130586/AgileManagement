@@ -21,7 +21,8 @@ public class SampleBusinessImpl implements SampleBusiness {
 
     @Override
     public void saveEntityDemo() {
-        LogTransaction transaction = LogTransaction.builder().name("Test").description("test").build(); // builder of lombok
+        LogTransaction transaction = new LogTransaction();
+        transaction.setName("Demo JPA");
         logTransactionRepository.save(transaction);
     }
 
