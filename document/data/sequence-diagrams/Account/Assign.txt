@@ -1,0 +1,23 @@
+title Assign Account
+
+actor User
+
+User ->ReactUI: click on Account Assign 
+
+ReactUI ->User: pop-up Account Assign Form
+
+User ->ReactUI: fill-in Account Assign Form
+
+ReactUI ->ReactUI: validate data
+
+ReactUI ->Jira Backend: send account assign request
+
+Jira Backend ->Jira Backend: validate data
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification

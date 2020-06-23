@@ -60,12 +60,16 @@ public class UserBusinessImp implements UserBusiness {
     }
 
     @Override
-    public boolean validateToken(String token) {
+    public User validateToken(String token) {
         try{
             DecodedJWT decodedJWT = tokenProvider.validateToken(token);
-            return true;
+            String userName = tokenProvider.getUserNameFromJWT(decodedJWT);
+            CustomUserDetails userDetails = (CustomUserDetails)loadUserByUsername(userName);
+            User result = userDetails.getUser();
+            result.setPassword(null);
+            return userDetails.getUser();
         }catch (Exception e){
-            return false;
+            return null;
         }
     }
 

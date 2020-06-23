@@ -1,25 +1,42 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import '@progress/kendo-theme-default/dist/all.css';
 import './App.css';
 import Navigation from './containers/NavigationContainer'
 import Workplace from './containers/WorkplaceContainer'
+import Login from './containers/LoginContainer'
 import { connect } from 'react-redux'
-import {navigateTo, clearNavigateTo} from './actions/global'
+import { navigateTo, clearNavigateTo, validateToken } from './actions/global'
+import { getToken } from './common/localStorage'
 
 function App(props) {
-  if(props.GlobalRouter.forceRedirectTo != null){
-    props.history.push(props.GlobalRouter.forceRedirectTo)
-    props.clearNavigateTo()
-  }
+  useEffect(() => {
+    if (props.common.forceRedirectTo != null) {
+      props.history.push(props.common.forceRedirectTo)
+      props.clearNavigateTo()
+    }
+  }, [props.common.forceRedirectTo])
+
+  useEffect(() => {
+    if (!props.common.isAppLoad) {
+      const token = getToken()
+      if (token) {
+          props.validateToken(token)
+      }else {
+        props.navigateTo('/login')
+      }
+    }
+  }, [props.common.appLoad])
   return (
     <div className="main">
       <Switch>
-        <Route path="/">
+        <Route exact path="/">
           <Fragment>
             <Navigation className="main-navigation" />
             <Workplace className="main-workplace" />
           </Fragment>
+        </Route>
+        <Route exact path="/login" component={Login}>
         </Route>
       </Switch>
     </div>
@@ -28,13 +45,14 @@ function App(props) {
 
 const mapStateToProps = state => {
   return {
-      GlobalRouter: state.GlobalRouter
+    common: state.Common
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
-      navigateTo: (url) => dispatch(navigateTo(url)),
-      clearNavigateTo : () => dispatch(clearNavigateTo())
+    navigateTo: (url) => dispatch(navigateTo(url)),
+    clearNavigateTo: () => dispatch(clearNavigateTo()),
+    validateToken : (token) => dispatch(validateToken(token))
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(App);

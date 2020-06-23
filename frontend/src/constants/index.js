@@ -17,11 +17,20 @@ export const ASYNC = {
         PROJECT_GRID : 'full-filled.projec-grid'
     },
     REQUEST: {
-        DELETE_PROJECT : 'request.delete-project'
+        DELETE_PROJECT : 'request.delete-project',
+        FAILED : 'request.failed'
     }
    
 }
 export const Router = {
-    Redirect : "redirect-to",
-    ClearRedirectUrl : "clear-redirect-url"
+    REDIRECT : "redirect-to",
+    CLEAR_REDIRECT_URL : "clear-redirect-url"
+}
+export const Auth = {
+    VALIDATE_TOKEN : "auth-validate-token",
+    TOKEN_VALID : "auth-token-valid",
+    TOKEN_IN_VALID : "auth-token-in-valid",
+    LOGIN : "auth-login",
+    LOGIN_SUCCESS : "auth-login-success",
+    LOGIN_FAILED : "auth-login-failed"
 }

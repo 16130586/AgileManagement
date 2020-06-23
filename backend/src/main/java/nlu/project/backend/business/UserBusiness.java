@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserBusiness extends UserDetailsService {
     String login(LoginParams loginParams);
     User registry(RegistryParams registryParams);
-    boolean validateToken(String token);
+    User validateToken(String token);
     boolean checkExistsUsername(String username);
     User getUserById(int id);
     User getUserByGmail(String gmail);

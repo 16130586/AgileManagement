@@ -1,0 +1,23 @@
+title Create Account
+
+actor User
+
+User ->ReactUI: click on Create Account
+
+ReactUI ->User: pop-up Create Form
+
+User ->ReactUI: fill-in Create Form
+
+ReactUI ->ReactUI: validate data
+
+ReactUI ->Jira Backend: send create comment request
+
+Jira Backend ->Jira Backend: validate data
+
+Jira Backend ->Database: update
+
+Database ->Jira Backend: successful
+
+Jira Backend ->ReactUI: successful
+
+ReactUI ->User: pop-up successful notification
