@@ -31,6 +31,7 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	// security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.3.RELEASE'
 	compile group: 'com.auth0', name: 'java-jwt', version: '3.8.0'
 	testImplementation 'org.springframework.security:spring-security-test'
 

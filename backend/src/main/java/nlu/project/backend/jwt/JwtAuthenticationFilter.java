@@ -42,24 +42,23 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // Lấy jwt từ request
             String jwt = getJwtFromRequest((HttpServletRequest) request);
             DecodedJWT decodedJWT = jwtProvider.validateToken(jwt);
-            if (jwt != null && decodedJWT != null) {
-                // Lấy username từ chuỗi jwt
-                String userName = jwtProvider.getUserNameFromJWT(decodedJWT);
-                // Lấy thông tin người dùng từ username
-                UserDetails userDetails = userBusiness.loadUserByUsername(userName);
-                // Set attribute user into httpRequest
-                ((HttpServletRequest) request).setAttribute("user", userDetails);
-                // Nếu người dùng hợp lệ, set thông tin cho Seturity Context
-                UsernamePasswordAuthenticationToken
-                        authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) request));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                SecurityContextHolder.getContext().setAuthentication(null);
-            }
+            // Lấy username từ chuỗi jwt
+            String userName = jwtProvider.getUserNameFromJWT(decodedJWT);
+            // Lấy thông tin người dùng từ username
+            UserDetails userDetails = userBusiness.loadUserByUsername(userName);
+            // Set attribute user into httpRequest
+            ((HttpServletRequest) request).setAttribute("user", userDetails);
+            // Nếu người dùng hợp lệ, set thông tin cho Seturity Context
+            UsernamePasswordAuthenticationToken
+                    authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) request));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
         } catch (Exception ex) {
             //ex.printStackTrace();
+            SecurityContextHolder.getContext().setAuthentication(null);
             System.out.println("Failed on set user authentication");
         }
         chain.doFilter(request, response);
