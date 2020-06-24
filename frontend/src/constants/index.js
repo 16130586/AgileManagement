@@ -18,6 +18,9 @@ export const ASYNC = {
     },
     REQUEST: {
         DELETE_PROJECT : 'request.delete-project',
+        CREATE_PROJECT : 'request.create-project',
+        CREATE_PROJECT_SUCCESS : 'request.create-project-success',
+        CREATE_PROJECT_FAILED : 'request.create-project-failed',
         FAILED : 'request.failed'
     }
    

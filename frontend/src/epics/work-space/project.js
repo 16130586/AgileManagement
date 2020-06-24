@@ -1,8 +1,16 @@
 import { of as rxjsOf } from 'rxjs';
-import { mergeMap, delay, map } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
+import { mergeMap, delay, map, switchMap } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import { ASYNC as AsyncTypes } from '../../constants/index'
-import { fullFilledDeleteProject, fullFilledProjectGrid } from '../../actions/project'
+import { BACKEND_API } from '../../config/api'
+import {madeRequestFail } from '../../actions/global'
+import { fullFilledDeleteProject, 
+    fullFilledProjectGrid, 
+    createProjectSuccess, 
+    createProjectFailed } from '../../actions/project'
+import {getToken} from '../../common/localStorage'
+
 let remoteData = [{
     "id": 1,
     "name": "name 1",
@@ -66,4 +74,42 @@ export const deleteProject = action$ =>
         ofType(AsyncTypes.REQUEST.DELETE_PROJECT),
         mergeMap(action => delelteProjectFakeAjax(action.payload)),
         map(response => fullFilledDeleteProject(response.data))
-    ); 
+    );
+
+
+export const createProject = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.CREATE_PROJECT),
+        switchMap(action => {
+            console.log(action)
+            const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.CREATE_PROJECT)
+            const requestSettings = {
+                url: fullyUrl,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization' : `Bearer ${getToken()}` 
+                },
+                body: {
+                    name: action.payload.projectName,
+                    key: action.payload.projectKey,
+                    description : action.payload.shortDescription, 
+                }
+            }
+            return ajax(requestSettings)
+        }),
+        map(ajax => {
+            if (ajax && ajax.status < 400) {
+              const response = ajax.response
+              console.log(response)
+              if (response.status == 200) {
+                return createProjectSuccess(response.data)
+              }
+              else {
+                return madeRequestFail(response.message)
+              }
+            } else {
+              return madeRequestFail('Connection error!')
+            }
+          })
+    )

@@ -1,4 +1,4 @@
-import { Auth as AuthEventTypes, Router as RouterTypes } from '../constants/index'
+import { Auth as AuthEventTypes, ASYNC as AsyncEventTypes,Router as RouterTypes } from '../constants/index'
 import { saveToken, getToken } from '../common/localStorage'
 const initState = {
     isAppLoad: false,
@@ -10,7 +10,6 @@ const Common = (state = initState, action) => {
     let nextState = state
     switch (action.type) {
         case AuthEventTypes.LOGIN_SUCCESS:
-            console.log('ok google')
             saveToken(action.payload)
             nextState = {
                 ...state,
@@ -26,11 +25,14 @@ const Common = (state = initState, action) => {
         case AuthEventTypes.TOKEN_IN_VALID:
             nextState = { ...state, forceRedirectTo: '/login', isAppLoad: true }
             break;
+        case AsyncEventTypes.REQUEST.CREATE_PROJECT_SUCCESS:
+            console.log('don know wwhy')
+            nextState = { ...state, forceRedirectTo: `/project/${action.payload.id}`, isAppLoad: true }
+            break;
         case RouterTypes.Redirect:
             nextState = { ...state, forceRedirectTo: action.payload }
             break;
         case RouterTypes.CLEAR_REDIRECT_URL:
-            console.log('clear')
             nextState = { ...state, forceRedirectTo: null }
             break;
     }
