@@ -40,6 +40,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             Project project = new Project();
             project.setName(projectParams.name);
             project.setCode(projectParams.key);
+            project.setDescription(projectParams.description);
             projectRepository.save(project);
             // Backlog
             BackLog backLog = new BackLog();
@@ -65,7 +66,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             return project;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new InternalException("Internal Error");
+            throw new InternalException("Internal Error: " + e.getMessage());
         }
     }
 

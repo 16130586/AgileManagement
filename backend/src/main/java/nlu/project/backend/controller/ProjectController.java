@@ -13,20 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/project")
-public class ProjectController {
+@Secured("ROLE_USER")
+public class ProjectController extends BaseController{
 
     @Autowired
     ProjectBusiness projectBusiness;
 
     @PostMapping("/create")
-    @Secured("ROLE_USER")
     public ApiResponse createProject(@RequestBody ProjectParams projectParams, HttpServletRequest request) {
-        Object result = projectBusiness.create(projectParams, (UserDetails) request.getAttribute("user"));
+        Object result = projectBusiness.create(projectParams, getUser(request));
         return ApiResponse.OnCreatedSuccess(result, "Create Project Success!");
     }
 
     @PostMapping("/update")
-    @Secured("ROLE_USER")
     public ApiResponse updateProject(@RequestBody ProjectParams projectParams) {
         Object result = projectBusiness.update(projectParams);
         return ApiResponse.OnSuccess(result, "Update Project Success!");
