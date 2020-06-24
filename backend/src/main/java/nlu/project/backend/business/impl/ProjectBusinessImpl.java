@@ -8,7 +8,6 @@ import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import nlu.project.backend.util.constraint.ConstraintRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +28,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     BacklogRepository backlogRepository;
 
     @Override
-    public Project create(ProjectParams projectParams, UserDetails userDetails) {
+    public Project create(ProjectParams projectParams) {
         if (projectRepository.existsByName(projectParams.name))
             throw new InvalidInputException("Project's Name already exists");
         if (projectRepository.existsByCode(projectParams.key))
@@ -53,9 +52,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             leader.setUser(teamLead);
             leader.setRole(leadRole);
             leader.setProject(project);
-            userRoleRepository.saveAndFlush(leader);
+            userRoleRepository.save(leader);
             // Product Owner
-            User creator = userRepository.findByUserName(userDetails.getUsername());
+            User creator = userRepository.findById(projectParams.productOwner).get();
             Role poRole = roleRepository.findByName(ConstraintRole.PRODUCT_OWNER);
             UserRole productOwner = new UserRole();
             productOwner.setUser(creator);
