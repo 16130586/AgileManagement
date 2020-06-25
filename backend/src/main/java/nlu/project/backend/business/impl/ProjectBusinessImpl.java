@@ -16,14 +16,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     ProjectDAO projectDAO;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project create(ProjectParams projectParams) {
         if (projectDAO.isExistedProjectName(projectParams.name))
             throw new InvalidInputException("Project's Name already exists");
         if (projectDAO.isExistedProjectCode(projectParams.key))
             throw new InvalidInputException("Project's Key already exists");
-
-            return projectDAO.save(projectParams);
+         return projectDAO.save(projectParams);
     }
 
     @Override

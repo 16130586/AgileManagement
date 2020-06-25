@@ -41,4 +41,6 @@ public class Issue {
     @ManyToOne
     @JoinColumn(name = "priority_id")
     private Priority priority;
+
+
 }

@@ -12,30 +12,41 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/issue")
-public class IssueController {
+@Secured("ROLE_USER")
+public class IssueController extends BaseController{
 
     @Autowired
     IssueBusiness issueBusiness;
 
     @PostMapping("/create")
-    @Secured("ROLE_USER")
     public ApiResponse createIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
-        Object result = issueBusiness.create(issueParams);
+        Object result = issueBusiness.create(issueParams, getUser(request));
+        // if result khac null thi tao thanh cong
+        // neu result khong tao duoc thi tra ve tao that bai
+        // ApiResponse.BadRequesr()
+        if (result == null) {
+            return ApiResponse.OnBadRequest("Create Issue Failed");
+        }
         return ApiResponse.OnCreatedSuccess(result, "Create Issue Success!");
+
     }
 
     @PostMapping("/update")
-    @Secured("ROLE_USER")
     public ApiResponse updateIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
-        Object result = issueBusiness.update(issueParams);
+        Object result = issueBusiness.update(issueParams, getUser(request));
+        if (result == null) {
+            return ApiResponse.OnBadRequest("Update Issue Failed");
+        }
         return ApiResponse.OnCreatedSuccess(result, "Update Issue Success!");
     }
 
+
     @PostMapping("/delete")
-    @Secured("ROLE_USER")
     public ApiResponse deleteIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
-        Object result = issueBusiness.delete(issueParams);
+        Object result = issueBusiness.delete(issueParams, getUser(request));
+        if (result.equals(Boolean.FALSE)) {
+            return ApiResponse.OnBadRequest("Update Issue Failed");
+        }
         return ApiResponse.OnCreatedSuccess(result, "Delete Issue Success!");
     }
-
 }

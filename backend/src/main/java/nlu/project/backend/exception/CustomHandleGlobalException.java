@@ -42,7 +42,6 @@ public class CustomHandleGlobalException extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(apiResponse, headers, HttpStatus.OK);
     }
 
-
     /**
      * Handle when throw custom InternalException
      */

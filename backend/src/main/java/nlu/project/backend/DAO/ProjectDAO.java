@@ -1,13 +1,19 @@
 package nlu.project.backend.DAO;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import nlu.project.backend.util.constraint.ConstraintRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@NoArgsConstructor
+@Data
 public class ProjectDAO {
     @Autowired
     UserRepository userRepository;
@@ -36,6 +42,7 @@ public class ProjectDAO {
         return projectRepository.findById(id).get();
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project save(ProjectParams projectParams) {
         // Project
         Project project = new Project();
@@ -66,7 +73,7 @@ public class ProjectDAO {
         // End
         return project;
     }
-
+    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project update(Project project, ProjectParams projectParams) {
         Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
         UserRole leader = userRoleRepository.findByRoleAndProject(leadRole, project);
