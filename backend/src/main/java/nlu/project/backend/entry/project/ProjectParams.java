@@ -5,5 +5,6 @@ public class ProjectParams {
     public String name;
     public String key;
     public String description;
-    public int leader;
+    public Integer leader;
+    public Integer productOwner;
 }

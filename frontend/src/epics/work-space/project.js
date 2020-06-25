@@ -1,8 +1,18 @@
 import { of as rxjsOf } from 'rxjs';
-import { mergeMap, delay, map } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
+import { mergeMap, delay, map, switchMap, catchError } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import { ASYNC as AsyncTypes } from '../../constants/index'
-import { fullFilledDeleteProject, fullFilledProjectGrid } from '../../actions/project'
+import { BACKEND_API } from '../../config/api'
+import { madeRequestFail } from '../../actions/global'
+import {
+    fullFilledDeleteProject,
+    fullFilledProjectGrid,
+    createProjectSuccess,
+    createProjectFailed
+} from '../../actions/project'
+import { getToken } from '../../common/localStorage'
+
 let remoteData = [{
     "id": 1,
     "name": "name 1",
@@ -66,4 +76,42 @@ export const deleteProject = action$ =>
         ofType(AsyncTypes.REQUEST.DELETE_PROJECT),
         mergeMap(action => delelteProjectFakeAjax(action.payload)),
         map(response => fullFilledDeleteProject(response.data))
-    ); 
+    );
+
+
+export const createProject = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.CREATE_PROJECT),
+        switchMap(action => {
+            console.log(action)
+            const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.CREATE_PROJECT)
+            const requestSettings = {
+                url: fullyUrl,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: {
+                    name: action.payload.projectName,
+                    key: action.payload.projectKey,
+                    description: action.payload.shortDescription,
+                }
+            }
+            return ajax(requestSettings)
+        }),
+        map(ajax => {
+            // always ajax.status < 400
+            const response = ajax.response
+            if (response == null)
+                return madeRequestFail('No response from server!')
+            if (response.status < 400) {
+                return createProjectSuccess(response.data)
+            }
+            else {
+                return madeRequestFail(response.message)
+            }
+
+        }),
+        catchError(ajax => madeRequestFail('Connection error!'))
+    )

@@ -4,5 +4,6 @@ export const BACKEND_API = {
         LOGIN: "/user/login",
         REGISTRY: "/user/registry",
         VALIDATE_TOKEN: "/user/validateToken",
+        CREATE_PROJECT: "/project/create"
     }
 }

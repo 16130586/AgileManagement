@@ -1,10 +1,10 @@
 import { of as rxjsOf } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { mergeMap, delay, map , switchMap} from 'rxjs/operators';
+import { mergeMap, delay, map, switchMap, catchError } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import { Auth as AuthEventTypes } from '../constants/index'
 import { BACKEND_API } from '../config/api'
-import { tokenValid, tokenInValid, madeRequestFail , loginSuccess, loginFailed } from '../actions/global'
+import { tokenValid, tokenInValid, madeRequestFail, loginSuccess, loginFailed } from '../actions/global'
 
 export const validateToken = action$ =>
   action$.pipe(
@@ -24,17 +24,20 @@ export const validateToken = action$ =>
       return ajax(requestSettings)
     }),
     map(ajax => {
-      if (ajax && ajax.status < 400) {
-        const response = ajax.response
-        if (response.status == 200) {
-          return tokenValid(response.data)
-        }
-        if (response.status == 400) {
-          return tokenInValid()
-        }
-      } else {
-        return madeRequestFail('Connection error!')
+      const response = ajax.response
+      if (response == null)
+        return madeRequestFail('No response from server!')
+      if (response.status == 200) {
+        return tokenValid(response.data)
       }
+      if (response.status == 400) {
+        return tokenInValid()
+      }
+     
+    }),
+    catchError(ajax => {
+      if (ajax.status < 500) return rxjsOf(tokenInValid())
+      return rxjsOf(madeRequestFail(ajax.message))
     })
   );
 
@@ -58,16 +61,18 @@ export const login = action$ =>
       return ajax(requestSettings)
     }),
     map(ajax => {
-      if (ajax && ajax.status < 400) {
-        const response = ajax.response
-        if (response.status == 200) {
-          return loginSuccess(response.data)
-        }
-        if (response.status == 400) {
-          return loginFailed()
-        }
-      } else {
-        return madeRequestFail('Connection error!')
+      // always ajax.status < 400
+      const response = ajax.response
+      console.log(response)
+      if (response == null)
+        return madeRequestFail('No response from server!')
+      if (response.status < 400) {
+        return loginSuccess(response.data)
       }
-    })
+    }),
+    // ajax.status >= 400
+    catchError(ajax => {
+      if (ajax.status < 500) return rxjsOf(loginFailed())
+      return rxjsOf(madeRequestFail(ajax.message))
+    })//,
   );
