@@ -9,6 +9,8 @@ import nlu.project.backend.repository.*;
 import nlu.project.backend.util.constraint.ConstraintRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectBusinessImpl implements ProjectBusiness {
@@ -28,13 +30,14 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     BacklogRepository backlogRepository;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project create(ProjectParams projectParams) {
         if (projectRepository.existsByName(projectParams.name))
             throw new InvalidInputException("Project's Name already exists");
         if (projectRepository.existsByCode(projectParams.key))
             throw new InvalidInputException("Project's Key already exists");
 
-        try {
+
             // Project
             Project project = new Project();
             project.setName(projectParams.name);
@@ -63,10 +66,6 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             userRoleRepository.save(productOwner);
             // End
             return project;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalException("Internal Error: " + e.getMessage());
-        }
     }
 
     @Override
