@@ -30,7 +30,7 @@ function App(props) {
   return (
     <div className="main">
       <Switch>
-        <Route path="/login" component={Login} />
+        <Route exact path="/login" component={Login} />
         <Route path="/">
           <Fragment>
             <Navigation className="main-navigation" />
@@ -43,8 +43,9 @@ function App(props) {
 }
 
 const mapStateToProps = state => {
+  console.log(state)
   return {
-    common: state.Common
+    common: state.Common,
   }
 }
 const mapDispatchToProps = dispatch => {

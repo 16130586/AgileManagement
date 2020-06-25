@@ -1,6 +1,6 @@
 import { of as rxjsOf } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { mergeMap, delay, map, switchMap, catchError } from 'rxjs/operators';
+import { mergeMap, delay, map, switchMap, catchError , mapTo} from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import { Auth as AuthEventTypes } from '../constants/index'
 import { BACKEND_API } from '../config/api'
@@ -33,10 +33,9 @@ export const validateToken = action$ =>
       if (response.status == 400) {
         return tokenInValid()
       }
-     
     }),
     catchError(ajax => {
-      if (ajax.status < 500) return rxjsOf(tokenInValid())
+      if (ajax.status > 0 && ajax.status < 500) return rxjsOf(tokenInValid())
       return rxjsOf(madeRequestFail(ajax.message))
     })
   );
@@ -45,7 +44,8 @@ export const validateToken = action$ =>
 export const login = action$ =>
   action$.pipe(
     ofType(AuthEventTypes.LOGIN),
-    switchMap(action => {
+    mergeMap(action => {
+      console.log(action)
       const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.LOGIN)
       const requestSettings = {
         url: fullyUrl,
@@ -63,7 +63,6 @@ export const login = action$ =>
     map(ajax => {
       // always ajax.status < 400
       const response = ajax.response
-      console.log(response)
       if (response == null)
         return madeRequestFail('No response from server!')
       if (response.status < 400) {
@@ -72,7 +71,8 @@ export const login = action$ =>
     }),
     // ajax.status >= 400
     catchError(ajax => {
-      if (ajax.status < 500) return rxjsOf(loginFailed())
+      console.log(ajax)
+      if (ajax.status > 0 && ajax.status < 500) return rxjsOf(loginFailed())
       return rxjsOf(madeRequestFail(ajax.message))
     })//,
   );
