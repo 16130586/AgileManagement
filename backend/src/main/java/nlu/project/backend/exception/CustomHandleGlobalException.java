@@ -47,7 +47,7 @@ public class CustomHandleGlobalException extends ResponseEntityExceptionHandler 
      * Handle when throw custom InternalException
      */
     @ExceptionHandler(InternalException.class)
-    protected ResponseEntity<Object> handleInternalException(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleInternalException(RuntimeException ex) {
         ApiResponse apiResponse = new ApiResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, ex.getMessage(), null);
         return new ResponseEntity<>(apiResponse, header.getHeaders(), HttpStatus.OK);
     }
@@ -56,7 +56,7 @@ public class CustomHandleGlobalException extends ResponseEntityExceptionHandler 
      * Handle when throw custom NotFoundException
      */
     @ExceptionHandler(NotFoundException.class)
-    protected ResponseEntity<Object> handleNotFoundException(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleNotFoundException(RuntimeException ex) {
         ApiResponse apiResponse = new ApiResponse(HttpServletResponse.SC_NOT_FOUND, null, ex.getMessage(), null);
         return new ResponseEntity<>(apiResponse, header.getHeaders(), HttpStatus.OK);
     }
@@ -65,7 +65,7 @@ public class CustomHandleGlobalException extends ResponseEntityExceptionHandler 
      * Handle when throw custom InvalidInputException
      */
     @ExceptionHandler(InvalidInputException.class)
-    protected ResponseEntity<Object> handleInvalidInputException(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleInvalidInputException(RuntimeException ex) {
         ApiResponse apiResponse = new ApiResponse(HttpServletResponse.SC_BAD_REQUEST, null, ex.getMessage(), null);
         return new ResponseEntity<>(apiResponse, header.getHeaders(), HttpStatus.OK);
     }
@@ -74,9 +74,17 @@ public class CustomHandleGlobalException extends ResponseEntityExceptionHandler 
      * Handle when throw custom UnauthorizedException
      */
     @ExceptionHandler(UnauthorizedException.class)
-    protected ResponseEntity<Object> handleUnauthorizedException(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleUnauthorizedException(RuntimeException ex) {
         ApiResponse apiResponse = new ApiResponse(HttpServletResponse.SC_UNAUTHORIZED, null, ex.getMessage(), null);
         return new ResponseEntity<>(apiResponse, header.getHeaders(), HttpStatus.OK);
+    }
+
+    /**
+     * Handle remain Exception
+     */
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleRemainException(RuntimeException ex) {
+        return handleInternalException(new InternalException("Internal Error: " + ex.getMessage()));
     }
 
 }
