@@ -53,7 +53,6 @@ public class IssueDAO {
         toSave.setBackLog(backlogRepository.getOne(issueParams.backlogId));
         toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
         toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
-        toSave.setSprint(sprintRepository.getOne(issueParams.sprintId));
         toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
         toSave.setWorkFlow(workflowRepository.getOne(issueParams.workflowId));
 
@@ -67,10 +66,8 @@ public class IssueDAO {
         toSave.setDescription(issueParams.name);
         toSave.setHours(issueParams.hours);
         toSave.setCode(issueParams.code);
-        toSave.setBackLog(backlogRepository.getOne(issueParams.backlogId));
         toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
         toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
-        toSave.setSprint(sprintRepository.getOne(issueParams.sprintId));
         toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
         toSave.setWorkFlow(workflowRepository.getOne(issueParams.workflowId));
 

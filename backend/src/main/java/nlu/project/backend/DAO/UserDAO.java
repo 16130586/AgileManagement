@@ -2,10 +2,7 @@ package nlu.project.backend.DAO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nlu.project.backend.model.BackLog;
-import nlu.project.backend.model.Project;
-import nlu.project.backend.model.User;
-import nlu.project.backend.model.UserRole;
+import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,8 +32,10 @@ public class UserDAO {
         BackLog backlog = backlogRepository.getOne(backlogId);
         Project project = backlog.getProject();
 
-        UserRole role = userRoleRepository.findByUserAndProject(user, project);
-        if (role == null)
+        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        if (userRole == null)
+            return false;
+        if (userRole.getRole().getId() == 1)
             return false;
         return true;
     }
