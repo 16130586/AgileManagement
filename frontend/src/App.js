@@ -21,8 +21,8 @@ function App(props) {
     if (!props.common.isAppLoad) {
       const token = getToken()
       if (token) {
-          props.validateToken(token)
-      }else {
+        props.validateToken(token)
+      } else {
         props.navigateTo('/login')
       }
     }
@@ -30,13 +30,12 @@ function App(props) {
   return (
     <div className="main">
       <Switch>
+        <Route path="/login" component={Login} />
         <Route path="/">
           <Fragment>
             <Navigation className="main-navigation" />
             <Workplace className="main-workplace" />
           </Fragment>
-        </Route>
-        <Route exact path="/login" component={Login}>
         </Route>
       </Switch>
     </div>
@@ -52,7 +51,7 @@ const mapDispatchToProps = dispatch => {
   return {
     navigateTo: (url) => dispatch(navigateTo(url)),
     clearNavigateTo: () => dispatch(clearNavigateTo()),
-    validateToken : (token) => dispatch(validateToken(token))
+    validateToken: (token) => dispatch(validateToken(token))
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(App);

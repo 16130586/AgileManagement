@@ -1,15 +1,17 @@
 import { of as rxjsOf } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { mergeMap, delay, map, switchMap } from 'rxjs/operators';
+import { mergeMap, delay, map, switchMap, catchError } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import { ASYNC as AsyncTypes } from '../../constants/index'
 import { BACKEND_API } from '../../config/api'
-import {madeRequestFail } from '../../actions/global'
-import { fullFilledDeleteProject, 
-    fullFilledProjectGrid, 
-    createProjectSuccess, 
-    createProjectFailed } from '../../actions/project'
-import {getToken} from '../../common/localStorage'
+import { madeRequestFail } from '../../actions/global'
+import {
+    fullFilledDeleteProject,
+    fullFilledProjectGrid,
+    createProjectSuccess,
+    createProjectFailed
+} from '../../actions/project'
+import { getToken } from '../../common/localStorage'
 
 let remoteData = [{
     "id": 1,
@@ -88,28 +90,28 @@ export const createProject = action$ =>
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization' : `Bearer ${getToken()}` 
+                    'Authorization': `Bearer ${getToken()}`
                 },
                 body: {
                     name: action.payload.projectName,
                     key: action.payload.projectKey,
-                    description : action.payload.shortDescription, 
+                    description: action.payload.shortDescription,
                 }
             }
             return ajax(requestSettings)
         }),
         map(ajax => {
-            if (ajax && ajax.status < 400) {
-              const response = ajax.response
-              console.log(response)
-              if (response.status == 200) {
+            // always ajax.status < 400
+            const response = ajax.response
+            if (response == null)
+                return madeRequestFail('No response from server!')
+            if (response.status < 400) {
                 return createProjectSuccess(response.data)
-              }
-              else {
-                return madeRequestFail(response.message)
-              }
-            } else {
-              return madeRequestFail('Connection error!')
             }
-          })
+            else {
+                return madeRequestFail(response.message)
+            }
+
+        }),
+        catchError(ajax => madeRequestFail('Connection error!'))
     )

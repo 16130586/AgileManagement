@@ -1,5 +1,5 @@
 import { Auth as AuthEventTypes, ASYNC as AsyncEventTypes,Router as RouterTypes } from '../constants/index'
-import { saveToken, getToken } from '../common/localStorage'
+import { saveToken, getToken, clearToken } from '../common/localStorage'
 const initState = {
     isAppLoad: false,
     user: null,
@@ -23,6 +23,7 @@ const Common = (state = initState, action) => {
             nextState = { ...state, user: action.payload, isAppLoad: true }
             break;
         case AuthEventTypes.TOKEN_IN_VALID:
+            clearToken()
             nextState = { ...state, forceRedirectTo: '/login', isAppLoad: true }
             break;
         case AsyncEventTypes.REQUEST.CREATE_PROJECT_SUCCESS:
