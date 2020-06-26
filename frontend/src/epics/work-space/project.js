@@ -82,7 +82,7 @@ export const deleteProject = action$ =>
 export const createProject = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.CREATE_PROJECT),
-        switchMap(action => {
+        mergeMap(action => {
             console.log(action)
             const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.CREATE_PROJECT)
             const requestSettings = {
@@ -99,19 +99,20 @@ export const createProject = action$ =>
                 }
             }
             return ajax(requestSettings)
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
         }),
         map(ajax => {
-            // always ajax.status < 400
-            const response = ajax.response
-            if (response == null)
-                return madeRequestFail('No response from server!')
-            if (response.status < 400) {
-                return createProjectSuccess(response.data)
-            }
-            else {
-                return madeRequestFail(response.message)
-            }
 
-        }),
-        catchError(ajax => madeRequestFail('Connection error!'))
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return createProjectSuccess(ajax.response.data)
+            }
+            else
+                return createProjectFailed(ajax.response.data)
+        })
     )
