@@ -1,6 +1,6 @@
 import { of as rxjsOf } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { mergeMap, delay, map, switchMap, catchError , mapTo} from 'rxjs/operators';
+import { mergeMap, delay, map, switchMap, catchError, mapTo } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import { Auth as AuthEventTypes } from '../constants/index'
 import { BACKEND_API } from '../config/api'
@@ -22,21 +22,20 @@ export const validateToken = action$ =>
         }
       }
       return ajax(requestSettings)
+        .pipe(
+          mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+          catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
     }),
     map(ajax => {
-      const response = ajax.response
-      if (response == null)
+      if (ajax.status == 0)
+        return madeRequestFail(ajax.response)
+      if (ajax.response == null)
         return madeRequestFail('No response from server!')
-      if (response.status == 200) {
-        return tokenValid(response.data)
+      else if (ajax.status > 0 && ajax.response.status < 400) {
+        return tokenValid(ajax.response.data)
       }
-      if (response.status == 400) {
+      else
         return tokenInValid()
-      }
-    }),
-    catchError(ajax => {
-      if (ajax.status > 0 && ajax.status < 500) return rxjsOf(tokenInValid())
-      return rxjsOf(madeRequestFail(ajax.message))
     })
   );
 
@@ -45,7 +44,6 @@ export const login = action$ =>
   action$.pipe(
     ofType(AuthEventTypes.LOGIN),
     mergeMap(action => {
-      console.log(action)
       const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.LOGIN)
       const requestSettings = {
         url: fullyUrl,
@@ -59,20 +57,22 @@ export const login = action$ =>
         }
       }
       return ajax(requestSettings)
+        .pipe(
+          mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+          catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
     }),
     map(ajax => {
-      // always ajax.status < 400
-      const response = ajax.response
-      if (response == null)
+      // xhr failed on cros, 404 , 500 - xhr not by our server
+      if (ajax.status == 0)
+        return madeRequestFail(ajax.response)
+      // xhr request was success but server didn't return anything
+      if (ajax.response == null)
         return madeRequestFail('No response from server!')
-      if (response.status < 400) {
-        return loginSuccess(response.data)
+      // xhr request was sucess and 
+      else if (ajax.status > 0 && ajax.response.status < 400) {
+        return loginSuccess(ajax.response.data)
       }
-    }),
-    // ajax.status >= 400
-    catchError(ajax => {
-      console.log(ajax)
-      if (ajax.status > 0 && ajax.status < 500) return rxjsOf(loginFailed())
-      return rxjsOf(madeRequestFail(ajax.message))
-    })//,
-  );
+      else
+        return loginFailed()
+    })
+  )
