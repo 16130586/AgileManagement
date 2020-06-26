@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -79,9 +80,15 @@ public class CustomHandleGlobalException extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(apiResponse, header.getHeaders(), HttpStatus.OK);
     }
 
-    /**
-     * Handle remain Exception
-     */
+    @ExceptionHandler(AuthenticationException.class)
+    protected ResponseEntity<Object> handleAuthenticationException(RuntimeException ex) {
+        ApiResponse apiResponse = new ApiResponse(HttpServletResponse.SC_UNAUTHORIZED, null, ex.getMessage(), null);
+        return new ResponseEntity<>(apiResponse, header.getHeaders(), HttpStatus.OK);
+    }
+
+        /**
+         * Handle remain Exception
+         */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleRemainException(RuntimeException ex) {
         return handleInternalException(new InternalException("Internal Error: " + ex.getMessage()));
