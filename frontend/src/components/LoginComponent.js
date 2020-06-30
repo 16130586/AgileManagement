@@ -1,18 +1,19 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-
+import React, {useEffect} from 'react'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import TextField from '@material-ui/core/TextField'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Link from '@material-ui/core/Link'
+import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+import Container from '@material-ui/core/Container'
+import { navigateTo} from '../actions/global'
+import { connect } from 'react-redux'
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -48,6 +49,8 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginComponent = function (props) {
     const classes = useStyles();
+
+    useEffect(() => {}, [props.Common])
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -100,7 +103,7 @@ const LoginComponent = function (props) {
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="/sign-up" variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
@@ -114,4 +117,14 @@ const LoginComponent = function (props) {
     );
 }
 
-export default LoginComponent
+const mapStateToProps = state => {
+    return {
+      common: state.Common,
+    }
+}
+  const mapDispatchToProps = dispatch => {
+    return {
+      navigateTo: (url) => dispatch(navigateTo(url)),
+    }
+  }
+export default connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
