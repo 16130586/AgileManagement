@@ -19,6 +19,9 @@ const Common = (state = initState, action) => {
                 forceRedirectTo: "/"
             }
             break;
+        case AuthEventTypes.SIGN_UP_SUCCESS:
+            nextState = { ...state, forceRedirectTo: '/login' }
+            break;
         case AuthEventTypes.TOKEN_VALID:
             nextState = { ...state, user: action.payload, isAppLoad: true }
             break;
