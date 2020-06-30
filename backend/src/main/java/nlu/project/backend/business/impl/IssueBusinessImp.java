@@ -3,7 +3,9 @@ package nlu.project.backend.business.impl;
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.model.Issue;
+import org.springframework.stereotype.Service;
 
+@Service
 public class IssueBusinessImp implements IssueBusiness {
     @Override
     public Issue create(IssueParams issueParams) {

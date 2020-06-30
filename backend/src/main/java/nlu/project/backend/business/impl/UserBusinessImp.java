@@ -56,6 +56,7 @@ public class UserBusinessImp implements UserBusiness {
         toSave.setUserName(registryParams.userName);
         toSave.setPassword(new BCryptPasswordEncoder().encode(registryParams.password));
         userRepository.save(toSave);
+        toSave.setPassword(null);
         return toSave;
     }
 
