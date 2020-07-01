@@ -6,9 +6,12 @@ import nlu.project.backend.entry.user.LoginParams;
 import nlu.project.backend.entry.user.RegistryParams;
 import nlu.project.backend.model.User;
 import nlu.project.backend.model.response.ApiResponse;
+import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -37,5 +40,12 @@ public class UserController {
         if(validateResult == null)
             return ApiResponse.OnBadRequest("Token expired!");
         return ApiResponse.OnSuccess(validateResult, "Token is valid!");
+    }
+
+    @GetMapping("/me")
+    @Secured("ROLE_USER")
+    public ApiResponse myInfo(HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) request.getAttribute("user");
+        return ApiResponse.OnSuccess(userDetails.getUser(), "Get info success!");
     }
 }
