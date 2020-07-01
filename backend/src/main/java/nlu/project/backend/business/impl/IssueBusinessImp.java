@@ -7,7 +7,6 @@ import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.model.Issue;
 import nlu.project.backend.model.User;
 import nlu.project.backend.model.security.CustomUserDetails;
-import org.graalvm.compiler.lir.LIRInstruction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
