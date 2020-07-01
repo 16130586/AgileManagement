@@ -17,7 +17,7 @@ let ProjectNameComponent = function (props) {
             <img
                 style={{ width: "24px", height: "24px", borderRadius: "3px" }}
                 src={props.dataItem.projectIconUrl} alt="Missing url " />
-            <span class="ml-1">{props.dataItem.name}</span>
+            <span className="ml-1">{props.dataItem.name}</span>
         </td>
     )
 }

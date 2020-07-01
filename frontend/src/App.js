@@ -5,11 +5,13 @@ import './App.css';
 import Navigation from './containers/NavigationContainer'
 import Workplace from './containers/WorkplaceContainer'
 import Login from './containers/LoginContainer'
+import SignUp from './containers/SignUpContainer'
 import { connect } from 'react-redux'
 import { navigateTo, clearNavigateTo, validateToken } from './actions/global'
 import { getToken } from './common/localStorage'
 
 function App(props) {
+  let currentPath = props.history.location.pathname
   useEffect(() => {
     if (props.common.forceRedirectTo != null) {
       props.history.push(props.common.forceRedirectTo)
@@ -18,11 +20,12 @@ function App(props) {
   }, [props.common.forceRedirectTo])
 
   useEffect(() => {
+
     if (!props.common.isAppLoad) {
       const token = getToken()
       if (token) {
         props.validateToken(token)
-      } else {
+      } else if('/sign-up' != currentPath){
         props.navigateTo('/login')
       }
     }
@@ -30,7 +33,8 @@ function App(props) {
   return (
     <div className="main">
       <Switch>
-        <Route path="/login" component={Login} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/sign-up" component={SignUp}/>
         <Route path="/">
           <Fragment>
             <Navigation className="main-navigation" />
@@ -43,8 +47,9 @@ function App(props) {
 }
 
 const mapStateToProps = state => {
+  console.log(state)
   return {
-    common: state.Common
+    common: state.Common,
   }
 }
 const mapDispatchToProps = dispatch => {

@@ -35,5 +35,8 @@ export const Auth = {
     TOKEN_IN_VALID : "auth-token-in-valid",
     LOGIN : "auth-login",
     LOGIN_SUCCESS : "auth-login-success",
-    LOGIN_FAILED : "auth-login-failed"
+    LOGIN_FAILED : "auth-login-failed",
+    SIGN_UP : "auth-sign-up",
+    SIGN_UP_SUCCESS : "auth-sign-up-success",
+    SIGN_UP_FAILED : "auth-sign-up-failed",
 }

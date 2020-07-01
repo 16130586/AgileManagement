@@ -1,10 +1,10 @@
-import { Auth as AuthEventTypes, ASYNC as AsyncEventTypes,Router as RouterTypes } from '../constants/index'
+import { Auth as AuthEventTypes, ASYNC as AsyncEventTypes, Router as RouterTypes } from '../constants/index'
 import { saveToken, getToken, clearToken } from '../common/localStorage'
 const initState = {
     isAppLoad: false,
     user: null,
     forceRedirectTo: null,
-    token :  getToken()
+    token: getToken()
 }
 const Common = (state = initState, action) => {
     let nextState = state
@@ -16,8 +16,11 @@ const Common = (state = initState, action) => {
                 isAppLoad: false,
                 token: action.payload,
                 user: null,
-                forceRedirectTo : "/"
+                forceRedirectTo: "/"
             }
+            break;
+        case AuthEventTypes.SIGN_UP_SUCCESS:
+            nextState = { ...state, forceRedirectTo: '/login' }
             break;
         case AuthEventTypes.TOKEN_VALID:
             nextState = { ...state, user: action.payload, isAppLoad: true }
@@ -27,10 +30,10 @@ const Common = (state = initState, action) => {
             nextState = { ...state, forceRedirectTo: '/login', isAppLoad: true }
             break;
         case AsyncEventTypes.REQUEST.CREATE_PROJECT_SUCCESS:
-            console.log('don know wwhy')
             nextState = { ...state, forceRedirectTo: `/project/${action.payload.id}`, isAppLoad: true }
             break;
-        case RouterTypes.Redirect:
+        case RouterTypes.REDIRECT:
+            console.log(action)
             nextState = { ...state, forceRedirectTo: action.payload }
             break;
         case RouterTypes.CLEAR_REDIRECT_URL:

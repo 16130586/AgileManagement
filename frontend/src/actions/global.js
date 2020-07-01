@@ -8,3 +8,6 @@ export const madeRequestFail = (msg) => ({type : AsyncEventTypes.REQUEST.FAILED,
 export const login = (userName,password) => ({type : AuthEventTypes.LOGIN, payload: {userName , password}})
 export const loginSuccess = (token) => ({type : AuthEventTypes.LOGIN_SUCCESS, payload : token})
 export const loginFailed = () => ({type : AuthEventTypes.LOGIN_FAILED, payload: "Your credentials are in-correct!"})
+export const signUp = (userName,password,confirmPassword) => ({type : AuthEventTypes.SIGN_UP, payload: {userName , password, confirmPassword}})
+export const signUpSuccess = () => ({type : AuthEventTypes.SIGN_UP_SUCCESS})
+export const signUpFailed = (message) => ({type : AuthEventTypes.SIGN_UP_FAILED, payload: message == null ? 'Sign-up error!' : message})

@@ -1,19 +1,15 @@
-import React, {useEffect} from 'react'
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import Link from '@material-ui/core/Link'
-import Grid from '@material-ui/core/Grid'
-import Box from '@material-ui/core/Box'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
-import { navigateTo} from '../actions/global'
-import { connect } from 'react-redux'
+import React from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -47,10 +43,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const LoginComponent = function (props) {
+const SignUpComponent = function (props) {
     const classes = useStyles();
-
-    useEffect(() => {}, [props.Common])
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -59,7 +53,7 @@ const LoginComponent = function (props) {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Sign Up
         </Typography>
                 <h2 style={{color: 'red'}}>{props.errorMsg}</h2>
                 <form className={classes.form} noValidate>
@@ -84,7 +78,17 @@ const LoginComponent = function (props) {
                         label="Password"
                         type="password"
                         id="password"
-                        autoComplete="current-password"
+                        onChange={(e) => props.dataChange(e)}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="confirm-password"
+                        label="Confirm password"
+                        type="password"
+                        id="confirm-password"
                         onChange={(e) => props.dataChange(e)}
                     />
                     <Button
@@ -92,22 +96,10 @@ const LoginComponent = function (props) {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={() => props.submit(props.userName, props.password)}
+                        onClick={() => props.submit(props.userName, props.password, props.confirmPassword)}
                     >
-                        Sign In
+                        Sign Up
                     </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link href="/sign-up" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
                 </form>
             </div>
             <Box mt={8}>
@@ -117,14 +109,4 @@ const LoginComponent = function (props) {
     );
 }
 
-const mapStateToProps = state => {
-    return {
-      common: state.Common,
-    }
-}
-  const mapDispatchToProps = dispatch => {
-    return {
-      navigateTo: (url) => dispatch(navigateTo(url)),
-    }
-  }
-export default connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
+export default SignUpComponent
