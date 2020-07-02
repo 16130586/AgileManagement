@@ -17,3 +17,7 @@ export let WorkSpace_YourWork_AssignToMe_Init = {
     data : [],
     totalAssignToMe : 0
 }
+
+export let All_Group_Init = {
+    data : []
+}

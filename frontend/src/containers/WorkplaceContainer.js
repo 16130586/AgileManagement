@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom';
 import YourWork from './workplace/YourWorkContainer'
 import Project from './workplace/ProjectsContainer'
+import People from './workplace/PeopleContainer'
 
 let WorkplaceContainer = function (props) {
 
@@ -16,6 +17,9 @@ let WorkplaceContainer = function (props) {
                 </Route>
                 <Route path="/dashboard">
                     <div>dashboard</div>
+                </Route>
+                <Route path="/people">
+                    <People />
                 </Route>
                 <Route exact path="/">
                     <div>Welcome</div>

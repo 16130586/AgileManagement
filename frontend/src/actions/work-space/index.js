@@ -14,3 +14,8 @@ export const fullFilledStarredItem = (items) => ({type : AsyncEventTypes.FULL_FI
 
 export const fetchTotalAssignToMe = () => ({type : AsyncEventTypes.LOAD_MORE.TOTAL_ASSIGN_TO_ME})
 export const fullFilledTotalAssignToMe = (total) => ({type : AsyncEventTypes.FULL_FILLED.TOTAL_ASSIGN_TO_ME , payload: {data : total}})
+
+export const fetchAllGroup = () => ({type: AsyncEventTypes.LOAD_MORE.ALL_GROUP})
+export const fullFilledAllGroup = (listGroup) => ({type: AsyncEventTypes.FULL_FILLED.ALL_GROUP, payload: {data: listGroup}})
+
+

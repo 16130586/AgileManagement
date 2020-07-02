@@ -4,6 +4,8 @@ import WorkSpace_Viewed from './work-space/your-work/viewed/index'
 import {fetchTotalAssignToMeEpic , fetchWorkOnEpic} from './work-space/your-work/assign-to-me/index'
 import {deleteProject , fetchProjects , createProject} from './work-space/project'
 import {validateToken, login, signUp} from './global'
+import {fetchGroup}  from "./work-space/people/group/index";
+
 export default combineEpics(
     login,
     signUp,
@@ -15,4 +17,5 @@ export default combineEpics(
     deleteProject,
     fetchProjects,
     createProject,
+    fetchGroup
 );

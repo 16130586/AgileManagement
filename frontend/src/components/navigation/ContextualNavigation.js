@@ -1,10 +1,11 @@
 import React, { useState, Fragment } from 'react';
+import People from './contextual-items/People';
 import DashBoard from './contextual-items/DashBoard';
 import Filter from './contextual-items/Filter';
 import FilterSelections from './contextual-items/FilterSelections';
 import Projects from './contextual-items/Project';
 import YourWork from './contextual-items/YourWork';
-let navItemsConfig = [YourWork, Projects, DashBoard, Filter]
+let navItemsConfig = [YourWork, Projects, DashBoard, People, Filter]
 Filter.prototype.component = FilterSelections
 
 function ContextualNavigation(props) {
