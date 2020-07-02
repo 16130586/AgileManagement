@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 @NoArgsConstructor
 @Data
@@ -97,5 +99,17 @@ public class ProjectDAO {
             return false;
         }
         return true;
+    }
+
+    public List<Project> findbyName(String name) {
+        return projectRepository.findbyName(name);
+    }
+
+    public List<Project> findbyDescription(String description) {
+        return projectRepository.findbyDescription(description);
+    }
+
+    public List<Project> findbyKey(String key) {
+        return projectRepository.findbyKey(key);
     }
 }

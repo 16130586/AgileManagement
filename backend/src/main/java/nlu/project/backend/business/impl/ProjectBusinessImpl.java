@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectBusinessImpl implements ProjectBusiness {
     @Autowired
@@ -50,4 +52,21 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         }
         return false;
     }
+
+    @Override
+    public List<Project> findbyName(String name) {
+        return projectDAO.findbyName(name);
+    }
+
+    @Override
+    public List<Project> findbyKey(String key) {
+        return projectDAO.findbyKey(key);
+    }
+
+    @Override
+    public List<Project> findbyDescription(String description) {
+        return projectDAO.findbyDescription(description);
+    }
+
+
 }

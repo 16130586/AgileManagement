@@ -1,6 +1,7 @@
 package nlu.project.backend.controller;
 
 import nlu.project.backend.business.ProjectBusiness;
+import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
@@ -45,5 +46,23 @@ public class ProjectController extends BaseController{
             return ApiResponse.OnBadRequest("Delete Project Failed");
         }
         return ApiResponse.OnCreatedSuccess(result, "Delete Project Success!");
+    }
+
+    @PostMapping("/searchByName")
+    public ApiResponse searchProjectByName(@RequestBody ProjectFilterParams projectFilterParams) {
+        Object result = projectBusiness.findbyName(projectFilterParams.name);
+        return ApiResponse.OnSuccess(result, "Find Project Success!");
+    }
+
+    @PostMapping("/searchByDescription")
+    public ApiResponse searchProjectByDescription(@RequestBody ProjectFilterParams projectFilterParams) {
+        Object result = projectBusiness.findbyDescription(projectFilterParams.description);
+        return ApiResponse.OnSuccess(result, "Find Project Success!");
+    }
+
+    @PostMapping("/searchByKey")
+    public ApiResponse searchProjectByKey(@RequestBody ProjectFilterParams projectFilterParams) {
+        Object result = projectBusiness.findbyKey(projectFilterParams.key);
+        return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 }
