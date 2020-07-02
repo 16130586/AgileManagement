@@ -1,19 +1,23 @@
 package nlu.project.backend.business.impl;
 
 import nlu.project.backend.DAO.ProjectDAO;
+import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.exception.custom.InvalidInputException;
 import nlu.project.backend.model.*;
+import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectBusinessImpl implements ProjectBusiness {
     @Autowired
     ProjectDAO projectDAO;
+
+    @Autowired
+    UserDAO userDAO;
 
     @Override
     public Project create(ProjectParams projectParams) {
@@ -38,7 +42,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public boolean delete() {
+    public boolean delete(ProjectParams projectParams, UserDetails userDetails) {
+        User user = ((CustomUserDetails)userDetails).getUser();
+
+        if (userDAO.isProductOwnerWithProjectId(user.getId(), projectParams.id)) {
+            return projectDAO.delete(projectParams.id);
+        }
         return false;
     }
 }

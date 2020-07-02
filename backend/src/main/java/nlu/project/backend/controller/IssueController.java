@@ -45,7 +45,7 @@ public class IssueController extends BaseController{
     public ApiResponse deleteIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
         Object result = issueBusiness.delete(issueParams, getUser(request));
         if (result.equals(Boolean.FALSE)) {
-            return ApiResponse.OnBadRequest("Update Issue Failed");
+            return ApiResponse.OnBadRequest("Delete Issue Failed");
         }
         return ApiResponse.OnCreatedSuccess(result, "Delete Issue Success!");
     }

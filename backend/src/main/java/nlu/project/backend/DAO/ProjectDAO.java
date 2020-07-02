@@ -88,4 +88,14 @@ public class ProjectDAO {
         projectRepository.save(project);
         return project;
     }
+    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+    public boolean delete(int projectId) {
+        try {
+            projectRepository.deleteById(projectId);
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }
