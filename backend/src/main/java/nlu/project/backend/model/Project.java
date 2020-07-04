@@ -24,4 +24,6 @@ public class Project {
     private String code;
     @Column(name = "description")
     private String description;
+    @Column(name="imgUrl")
+    private String imgUrl;
 }
