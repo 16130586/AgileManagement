@@ -54,18 +54,23 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public List<Project> findbyName(String name) {
-        return projectDAO.findbyName(name);
+    public List<Project> findByName(String name) {
+        return projectDAO.findByName(name);
     }
 
     @Override
-    public List<Project> findbyKey(String key) {
-        return projectDAO.findbyKey(key);
+    public List<Project> findByKey(String key) {
+        return projectDAO.findByKey(key);
     }
 
     @Override
-    public List<Project> findbyDescription(String description) {
-        return projectDAO.findbyDescription(description);
+    public List<Project> findByUserId(int userId) {
+        return projectDAO.findByUser(userId);
+    }
+
+    @Override
+    public List<Project> findByOwner(int ownerId) {
+        return projectDAO.findByOwner(ownerId);
     }
 
 

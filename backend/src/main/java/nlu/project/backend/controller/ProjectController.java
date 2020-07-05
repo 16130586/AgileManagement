@@ -50,19 +50,25 @@ public class ProjectController extends BaseController{
 
     @PostMapping("/searchByName")
     public ApiResponse searchProjectByName(@RequestBody ProjectFilterParams projectFilterParams) {
-        Object result = projectBusiness.findbyName(projectFilterParams.name);
+        Object result = projectBusiness.findByName(projectFilterParams.name);
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 
-    @PostMapping("/searchByDescription")
-    public ApiResponse searchProjectByDescription(@RequestBody ProjectFilterParams projectFilterParams) {
-        Object result = projectBusiness.findbyDescription(projectFilterParams.description);
+    @PostMapping("/searchByUserId")
+    public ApiResponse searchProjectByUserId(@RequestBody ProjectFilterParams projectFilterParams) {
+        Object result = projectBusiness.findByUserId(projectFilterParams.userId);
+        return ApiResponse.OnSuccess(result, "Find Project Success!");
+    }
+
+    @PostMapping("/searchByOwnerId")
+    public ApiResponse searchProjectByOwnerId(@RequestBody ProjectFilterParams projectFilterParams) {
+        Object result = projectBusiness.findByOwner(projectFilterParams.ownerId);
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 
     @PostMapping("/searchByKey")
     public ApiResponse searchProjectByKey(@RequestBody ProjectFilterParams projectFilterParams) {
-        Object result = projectBusiness.findbyKey(projectFilterParams.key);
+        Object result = projectBusiness.findByKey(projectFilterParams.key);
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 }

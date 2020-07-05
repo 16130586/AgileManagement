@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -101,15 +102,32 @@ public class ProjectDAO {
         return true;
     }
 
-    public List<Project> findbyName(String name) {
-        return projectRepository.findbyName(name);
+    public List<Project> findByName(String name) {
+        return projectRepository.findByName(name);
     }
 
-    public List<Project> findbyDescription(String description) {
-        return projectRepository.findbyDescription(description);
+    public List<Project> findByKey(String key) {
+        return projectRepository.findByCode(key);
     }
 
-    public List<Project> findbyKey(String key) {
-        return projectRepository.findbyKey(key);
+    public List<Project> findByUser(int userId) {
+        User user = userRepository.getOne(userId);
+        List<Project> result = new ArrayList<>();
+        List<UserRole> userRoles = userRoleRepository.findByUser(user);
+        for (UserRole i : userRoles) {
+            result.add(i.getProject());
+        }
+        return result;
+    }
+
+    public List<Project> findByOwner(int ownerId) {
+        User user = userRepository.getOne(ownerId);
+        List<Project> result = new ArrayList<>();
+        List<UserRole> userRoles = userRoleRepository.findByUser(user);
+        for (UserRole i : userRoles) {
+            if (i.getRole().getId() == 1)
+                result.add(i.getProject());
+        }
+        return result;
     }
 }

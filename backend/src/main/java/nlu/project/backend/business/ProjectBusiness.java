@@ -10,7 +10,8 @@ public interface ProjectBusiness {
     Project create(ProjectParams projectParams);
     Project update(ProjectParams projectParams);
     boolean delete(ProjectParams projectParams, UserDetails userDetails);
-    List<Project> findbyName(String name);
-    List<Project> findbyKey(String name);
-    List<Project> findbyDescription(String name);
+    List<Project> findByName(String name);
+    List<Project> findByKey(String name);
+    List<Project> findByUserId(int userId);
+    List<Project> findByOwner(int ownerId);
 }
