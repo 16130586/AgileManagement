@@ -11,7 +11,7 @@ public interface ProjectBusiness {
     Project update(ProjectParams projectParams);
     boolean delete(ProjectParams projectParams, UserDetails userDetails);
     List<Project> findByName(String name);
-    List<Project> findByKey(String name);
+    List<Project> findByKey(String key);
     List<Project> findByUserId(int userId);
     List<Project> findByOwner(int ownerId);
 }

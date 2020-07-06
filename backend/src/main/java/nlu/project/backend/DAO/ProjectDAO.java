@@ -107,7 +107,7 @@ public class ProjectDAO {
     }
 
     public List<Project> findByKey(String key) {
-        return projectRepository.findByCode(key);
+        return projectRepository.findByKey(key);
     }
 
     public List<Project> findByUser(int userId) {
