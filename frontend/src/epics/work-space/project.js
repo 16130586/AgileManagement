@@ -68,9 +68,34 @@ const delelteProjectFakeAjax = (id) =>
 export const fetchProjects = action$ =>
     action$.pipe(
         ofType(AsyncTypes.LOAD_MORE.PROJECT_GRID),
-        mergeMap(action => projectGridFakeAjax()),
-        map(response => fullFilledProjectGrid(response.data))
-    );
+        mergeMap(action => {
+            const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.PROJECT_GET_ALL)
+            const requestSettings = {
+                url: fullyUrl,
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            }
+            return ajax(requestSettings)
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
+        }),
+        map(ajax => {
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return fullFilledProjectGrid(ajax.response.data)
+            }
+            else
+                return madeRequestFail(ajax.response.data)
+        })
+    )
+
 export const deleteProject = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.DELETE_PROJECT),
@@ -83,20 +108,27 @@ export const createProject = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.CREATE_PROJECT),
         mergeMap(action => {
-            console.log(action)
+
+            let formData = new FormData();
+            formData.append('name', action.payload.projectName)
+            formData.append('key' , action.payload.projectKey)
+            formData.append('description' , action.payload.shortDescription)
+            formData.append('file', action.payload.img)
+            console.log(formData)
+            console.log(action.payload)
             const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.CREATE_PROJECT)
             const requestSettings = {
                 url: fullyUrl,
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${getToken()}`
                 },
-                body: {
-                    name: action.payload.projectName,
-                    key: action.payload.projectKey,
-                    description: action.payload.shortDescription,
-                }
+                // body: {
+                //     name: action.payload.projectName,
+                //     key: action.payload.projectKey,
+                //     description: action.payload.shortDescription,
+                // }
+                body : formData
             }
             return ajax(requestSettings)
                 .pipe(

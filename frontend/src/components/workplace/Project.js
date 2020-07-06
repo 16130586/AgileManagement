@@ -1,16 +1,18 @@
 import React, { Fragment, useState } from 'react'
-import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
-import { orderBy } from '@progress/kendo-data-query';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Icon from '@material-ui/core/Icon';
-import TextField from '@material-ui/core/TextField';
+import { Grid, GridColumn as Column } from '@progress/kendo-react-grid'
+import { orderBy } from '@progress/kendo-data-query'
+import Button from '@material-ui/core/Button'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Icon from '@material-ui/core/Icon'
+import TextField from '@material-ui/core/TextField'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
 let ProjectNameComponent = function (props) {
     return (
         <td style={{ display: "flex" }}>
@@ -132,6 +134,14 @@ let CreateProjectForm = function (props) {
                 type="text"
                 fullWidth
             />
+           <div style={{display:"flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem"}}>
+               <InputLabel>Select image</InputLabel>
+               <input 
+               onChange={(e) => props.formChange(e)}
+               type="file" 
+               name="img" 
+               accept="image/x-png,image/gif,image/jpeg"/>
+           </div>
         </Fragment>
     )
 }
@@ -147,12 +157,19 @@ let ProjectComponent = function (props) {
     const [createProjectForm, setCreateProjectForm] = React.useState({
         projectName: '',
         projectKey: '',
-        shortDescription: ''
+        shortDescription: '',
+        img : null
 
     })
     const formChange = function (event) {
         let formData = { ...createProjectForm }
-        formData[event.target.name] = event.target.value
+        if(event.target.name != 'img'){
+            formData[event.target.name] = event.target.value
+           
+        }
+        else if(event.target.name == 'img'){
+            formData[event.target.name] = event.target.files[0]
+        }
         setCreateProjectForm(formData)
     }
     const isFormValid = function() {
@@ -164,7 +181,6 @@ let ProjectComponent = function (props) {
         return !requiredAllNoneNull
     }
     const handleCreateProjectSubmit = function(){
-        console.log(createProjectForm)
         props.createProject(createProjectForm)
     }
     return (
