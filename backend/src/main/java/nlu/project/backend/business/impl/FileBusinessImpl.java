@@ -20,8 +20,8 @@ public class FileBusinessImpl implements FileBusiness {
     public String save(MultipartFile file) {
         if (file.isEmpty())
             return "";
-        String fileName = StringUtils.randomString() + ".jpg";
-        String path = ABSOLUTE_PATH_IMAGE_STORAGE +"/"+ fileName;
+        String fileName = StringUtils.randomString() + "_" + System.currentTimeMillis() + ".jpg";
+        String path = ABSOLUTE_PATH_IMAGE_STORAGE + File.separator + fileName;
         File serverFile = new File(path);
         try {
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
