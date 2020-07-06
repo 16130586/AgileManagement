@@ -3,6 +3,7 @@ package nlu.project.backend.business.impl;
 import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.util.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +14,8 @@ import java.io.IOException;
 
 @Service
 public class FileBusinessImpl implements FileBusiness {
-    private static final String ABSOLUTE_PATH_IMAGE_STORAGE = (new File("src/main/upload")).getAbsolutePath();
+    @Value("${upload.project.image.absolute.path}")
+    private String ABSOLUTE_PATH_IMAGE_STORAGE = (new File("src/main/upload")).getAbsolutePath();
 
 
     @Override
@@ -22,6 +24,10 @@ public class FileBusinessImpl implements FileBusiness {
             return "";
         String fileName = StringUtils.randomString() + ".jpg";
         String path = ABSOLUTE_PATH_IMAGE_STORAGE +"/"+ fileName;
+        File directory = new File(ABSOLUTE_PATH_IMAGE_STORAGE);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
         File serverFile = new File(path);
         try {
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
