@@ -1,5 +1,11 @@
 package nlu.project.backend.entry.project;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+@Data
+@NoArgsConstructor
 public class ProjectParams {
     public int id;
     public String name;
@@ -7,4 +13,5 @@ public class ProjectParams {
     public String description;
     public Integer leader;
     public Integer productOwner;
+    public MultipartFile file;
 }

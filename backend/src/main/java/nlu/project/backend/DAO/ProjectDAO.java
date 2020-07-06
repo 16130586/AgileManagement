@@ -2,6 +2,7 @@ package nlu.project.backend.DAO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
@@ -30,6 +31,9 @@ public class ProjectDAO {
     @Autowired
     BacklogRepository backlogRepository;
 
+    @Autowired
+    FileBusiness fileBusiness;
+
     public boolean isExistedProjectName(String name) {
         return projectRepository.existsByName(name);
     }
@@ -44,11 +48,13 @@ public class ProjectDAO {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project save(ProjectParams projectParams) {
+        String imgUrl = fileBusiness.save(projectParams.file);
         // Project
         Project project = new Project();
         project.setName(projectParams.name);
         project.setCode(projectParams.key);
         project.setDescription(projectParams.description);
+        project.setImgUrl(imgUrl);
         projectRepository.save(project);
         // Backlog
         BackLog backLog = new BackLog();

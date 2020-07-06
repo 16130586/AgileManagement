@@ -20,7 +20,7 @@ public class ProjectController extends BaseController{
     ProjectBusiness projectBusiness;
 
     @PostMapping("/create")
-    public ApiResponse createProject(@RequestBody ProjectParams projectParams, HttpServletRequest request) {
+    public ApiResponse createProject(ProjectParams projectParams, HttpServletRequest request) {
         if (projectParams.productOwner == null) {
             CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
             projectParams.productOwner = userDetails.getUser().getId();
