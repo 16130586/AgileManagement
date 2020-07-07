@@ -47,6 +47,18 @@ public class LocalDiskFileBusinessImpl implements FileBusiness {
     }
 
     @Override
+    public File get(String fileName) {
+        if(ABSOLUTE_PATH_IMAGE_STORAGE == null || ABSOLUTE_PATH_IMAGE_STORAGE.equals("") || ABSOLUTE_PATH_IMAGE_STORAGE.length() == 0){
+            ABSOLUTE_PATH_IMAGE_STORAGE = (new File(DEFAULT_PATH_IMAGE_STORAGE)).getAbsolutePath();
+        }
+        String path = ABSOLUTE_PATH_IMAGE_STORAGE + File.separator + fileName;
+        File result = new File(path);
+        if (result.exists())
+            return result;
+        return null;
+    }
+
+    @Override
     public void delete() {
         // TBD
     }
