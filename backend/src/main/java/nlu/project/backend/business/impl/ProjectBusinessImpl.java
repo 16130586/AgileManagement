@@ -60,7 +60,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
     @Override
     public List<Project> findByKey(String key) {
-        return projectDAO.findByKey(key);
+        return projectDAO.findByCode(key);
     }
 
     @Override

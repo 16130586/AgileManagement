@@ -63,22 +63,33 @@ public class ProjectDAO {
         BackLog backLog = new BackLog();
         backLog.setProject(project);
         backlogRepository.save(backLog);
-        // Leader
-        User teamLead = userRepository.findById(projectParams.leader).get();
-        Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
-        UserRole leader = new UserRole();
-        leader.setUser(teamLead);
-        leader.setRole(leadRole);
-        leader.setProject(project);
-        userRoleRepository.save(leader);
-        // Product Owner
-        User creator = userRepository.findById(projectParams.productOwner).get();
-        Role poRole = roleRepository.findByName(ConstraintRole.PRODUCT_OWNER);
-        UserRole productOwner = new UserRole();
-        productOwner.setUser(creator);
-        productOwner.setRole(poRole);
-        productOwner.setProject(project);
-        userRoleRepository.save(productOwner);
+
+        if(projectParams.leader != projectParams.productOwner){
+            // Leader
+            User teamLead = userRepository.findById(projectParams.leader).get();
+            Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
+            UserRole leader = new UserRole();
+            leader.setUser(teamLead);
+            leader.setRole(leadRole);
+            leader.setProject(project);
+            userRoleRepository.save(leader);
+            // Product Owner
+            User creator = userRepository.findById(projectParams.productOwner).get();
+            Role poRole = roleRepository.findByName(ConstraintRole.PRODUCT_OWNER);
+            UserRole productOwner = new UserRole();
+            productOwner.setUser(creator);
+            productOwner.setRole(poRole);
+            productOwner.setProject(project);
+            userRoleRepository.save(productOwner);
+        }else {
+            User creator = userRepository.findById(projectParams.productOwner).get();
+            Role poRole = roleRepository.findByName(ConstraintRole.PRODUCT_OWNER);
+            UserRole productOwner = new UserRole();
+            productOwner.setUser(creator);
+            productOwner.setRole(poRole);
+            productOwner.setProject(project);
+            userRoleRepository.save(productOwner);
+        }
         // End
         return project;
     }
@@ -112,8 +123,8 @@ public class ProjectDAO {
         return projectRepository.findByName(name);
     }
 
-    public List<Project> findByKey(String key) {
-        return projectRepository.findByKey(key);
+    public List<Project> findByCode(String key) {
+        return projectRepository.findByCode(key);
     }
 
     public List<Project> findByUser(int userId) {

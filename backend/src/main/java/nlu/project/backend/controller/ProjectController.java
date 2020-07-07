@@ -60,6 +60,13 @@ public class ProjectController extends BaseController{
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 
+    @GetMapping("/jointIn")
+    public ApiResponse jointIn(HttpServletRequest request) {
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.findByUserId(user.getUser().getId());
+        return ApiResponse.OnSuccess(result, "Find Project Success!");
+    }
+
     @PostMapping("/searchByOwnerId")
     public ApiResponse searchProjectByOwnerId(@RequestBody ProjectFilterParams projectFilterParams) {
         Object result = projectBusiness.findByOwner(projectFilterParams.ownerId);
