@@ -10,10 +10,8 @@ let sort = [
 let ProjectContaner = function(props){
     let [_sort , _setSort] = useState(sort)
     useState(() => {
-        if(!props.isLoadGrid){
-            props.fetchMoreProjectGrid()
-        }
-    }, [props.isLoadGrid])
+        props.fetchMoreProjectGrid()
+    })
     return (
         <ProjectComponent
         data={props.data} 
@@ -32,8 +30,7 @@ const mapStateToProps = state => {
     console.log(state)
     return {
         GlobalRouter: state.GlobalRouter,
-        data : state.WorkSpace_Project.gridData,
-        isLoadGrid : state.WorkSpace_Project.isLoadGrid
+        data : state.WorkSpace_Project.gridData
     }
   }
   const mapDispatchToProps = dispatch => {

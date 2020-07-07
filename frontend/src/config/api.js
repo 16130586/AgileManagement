@@ -4,6 +4,7 @@ export const BACKEND_API = {
         LOGIN: "/user/login",
         SIGN_UP: "/user/registry",
         VALIDATE_TOKEN: "/user/validateToken",
-        CREATE_PROJECT: "/project/create"
+        CREATE_PROJECT: "/project/create",
+        PROJECT_GET_ALL: "/project/jointIn"
     }
 }
