@@ -17,6 +17,7 @@ public class Group {
     private Integer id;
     @Column(name = "name")
     private String name;
-    @Column(name = "owner_id")
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
     private User owner;
 }

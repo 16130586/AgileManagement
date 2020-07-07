@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class IssueDAO {
 
     @Autowired
-    IssueReposistory issueReposistory;
+    IssueRepository issueReposistory;
 
     @Autowired
     UserRepository userRepository;
