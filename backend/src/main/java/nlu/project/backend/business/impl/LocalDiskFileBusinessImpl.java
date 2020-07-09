@@ -16,6 +16,8 @@ import java.io.IOException;
 public class LocalDiskFileBusinessImpl implements FileBusiness {
     @Value("${upload.project.image.absolute.path}")
     private String ABSOLUTE_PATH_IMAGE_STORAGE;
+    @Value("${deploy.host.config.url}")
+    private String HOST_CONFIG_URL;
     private final String DEFAULT_PATH_IMAGE_STORAGE = "src/main/upload";
     private final String ACTION = "/storage/";
 
@@ -43,7 +45,7 @@ public class LocalDiskFileBusinessImpl implements FileBusiness {
         } catch (IOException ex) {
             throw new InternalException("Upload file error!");
         }
-        return ACTION.concat(fileName);
+        return HOST_CONFIG_URL.concat(ACTION.concat(fileName));
     }
 
     @Override
