@@ -1,5 +1,7 @@
 package nlu.project.backend.business;
 
+import nlu.project.backend.entry.user.ResetPasswordParams;
+import nlu.project.backend.entry.user.ChangePasswordParams;
 import nlu.project.backend.entry.user.LoginParams;
 import nlu.project.backend.entry.user.RegistryParams;
 import nlu.project.backend.model.User;
@@ -14,4 +16,6 @@ public interface UserBusiness extends UserDetailsService {
     User getUserById(int id);
     User getUserByGmail(String gmail);
     void saveUser(User user);
+    void changePassword(ChangePasswordParams params);
+    void resetPassword(ResetPasswordParams params);
 }

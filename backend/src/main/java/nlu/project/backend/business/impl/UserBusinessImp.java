@@ -1,12 +1,13 @@
 package nlu.project.backend.business.impl;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.JWTVerifier;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.business.UserBusiness;
+import nlu.project.backend.entry.user.ResetPasswordParams;
+import nlu.project.backend.entry.user.ChangePasswordParams;
 import nlu.project.backend.entry.user.LoginParams;
 import nlu.project.backend.entry.user.RegistryParams;
+import nlu.project.backend.exception.custom.InvalidInputException;
 import nlu.project.backend.jwt.JwtProvider;
 import nlu.project.backend.model.User;
 import nlu.project.backend.model.security.CustomUserDetails;
@@ -93,6 +94,33 @@ public class UserBusinessImp implements UserBusiness {
     public void saveUser(User user) {
 
     }
+
+    @Override
+    public void changePassword(ChangePasswordParams params) {
+        User user = userRepository.findById(params.userId).get();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (!(params.newPassword.equals(params.reNewPassword)))
+            throw new InvalidInputException("New Password and ReNewPassword not match!");
+
+        if (encoder.matches(params.oldPassword, user.getPassword())) {
+            user.setPassword(encoder.encode(params.newPassword));
+            userRepository.save(user);
+        } else
+            throw new InvalidInputException("Old password not match!");
+    }
+    @Override
+        public void resetPassword(ResetPasswordParams params) {
+
+        User user = userRepository.findById(params.userId).get();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        if (encoder.matches(params.oldPassword, user.getPassword())) {
+            user.setPassword(encoder.encode("123456"));
+            userRepository.save(user);
+        } else
+            throw new InvalidInputException("Old password not match!");
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

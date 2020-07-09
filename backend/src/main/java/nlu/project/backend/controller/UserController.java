@@ -2,8 +2,10 @@ package nlu.project.backend.controller;
 
 import nlu.project.backend.business.UserBusiness;
 import nlu.project.backend.entry.ValidateTokenParams;
+import nlu.project.backend.entry.user.ChangePasswordParams;
 import nlu.project.backend.entry.user.LoginParams;
 import nlu.project.backend.entry.user.RegistryParams;
+import nlu.project.backend.entry.user.ResetPasswordParams;
 import nlu.project.backend.model.User;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
@@ -47,5 +49,16 @@ public class UserController {
     public ApiResponse myInfo(HttpServletRequest request) {
         CustomUserDetails userDetails = (CustomUserDetails) request.getAttribute("user");
         return ApiResponse.OnSuccess(userDetails.getUser(), "Get info success!");
+    }
+
+    @PostMapping("/change-password")
+    public ApiResponse changePassword(@RequestBody ChangePasswordParams params) {
+        userBusiness.changePassword(params);
+        return ApiResponse.OnSuccess(null, "Change password success!");
+    }
+    @PostMapping("/reset-password")
+    public ApiResponse resetpassword(@RequestBody ResetPasswordParams params) {
+        userBusiness.resetPassword(params);
+        return ApiResponse.OnSuccess(null,"Reset password success!");
     }
 }
