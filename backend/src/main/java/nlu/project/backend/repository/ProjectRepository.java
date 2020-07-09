@@ -9,7 +9,9 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     boolean existsByName(String name);
     boolean existsByCode(String code);
 
-    List<Project> findByKey(String key);
+    List<Project> findByKeyLike(String key);
 
-    List<Project> findByName(String name);
+    List<Project> findByNameLike(String name);
+
+    List<Project> findByNameLikeAndKeyLike(String name, String key);
 }
