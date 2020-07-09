@@ -113,12 +113,9 @@ public class UserBusinessImp implements UserBusiness {
 
         User user = userRepository.findById(params.userId).get();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode("123456"));
+        userRepository.save(user);
 
-        if (encoder.matches(params.oldPassword, user.getPassword())) {
-            user.setPassword(encoder.encode("123456"));
-            userRepository.save(user);
-        } else
-            throw new InvalidInputException("Old password not match!");
     }
 
 
