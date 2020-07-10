@@ -29,28 +29,29 @@ public class StorageController {
 
     @GetMapping("/{name}")
     public void getImg(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) throws ParseException {
-        // in this case - we will make browser cache forever if it's firstly request is success
-        String ifModifiedSinceAsString = request.getHeader("If-Modified-Since"); // as ICT time
-        long currentTime = Calendar.getInstance(TimeZone.getTimeZone("ICT")).getTimeInMillis();
-        long ifModifiedSinceAsLong = 0;
-
-        if (ifModifiedSinceAsString == null) {
-            ifModifiedSinceAsLong = Calendar.getInstance(TimeZone.getTimeZone("ICT")).getTimeInMillis();
-        } else {
-            try {
-                Calendar c = Calendar.getInstance();
-                c.setTime(formatter.parse(ifModifiedSinceAsString));
-                ifModifiedSinceAsLong = c.getTimeInMillis();
-                c.getTimeInMillis();
-            } catch (Exception e) {
-                ifModifiedSinceAsLong = Calendar.getInstance(TimeZone.getTimeZone("ICT")).getTimeInMillis();
-            }
-
-        }
-        if (ifModifiedSinceAsLong <= currentTime) {
-            response.setStatus(304);
-            return;
-        }
+//        // in this case - we will make browser cache forever if it's firstly request is success
+//        String ifModifiedSinceAsString = request.getHeader("If-Modified-Since"); // as ICT time
+//        long currentTime = Calendar.getInstance(TimeZone.getTimeZone("ICT")).getTimeInMillis();
+//        long ifModifiedSinceAsLong = 0;
+//
+//        if (ifModifiedSinceAsString == null) {
+//            ifModifiedSinceAsLong = Calendar.getInstance(TimeZone.getTimeZone("ICT")).getTimeInMillis();
+//        } else {
+//            try {
+//                Calendar c = Calendar.getInstance();
+//                c.setTime(formatter.parse(ifModifiedSinceAsString));
+//                ifModifiedSinceAsLong = c.getTimeInMillis();
+//                c.getTimeInMillis();
+//            } catch (Exception e) {
+//                ifModifiedSinceAsLong = Calendar.getInstance(TimeZone.getTimeZone("ICT")).getTimeInMillis();
+//            }
+//
+//        }
+//        String pragma = request.getHeader("Pragma");
+//        if (ifModifiedSinceAsLong <= currentTime && !"no-cache".equals(pragma)) {
+//            response.setStatus(304);
+//            return;
+//        }
         File file = fileBusiness.get(name);
         boolean isLoaded = true;
         if (file != null) {
@@ -61,6 +62,7 @@ public class StorageController {
                 response.addHeader("Last-Modified", formatter.format(Calendar.getInstance(TimeZone.getTimeZone("GMT")).getTime()));
                 response.setStatus(200);
                 Files.copy(file.toPath(), response.getOutputStream());
+                response.flushBuffer();
             } catch (IOException ex) {
                 isLoaded = false;
             }
