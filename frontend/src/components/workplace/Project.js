@@ -14,11 +14,12 @@ import TextField from '@material-ui/core/TextField'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 let ProjectNameComponent = function (props) {
+    console.log(props)
     return (
         <td style={{ display: "flex" }}>
             <img
                 style={{ width: "24px", height: "24px", borderRadius: "3px" }}
-                src={props.dataItem.projectIconUrl} alt="Missing url " />
+                src={props.dataItem.imgUrl} alt="Missing url " />
             <span className="ml-1">{props.dataItem.name}</span>
         </td>
     )
@@ -236,7 +237,7 @@ let ProjectComponent = function (props) {
                     }}
                 >
                     <Column field="name" title="Name" cell={ProjectNameComponent} />
-                    <Column field="key" title="Key" />
+                    <Column field="key" title="Code" />
                     <Column field="lead" title="Lead"
                         cell={(nestedProps) =>
                             <LeadComponent {...nestedProps}
