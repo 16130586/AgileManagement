@@ -3,6 +3,7 @@ package nlu.project.backend.business.impl;
 import nlu.project.backend.DAO.IssueDAO;
 import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.business.IssueBusiness;
+import nlu.project.backend.entry.filter.IssueFilterParams;
 import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.model.Issue;
 import nlu.project.backend.model.User;
@@ -10,6 +11,8 @@ import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class IssueBusinessImp implements IssueBusiness {
@@ -45,5 +48,10 @@ public class IssueBusinessImp implements IssueBusiness {
         if (userDAO.isProductOwner(user.getId(), issueParams.backlogId))
             return issueDAO.delete(issueParams.id);
         return false;
+    }
+
+    @Override
+    public List<Issue> findByFilter(IssueFilterParams filter) {
+        return issueDAO.findByFilter(filter);
     }
 }
