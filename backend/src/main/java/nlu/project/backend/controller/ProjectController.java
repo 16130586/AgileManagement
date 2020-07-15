@@ -78,4 +78,10 @@ public class ProjectController extends BaseController{
         Object result = projectBusiness.findByKey(projectFilterParams.key);
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
+
+    @PostMapping("/searchByFilter")
+    public ApiResponse searchProjectByFilter(@RequestBody ProjectFilterParams projectFilterParams) {
+        Object result = projectBusiness.findByFilter(projectFilterParams);
+        return ApiResponse.OnSuccess(result, "Find Project Success!");
+    }
 }

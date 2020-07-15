@@ -1,5 +1,6 @@
 package nlu.project.backend.business;
 
+import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.model.Project;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,4 +15,5 @@ public interface ProjectBusiness {
     List<Project> findByKey(String key);
     List<Project> findByUserId(int userId);
     List<Project> findByOwner(int ownerId);
+    List<Project> findByFilter(ProjectFilterParams filter);
 }

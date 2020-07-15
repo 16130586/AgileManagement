@@ -12,5 +12,9 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     List<Project> findByCode(String key);
 
-    List<Project> findByName(String name);
+    List<Project> findByCodeLike(String code);
+
+    List<Project> findByNameLike(String name);
+
+    List<Project> findByNameLikeAndCodeLike(String name, String code);
 }

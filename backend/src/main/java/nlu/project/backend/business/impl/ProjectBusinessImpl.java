@@ -3,6 +3,7 @@ package nlu.project.backend.business.impl;
 import nlu.project.backend.DAO.ProjectDAO;
 import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.business.ProjectBusiness;
+import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.exception.custom.InvalidInputException;
 import nlu.project.backend.model.*;
@@ -55,12 +56,12 @@ public class ProjectBusinessImpl implements ProjectBusiness {
 
     @Override
     public List<Project> findByName(String name) {
-        return projectDAO.findByName(name);
+        return projectDAO.findByNameLike(name);
     }
 
     @Override
     public List<Project> findByKey(String key) {
-        return projectDAO.findByCode(key);
+        return projectDAO.findByKeyLike(key);
     }
 
     @Override
@@ -71,6 +72,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     @Override
     public List<Project> findByOwner(int ownerId) {
         return projectDAO.findByOwner(ownerId);
+    }
+
+    @Override
+    public List<Project> findByFilter(ProjectFilterParams filter) {
+        return projectDAO.findByFilter(filter);
     }
 
 

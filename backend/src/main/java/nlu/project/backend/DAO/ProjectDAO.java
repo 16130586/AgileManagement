@@ -3,6 +3,7 @@ package nlu.project.backend.DAO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.business.FileBusiness;
+import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
@@ -119,12 +120,15 @@ public class ProjectDAO {
         return true;
     }
 
-    public List<Project> findByName(String name) {
-        return projectRepository.findByName(name);
+    public List<Project> findByNameLike(String name) {
+        return projectRepository.findByNameLike(name);
     }
 
     public List<Project> findByCode(String key) {
         return projectRepository.findByCode(key);
+    }
+    public List<Project> findByKeyLike(String key) {
+        return projectRepository.findByCodeLike(key);
     }
 
     public List<Project> findByUser(int userId) {
@@ -147,4 +151,56 @@ public class ProjectDAO {
         }
         return result;
     }
+
+    public List<Project> findByFilter(ProjectFilterParams filter) {
+        List<Project> result;
+        String name = (filter.name == null) ? "" : filter.name;
+        String key = (filter.key == null) ? "" : filter.key;
+        if ( (filter.name != null) || (filter.key != null) ) {
+            result = projectRepository.findByNameLikeAndCodeLike(name, key);
+            result = filterByUserId(result, filter);
+            result = filterByOwnerId(result, filter);
+            return  result;
+        }
+        if (filter.userId != null) {
+            result = findByUser(filter.userId);
+            result = filterByOwnerId(result, filter);
+            return result;
+        }
+        if (filter.ownerId != null)
+            return findByOwner(filter.ownerId);
+        return findByNameLike("");
+    }
+
+    public List<Project> filterByOwnerId(List<Project> projectList, ProjectFilterParams filter) {
+        if (filter.ownerId == null)
+            return projectList;
+
+        List<Project> result = new ArrayList<>();
+        User owner = userRepository.getOne(filter.ownerId);
+        UserRole userRole;
+        for(Project project : projectList) {
+            userRole = userRoleRepository.findByUserAndProject(owner, project);
+            if (userRole != null && userRole.getRole().getId() == 1)
+                result.add(project);
+        }
+        return result;
+    }
+
+    public List<Project> filterByUserId(List<Project> projectList, ProjectFilterParams filter) {
+        if (filter.userId == null)
+            return projectList;
+
+        List<Project> result = new ArrayList<>();
+        User owner = userRepository.getOne(filter.ownerId);
+        UserRole userRole;
+        for(Project project : projectList) {
+            userRole = userRoleRepository.findByUserAndProject(owner, project);
+            if (userRole != null )
+                result.add(project);
+        }
+        return result;
+    }
+
+
 }
