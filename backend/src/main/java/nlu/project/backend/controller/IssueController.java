@@ -1,6 +1,8 @@
 package nlu.project.backend.controller;
 
 import nlu.project.backend.business.IssueBusiness;
+import nlu.project.backend.entry.filter.IssueFilterParams;
+import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.model.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,4 +51,11 @@ public class IssueController extends BaseController{
         }
         return ApiResponse.OnCreatedSuccess(result, "Delete Issue Success!");
     }
+
+    @PostMapping("/searchByFilter")
+    public ApiResponse searchIssueByFilter(@RequestBody IssueFilterParams filterParams) {
+        Object result = issueBusiness.findByFilter(filterParams);
+        return ApiResponse.OnSuccess(result, "Find Project Success!");
+    }
+
 }

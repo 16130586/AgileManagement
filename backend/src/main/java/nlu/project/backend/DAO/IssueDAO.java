@@ -2,11 +2,16 @@ package nlu.project.backend.DAO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nlu.project.backend.entry.filter.IssueFilterParams;
 import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.model.Issue;
+import nlu.project.backend.model.User;
+import nlu.project.backend.model.WorkFlow;
 import nlu.project.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @NoArgsConstructor
@@ -74,7 +79,6 @@ public class IssueDAO {
         return issueReposistory.save(toSave);
     }
 
-
     public boolean delete(int issueId) {
         try{
             issueReposistory.deleteById(issueId);
@@ -82,5 +86,25 @@ public class IssueDAO {
             return false;
         }
         return true;
+    }
+
+    public List<Issue> findByFilter(IssueFilterParams filter) {
+        List<Issue> result;
+        String name = (filter.name == null) ? "" : filter.name;
+        String code = (filter.code == null) ? "" : filter.code;
+
+        if (filter.assignment != null) {
+            User assignment = userRepository.getOne(filter.assignment);
+            if (filter.workflowId != null) {
+                WorkFlow workFlow = workflowRepository.getOne(filter.workflowId);
+                return issueReposistory.findByNameLikeAndCodeLikeAndWorkflowAndAssignment(name, code, workFlow, assignment);
+            }
+            return issueReposistory.findByNameLikeAndCodeLikeAndAssignment(name, code, assignment);
+        }
+        if (filter.workflowId != null) {
+            WorkFlow workFlow = workflowRepository.getOne(filter.workflowId);
+            return issueReposistory.findByNameLikeAndCodeLikeAndWorkflow(name, code, workFlow);
+        }
+        return issueReposistory.findByNameLikeAndCodeLike(name, code);
     }
 }
