@@ -48,7 +48,7 @@ let LeadComponent = function (props) {
                 <img
                     style={{ width: "24px", height: "24px" }}
                     src={props.dataItem.avatarUrl} alt="Missing url " />
-                <span>{props.dataItem.lead}</span>
+                <span>{props.dataItem.leader.userName}</span>
             </div>
             <div>
                 <Icon
@@ -237,7 +237,7 @@ let ProjectComponent = function (props) {
                     }}
                 >
                     <Column field="name" title="Name" cell={ProjectNameComponent} />
-                    <Column field="key" title="Code" />
+                    <Column field="code" title="Code" />
                     <Column field="lead" title="Lead"
                         cell={(nestedProps) =>
                             <LeadComponent {...nestedProps}
