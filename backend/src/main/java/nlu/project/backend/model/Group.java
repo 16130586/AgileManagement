@@ -1,5 +1,6 @@
 package nlu.project.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,10 @@ public class Group {
     private Integer id;
     @Column(name = "name")
     private String name;
+
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
+    @JsonIgnoreProperties("groups")
     private User owner;
 }

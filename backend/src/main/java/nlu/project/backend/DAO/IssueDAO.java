@@ -97,13 +97,13 @@ public class IssueDAO {
             User assignment = userRepository.getOne(filter.assignment);
             if (filter.workflowId != null) {
                 WorkFlow workFlow = workflowRepository.getOne(filter.workflowId);
-                return issueReposistory.findByNameLikeAndCodeLikeAndWorkflowAndAssignment(name, code, workFlow, assignment);
+                return issueReposistory.findByNameLikeAndCodeLikeAndWorkFlowAndAssignment(name, code, workFlow, assignment);
             }
             return issueReposistory.findByNameLikeAndCodeLikeAndAssignment(name, code, assignment);
         }
         if (filter.workflowId != null) {
             WorkFlow workFlow = workflowRepository.getOne(filter.workflowId);
-            return issueReposistory.findByNameLikeAndCodeLikeAndWorkflow(name, code, workFlow);
+            return issueReposistory.findByNameLikeAndCodeLikeAndWorkFlow(name, code, workFlow);
         }
         return issueReposistory.findByNameLikeAndCodeLike(name, code);
     }

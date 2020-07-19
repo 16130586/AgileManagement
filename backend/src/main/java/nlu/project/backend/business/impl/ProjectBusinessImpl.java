@@ -79,5 +79,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return projectDAO.findByFilter(filter);
     }
 
+    @Override
+    public List<Project> findJointIn(int userId) {
+        return projectDAO.findJointIn(userId);
+    }
 
 }

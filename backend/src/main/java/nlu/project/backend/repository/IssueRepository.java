@@ -13,9 +13,9 @@ public interface IssueRepository extends JpaRepository<Issue, Integer> {
 
     List<Issue> findByNameLikeAndCodeLike(String name, String code);
 
-    List<Issue> findByNameLikeAndCodeLikeAndWorkflow(String name, String code, WorkFlow workflow);
+    List<Issue> findByNameLikeAndCodeLikeAndWorkFlow(String name, String code, WorkFlow workflow);
 
     List<Issue> findByNameLikeAndCodeLikeAndAssignment(String name, String code, User assignment);
 
-    List<Issue> findByNameLikeAndCodeLikeAndWorkflowAndAssignment(String name, String code, WorkFlow workflow, User assignment);
+    List<Issue> findByNameLikeAndCodeLikeAndWorkFlowAndAssignment(String name, String code, WorkFlow workflow, User assignment);
 }
