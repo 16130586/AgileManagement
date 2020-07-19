@@ -28,8 +28,8 @@ public class Issue {
     @JoinColumn(name = "assignment")
     private User assignment;
     @ManyToOne
-    @JoinColumn(name = "workflow_id")
-    private WorkFlow workFlow;
+    @JoinColumn(name = "workflow_item_id")
+    private WorkFlowItem status;
     @Column(name = "code")
     private String code;
     @Column(name = "name")

@@ -25,4 +25,7 @@ public class SubTask {
     private String name;
     @Column(name = "estimate_time")
     private Double estimateTime;
+    @ManyToOne
+    @JoinColumn(name = "workflow_item_id")
+    private WorkFlowItem status;
 }

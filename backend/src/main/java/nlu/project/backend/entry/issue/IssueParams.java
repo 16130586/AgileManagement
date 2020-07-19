@@ -6,7 +6,7 @@ public class IssueParams {
     public int sprintId;
     public int backlogId;
     public int userAssignment;
-    public int workflowId;
+    public int workflowItemId;
     public int priorityId;
     public String code;
     public String name;

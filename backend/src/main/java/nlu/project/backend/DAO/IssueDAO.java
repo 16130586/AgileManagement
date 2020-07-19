@@ -7,6 +7,7 @@ import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.model.Issue;
 import nlu.project.backend.model.User;
 import nlu.project.backend.model.WorkFlow;
+import nlu.project.backend.model.WorkFlowItem;
 import nlu.project.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,7 +47,7 @@ public class IssueDAO {
     IssueTypeRepository issueTypeRepository;
 
     @Autowired
-    WorkflowRepository workflowRepository;
+    WorkFlowItemRepository workFlowItemRepository;
 
     public Issue save(IssueParams issueParams) {
         Issue toSave = new Issue();
@@ -59,7 +60,7 @@ public class IssueDAO {
         toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
         toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
         toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
-        toSave.setWorkFlow(workflowRepository.getOne(issueParams.workflowId));
+        toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
 
         return issueReposistory.save(toSave);
     }
@@ -74,7 +75,7 @@ public class IssueDAO {
         toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
         toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
         toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
-        toSave.setWorkFlow(workflowRepository.getOne(issueParams.workflowId));
+        toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
 
         return issueReposistory.save(toSave);
     }
@@ -95,15 +96,15 @@ public class IssueDAO {
 
         if (filter.assignment != null) {
             User assignment = userRepository.getOne(filter.assignment);
-            if (filter.workflowId != null) {
-                WorkFlow workFlow = workflowRepository.getOne(filter.workflowId);
-                return issueReposistory.findByNameLikeAndCodeLikeAndWorkflowAndAssignment(name, code, workFlow, assignment);
+            if (filter.workflowItemId != null) {
+                WorkFlowItem workFlow = workFlowItemRepository.getOne(filter.workflowItemId);
+                return issueReposistory.findByNameLikeAndCodeLikeAndStatusAndAssignment(name, code, workFlow, assignment);
             }
             return issueReposistory.findByNameLikeAndCodeLikeAndAssignment(name, code, assignment);
         }
-        if (filter.workflowId != null) {
-            WorkFlow workFlow = workflowRepository.getOne(filter.workflowId);
-            return issueReposistory.findByNameLikeAndCodeLikeAndWorkflow(name, code, workFlow);
+        if (filter.workflowItemId != null) {
+            WorkFlowItem workFlow = workFlowItemRepository.getOne(filter.workflowItemId);
+            return issueReposistory.findByNameLikeAndCodeLikeAndStatus(name, code, workFlow);
         }
         return issueReposistory.findByNameLikeAndCodeLike(name, code);
     }
