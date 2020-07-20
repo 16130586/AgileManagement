@@ -63,7 +63,7 @@ public class ProjectController extends BaseController{
     @GetMapping("/jointIn")
     public ApiResponse jointIn(HttpServletRequest request) {
         CustomUserDetails user = (CustomUserDetails) getUser(request);
-        Object result = projectBusiness.findByUserId(user.getUser().getId());
+        Object result = projectBusiness.findJointIn(user.getUser().getId());
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 

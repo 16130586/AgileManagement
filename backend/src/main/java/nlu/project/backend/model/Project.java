@@ -1,10 +1,11 @@
 package nlu.project.backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "project")
@@ -26,4 +27,15 @@ public class Project {
     private String description;
     @Column(name="imgUrl")
     private String imgUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="leader_id", nullable = true)
+    private User leader;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="owner_id", nullable = true)
+    private User owner;
+
+    @ManyToMany(mappedBy = "jointProjects", fetch = FetchType.LAZY)
+    private Collection<User> devTeam;
 }

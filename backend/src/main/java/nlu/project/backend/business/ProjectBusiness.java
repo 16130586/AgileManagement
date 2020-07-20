@@ -16,4 +16,5 @@ public interface ProjectBusiness {
     List<Project> findByUserId(int userId);
     List<Project> findByOwner(int ownerId);
     List<Project> findByFilter(ProjectFilterParams filter);
+    List<Project> findJointIn(int userId);
 }
