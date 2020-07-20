@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import nlu.project.backend.util.constraint.ConstraintRole;
@@ -37,6 +38,12 @@ public class ProjectDAO {
 
     @Autowired
     FileBusiness fileBusiness;
+
+    @Autowired
+    WorkflowRepository workflowRepository;
+
+    @Autowired
+    WorkFlowItemRepository itemRepository;
 
     public boolean isExistedProjectName(String name) {
         return projectRepository.existsByName(name);
@@ -213,5 +220,26 @@ public class ProjectDAO {
         return projectRepository.findJointIn(userId);
     }
 
+    public WorkFlow createWorkFlow(WorkFlowParams params) {
+        Project project = getProjectById(params.projectId);
+        WorkFlow workFlow = new WorkFlow();
+        workFlow.setName(params.name);
+        workFlow.setProject(project);
+        return workflowRepository.save(workFlow);
+    }
 
+    public WorkFlowItem addWorkFlowItem(WorkFlowParams params) {
+        WorkFlow workFlow = workflowRepository.getOne(params.id);
+        WorkFlowItem item = new WorkFlowItem();
+        item.setName(params.itemName);
+        item.setWorkFlow(workFlow);
+        return itemRepository.save(item);
+    }
+
+    public WorkFlowItem addLinkWorkFlow(WorkFlowParams params) {
+        WorkFlowItem item = itemRepository.getOne(params.fromItemId);
+        WorkFlowItem toItem = itemRepository.getOne(params.toItemId);
+        item.getNextItems().add(toItem);
+        return itemRepository.save(item);
+    }
 }

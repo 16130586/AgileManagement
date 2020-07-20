@@ -3,6 +3,7 @@ package nlu.project.backend.controller;
 import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,5 +84,23 @@ public class ProjectController extends BaseController{
     public ApiResponse searchProjectByFilter(@RequestBody ProjectFilterParams projectFilterParams) {
         Object result = projectBusiness.findByFilter(projectFilterParams);
         return ApiResponse.OnSuccess(result, "Find Project Success!");
+    }
+
+    @PostMapping("/workflow/create")
+    public ApiResponse createWorkflow(@RequestBody WorkFlowParams params) {
+        Object result = projectBusiness.createWorkFlow(params);
+        return ApiResponse.OnSuccess(result, "Create WorkFlow Success!");
+    }
+
+    @PostMapping("/workflow/add-item")
+    public ApiResponse addWorkFlowItem(@RequestBody WorkFlowParams params) {
+        Object result = projectBusiness.addWorkFlowItem(params);
+        return ApiResponse.OnSuccess(result, "Add WorkFlow Item Success!");
+    }
+
+    @PostMapping("/workflow/add-link")
+    public ApiResponse addLinkWorkFlow(@RequestBody WorkFlowParams params) {
+        Object result = projectBusiness.addLinkWorkFlow(params);
+        return ApiResponse.OnSuccess(result, "Add Link WorkFlow Item Success!");
     }
 }

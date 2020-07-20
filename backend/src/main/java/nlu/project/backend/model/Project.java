@@ -38,4 +38,8 @@ public class Project {
 
     @ManyToMany(mappedBy = "jointProjects", fetch = FetchType.LAZY)
     private Collection<User> devTeam;
+
+    @ManyToOne
+    @JoinColumn(name = "workflow_id")
+    private WorkFlow currentWorkFlow;
 }

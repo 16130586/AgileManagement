@@ -5,6 +5,7 @@ import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.exception.custom.InvalidInputException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
@@ -82,6 +83,21 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     @Override
     public List<Project> findJointIn(int userId) {
         return projectDAO.findJointIn(userId);
+    }
+
+    @Override
+    public WorkFlow createWorkFlow(WorkFlowParams params) {
+        return projectDAO.createWorkFlow(params);
+    }
+
+    @Override
+    public WorkFlowItem addWorkFlowItem(WorkFlowParams params) {
+        return projectDAO.addWorkFlowItem(params);
+    }
+
+    @Override
+    public WorkFlowItem addLinkWorkFlow(WorkFlowParams params) {
+        return projectDAO.addLinkWorkFlow(params);
     }
 
 }

@@ -2,7 +2,10 @@ package nlu.project.backend.business;
 
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.model.Project;
+import nlu.project.backend.model.WorkFlow;
+import nlu.project.backend.model.WorkFlowItem;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -17,4 +20,7 @@ public interface ProjectBusiness {
     List<Project> findByOwner(int ownerId);
     List<Project> findByFilter(ProjectFilterParams filter);
     List<Project> findJointIn(int userId);
+    WorkFlow createWorkFlow(WorkFlowParams params);
+    WorkFlowItem addWorkFlowItem(WorkFlowParams params);
+    WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
 }
