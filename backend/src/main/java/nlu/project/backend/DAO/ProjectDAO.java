@@ -242,4 +242,17 @@ public class ProjectDAO {
         item.getNextItems().add(toItem);
         return itemRepository.save(item);
     }
+
+    public WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params) {
+        WorkFlowItem item = itemRepository.getOne(params.fromItemId);
+        WorkFlowItem toItem = itemRepository.getOne(params.toItemId);
+        item.getNextItems().remove(toItem);
+        return itemRepository.save(item);
+    }
+
+    public WorkFlow deleteWorkFlowItem(WorkFlowParams params) {
+        WorkFlowItem item = itemRepository.getOne(params.toItemId);
+        itemRepository.delete(item);
+        return workflowRepository.getOne(params.id);
+    }
 }

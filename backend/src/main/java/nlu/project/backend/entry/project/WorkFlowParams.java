@@ -7,5 +7,4 @@ public class WorkFlowParams {
     public String itemName;
     public Integer fromItemId;
     public Integer toItemId;
-    public String linkName;
 }

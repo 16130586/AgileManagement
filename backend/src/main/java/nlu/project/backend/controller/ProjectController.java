@@ -98,9 +98,21 @@ public class ProjectController extends BaseController{
         return ApiResponse.OnSuccess(result, "Add WorkFlow Item Success!");
     }
 
+    @PostMapping("/workflow/delete-item")
+    public ApiResponse deleteWorkFlowItem(@RequestBody WorkFlowParams params) {
+        Object result = projectBusiness.deleteWorkFlowItem(params);
+        return ApiResponse.OnSuccess(result, "Delete WorkFlow Item Success!");
+    }
+
     @PostMapping("/workflow/add-link")
     public ApiResponse addLinkWorkFlow(@RequestBody WorkFlowParams params) {
         Object result = projectBusiness.addLinkWorkFlow(params);
         return ApiResponse.OnSuccess(result, "Add Link WorkFlow Item Success!");
+    }
+
+    @PostMapping("/workflow/delete-link")
+    public ApiResponse deleteLinkWorkFlow(@RequestBody WorkFlowParams params) {
+        Object result = projectBusiness.deleteLinkWorkFlow(params);
+        return ApiResponse.OnSuccess(result, "Delete Link WorkFlow Item Success!");
     }
 }

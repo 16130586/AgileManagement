@@ -23,4 +23,6 @@ public interface ProjectBusiness {
     WorkFlow createWorkFlow(WorkFlowParams params);
     WorkFlowItem addWorkFlowItem(WorkFlowParams params);
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
+    WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
+    WorkFlow deleteWorkFlowItem(WorkFlowParams params);
 }

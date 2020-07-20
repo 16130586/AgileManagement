@@ -100,4 +100,14 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return projectDAO.addLinkWorkFlow(params);
     }
 
+    @Override
+    public WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params) {
+        return projectDAO.deleteLinkWorkFlow(params);
+    }
+
+    @Override
+    public WorkFlow deleteWorkFlowItem(WorkFlowParams params) {
+        return projectDAO.deleteWorkFlowItem(params);
+    }
+
 }
