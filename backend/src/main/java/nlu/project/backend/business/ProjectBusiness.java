@@ -25,4 +25,5 @@ public interface ProjectBusiness {
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
     WorkFlow deleteWorkFlowItem(WorkFlowParams params);
+    void updateWorkFlowDiagram(List<WorkFlowParams> params);
 }

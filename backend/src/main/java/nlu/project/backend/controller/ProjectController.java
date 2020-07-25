@@ -11,6 +11,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -114,5 +115,11 @@ public class ProjectController extends BaseController{
     public ApiResponse deleteLinkWorkFlow(@RequestBody WorkFlowParams params) {
         Object result = projectBusiness.deleteLinkWorkFlow(params);
         return ApiResponse.OnSuccess(result, "Delete Link WorkFlow Item Success!");
+    }
+
+    @PostMapping("/workflow/update-diagram")
+    public ApiResponse updateDiagramWorkflow(@RequestBody List<WorkFlowParams> params) {
+        projectBusiness.updateWorkFlowDiagram(params);
+        return ApiResponse.OnSuccess(null, "Update WorkFlow diagram Success!");
     }
 }
