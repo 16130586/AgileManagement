@@ -1,7 +1,7 @@
 import React, {Fragment, useEffect} from 'react'
 import { connect } from 'react-redux'
 import { fetchTotalAssignToMe } from '../../actions/work-space/index'
-
+import { pageContextualNavigation} from '../../actions/global'
 import YourWorkComponent from '../../components/workplace/your-work/Index'
 import WorkOnContainer from './your-work/WorkOnContainer'
 import ViewedContainer from './your-work/ViewedContainer'
@@ -19,6 +19,11 @@ let YourWorkContainer = function(props){
     useEffect(()=> {
         props.fetchTotalAssignToMe()
     }, [props.fetchTotalAssignToMe])
+
+    useEffect(() => {
+        props.getNavigation('GLOBAL', null)
+    }, [])
+
     return(
         <Fragment>
             <YourWorkComponent tabs={tabs} totalAssignToMe={props.totalAssignToMe}/>
@@ -32,7 +37,8 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        fetchTotalAssignToMe: () => dispatch(fetchTotalAssignToMe())
+        fetchTotalAssignToMe: () => dispatch(fetchTotalAssignToMe()),
+        getNavigation : (pageName, data) => dispatch(pageContextualNavigation(pageName,data))
     }
 }
 

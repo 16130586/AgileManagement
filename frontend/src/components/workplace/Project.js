@@ -14,13 +14,12 @@ import TextField from '@material-ui/core/TextField'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 let ProjectNameComponent = function (props) {
-    console.log(props)
     return (
-        <td style={{ display: "flex" }}>
+        <td style={{ display: "flex" , cursor : "pointer"}}>
             <img
                 style={{ width: "24px", height: "24px", borderRadius: "3px" }}
                 src={props.dataItem.imgUrl} alt="Missing url " />
-            <span className="ml-1">{props.dataItem.name}</span>
+            <span onClick={() => props.navigateTo(`/project/${props.dataItem.id}/boards`)} className="ml-1">{props.dataItem.name}</span>
         </td>
     )
 }
@@ -65,7 +64,7 @@ let LeadComponent = function (props) {
                     open={Boolean(anchorEl)}
                     onClose={handleCloseOptsMenu}
                 >
-                    <MenuItem onClick={() => props.navigateTo(`/project/${props.dataItem.id}`)}>Project settings</MenuItem>
+                    <MenuItem onClick={() => props.navigateTo(`/project/${props.dataItem.id}/settings/details`)}>Project settings</MenuItem>
                     <MenuItem onClick={() => {
                         setOpenDeleteDialog(true);
                         handleCloseOptsMenu()
@@ -236,7 +235,7 @@ let ProjectComponent = function (props) {
                         props.setSort(e.sort)
                     }}
                 >
-                    <Column field="name" title="Name" cell={ProjectNameComponent} />
+                    <Column field="name" title="Name" cell={(nestedProps) => <ProjectNameComponent {...nestedProps} navigateTo={props.navigateTo}/>} />
                     <Column field="code" title="Code" />
                     <Column field="lead" title="Lead"
                         cell={(nestedProps) =>

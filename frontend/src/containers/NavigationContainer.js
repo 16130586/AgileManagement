@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import GlobalNavigationContainer from '../containers/GlobalNavigationContainer'
 import ContextualNavigationComponent from '../components/navigation/ContextualNavigation'
-
+import { connect } from 'react-redux'
 let CollapseContextualNavigationButton = function (props) {
     let [isHidden, setIsHidden] = useState(false)
     let [currentState, setCurrentState] = useState('OPEN')
@@ -23,6 +23,7 @@ let CollapseContextualNavigationButton = function (props) {
     )
 }
 let NavigationContainer = function (props) {
+    console.log(props)
     let [currentContextualState, setContextualState] = useState("OPEN")
     let nextContextualDisplay = (state = currentContextualState) => {
         return {
@@ -38,7 +39,7 @@ let NavigationContainer = function (props) {
                 </div>
                 <div className="separator"></div>
                 <div style={nextContextualDisplay(currentContextualState)} className="main__contextual-navigation">
-                    {currentContextualState === "OPEN" &&  <ContextualNavigationComponent />}
+                    {currentContextualState === "OPEN" &&  <ContextualNavigationComponent navItems={props.navItems}/>}
                 </div>
             </div>
             <div className="main__contextual-collapse__container">
@@ -48,4 +49,17 @@ let NavigationContainer = function (props) {
         </Fragment>
     )
 }
-export default NavigationContainer;
+
+const mapStateToProps = state => {
+    console.log(state)
+    return {
+        navItems : state.Common.navItems
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationContainer);

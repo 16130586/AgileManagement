@@ -13,53 +13,7 @@ import {
 } from '../../actions/project'
 import { getToken } from '../../common/localStorage'
 
-let remoteData = [{
-    "id": 1,
-    "name": "name 1",
-    "key": "ABCDF",
-    "lead": "That dep chai",
-    "projectIconUrl": "https://realng.atlassian.net/secure/projectavatar?pid=10009&avatarId=10404",
-    "ProductID": 1,
-    "ProductName": "Chai",
-    "SupplierID": 1,
-    "CategoryID": 1,
-    "QuantityPerUnit": "10 boxes x 20 bags",
-    "UnitPrice": 18.0000,
-    "UnitsInStock": 39,
-    "UnitsOnOrder": 0,
-    "ReorderLevel": 10,
-    "Discontinued": false,
-    "Category": {
-        "CategoryID": 1,
-        "CategoryName": "Beverages",
-        "Description": "Soft drinks, coffees, teas, beers, and ales"
-    }
-}, {
-    "id": 2,
-    "name": "name 2",
-    "key": "DASDX",
-    "lead": "OMG HEas",
-    "projectIconUrl": "https://realng.atlassian.net/secure/projectavatar?pid=10015&avatarId=10415",
-    "ProductID": 2,
-    "ProductName": "Chang",
-    "SupplierID": 1,
-    "CategoryID": 1,
-    "QuantityPerUnit": "24 - 12 oz bottles",
-    "UnitPrice": 19.0000,
-    "UnitsInStock": 17,
-    "UnitsOnOrder": 40,
-    "ReorderLevel": 25,
-    "Discontinued": false,
-    "Category": {
-        "CategoryID": 1,
-        "CategoryName": "Beverages",
-        "Description": "Soft drinks, coffees, teas, beers, and ales"
-    }
-}]
-const projectGridFakeAjax = () =>
-    rxjsOf({
-        data: remoteData
-    }).pipe(delay(1000))
+
 const delelteProjectFakeAjax = (id) =>
     rxjsOf({
         data: id
@@ -114,9 +68,8 @@ export const createProject = action$ =>
             formData.append('key' , action.payload.projectKey)
             formData.append('description' , action.payload.shortDescription)
             formData.append('file', action.payload.img)
-            console.log(formData)
-            console.log(action.payload)
             const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.CREATE_PROJECT)
+            // do not declare content-type, let the browser do that such thing or get a bug
             const requestSettings = {
                 url: fullyUrl,
                 method: 'POST',

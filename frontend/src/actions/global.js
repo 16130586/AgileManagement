@@ -1,4 +1,4 @@
-import {Router as RouterEventTypes, Auth as AuthEventTypes, ASYNC as AsyncEventTypes } from '../constants/index'
+import {Router as RouterEventTypes, Auth as AuthEventTypes, ASYNC as AsyncEventTypes , UI as UIEventTypes} from '../constants/index'
 export const navigateTo = (url) => ({type : RouterEventTypes.REDIRECT, payload: url})
 export const clearNavigateTo = () => ({type : RouterEventTypes.CLEAR_REDIRECT_URL, payload: null})
 export const validateToken = (token) => ({type : AuthEventTypes.VALIDATE_TOKEN , payload : token})
@@ -11,3 +11,4 @@ export const loginFailed = () => ({type : AuthEventTypes.LOGIN_FAILED, payload: 
 export const signUp = (userName,password,confirmPassword) => ({type : AuthEventTypes.SIGN_UP, payload: {userName , password, confirmPassword}})
 export const signUpSuccess = () => ({type : AuthEventTypes.SIGN_UP_SUCCESS})
 export const signUpFailed = (message) => ({type : AuthEventTypes.SIGN_UP_FAILED, payload: message == null ? 'Sign-up error!' : message})
+export const pageContextualNavigation = (pageName, data) => ({type : UIEventTypes.CHANGE_CONTEXTUAL_NAVIGATION_BAR , payload : {pageName,data}})

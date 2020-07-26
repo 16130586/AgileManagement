@@ -6,7 +6,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 function Filter(props) {
     return (
-        <Link to="/dashboard" onClick={props.onClick} className={props.className} style={{ display: "block", textDecoration: "none" }}>
+        <Link to="#" onClick={props.onClick} className={props.className} style={{ display: "block", textDecoration: "none" }}>
             <div style={{ display: "flex", textDecoration: "none", alignItems: "center" }}>
                 <FilterListIcon /> <span className="ml-2">Filter</span>
             </div>
