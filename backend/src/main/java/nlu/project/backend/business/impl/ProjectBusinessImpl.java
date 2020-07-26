@@ -110,4 +110,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return projectDAO.deleteWorkFlowItem(params);
     }
 
+    @Override
+    public void updateWorkFlowDiagram(List<WorkFlowParams> params) {
+        projectDAO.updateWorkFlowDiagram(params);
+    }
+
 }

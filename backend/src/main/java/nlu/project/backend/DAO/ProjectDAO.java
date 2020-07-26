@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -232,6 +233,8 @@ public class ProjectDAO {
         WorkFlow workFlow = workflowRepository.getOne(params.id);
         WorkFlowItem item = new WorkFlowItem();
         item.setName(params.itemName);
+        item.setColor("lightgreen");
+        item.setLocation("0 0");
         item.setWorkFlow(workFlow);
         return itemRepository.save(item);
     }
@@ -254,5 +257,16 @@ public class ProjectDAO {
         WorkFlowItem item = itemRepository.getOne(params.toItemId);
         itemRepository.delete(item);
         return workflowRepository.getOne(params.id);
+    }
+
+    public void updateWorkFlowDiagram(List<WorkFlowParams> params) {
+        List<WorkFlowItem> items = new LinkedList<>();
+        WorkFlowItem item;
+        for (WorkFlowParams param : params) {
+            item = itemRepository.getOne(param.fromItemId);
+            item.setLocation(param.location);
+            items.add(item);
+        }
+        itemRepository.saveAll(items);
     }
 }
