@@ -24,6 +24,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import {fetchAllGroup} from "../../../actions/work-space";
+import TextField from "@material-ui/core/TextField/TextField";
 
 const useRowStyles = makeStyles({
     root: {
@@ -32,6 +33,23 @@ const useRowStyles = makeStyles({
         },
     },
 });
+
+let AddMemberForm = function (props) {
+    return (
+        <Fragment>
+            <TextField
+                name="userName"
+                value={props.addMemberForm.userName}
+                onChange={(e) => props.formChange(e)}
+                autoFocus
+                margin="dense"
+                label="Name"
+                type="text"
+                fullWidth
+            />
+        </Fragment>
+    )
+}
 
 function GroupItem(props) {
     const row = props.row;
@@ -58,6 +76,35 @@ function GroupItem(props) {
         handleCloseDialog(false)
     }
 
+    // Menu Group
+    const [openMenuGroup, setOpenMenuGroup] = React.useState(null);
+    const handleOpenMenuGroup = (event) => {
+        setOpenMenuGroup(event.currentTarget);
+    }
+    const handleCloseMenuGroup = () => {
+        setOpenMenuGroup(null);
+    }
+
+    // Add member group
+    const [addMemberForm, setAddMemberForm] = React.useState({
+        userName: ''
+    })
+
+    const formChange = function (event) {
+        let formData = { ...addMemberForm }
+        formData[event.target.name] = event.target.value
+        setAddMemberForm(formData)
+    }
+
+    const [openAddMemberDialog, setOpenAddMemberDialog] = React.useState(false)
+    const handleCloseAddMemberDialog = () => {
+        setOpenAddMemberDialog(false)
+    }
+
+    const handleAddMember = () => {
+        // TODO map dispatch to props & call action
+        handleCloseAddMemberDialog(false)
+    }
     return (
         <Fragment>
             <TableRow className={classes.root}>
@@ -69,7 +116,53 @@ function GroupItem(props) {
                 <TableCell component="th" scope="row">
                     {row.name}
                 </TableCell>
-                <TableCell align="right">TBD</TableCell>
+                <TableCell align="right">
+                    <Icon
+                    className="cursor--pointer"
+                    aria-controls={"lead_mor_hoz_menu".concat("group"+row.id)}
+                    aria-haspopup="true"
+                    onClick={handleOpenMenuGroup}>
+                    more_horiz
+                </Icon>
+                    <Menu
+                        id={"lead_mor_hoz_menu".concat("group"+row.id)}
+                        anchorEl={openMenuGroup}
+                        keepMounted
+                        open={Boolean(openMenuGroup)}
+                        onClose={handleCloseMenuGroup}
+                    >
+                        <MenuItem onClick={() => {
+                            setOpenAddMemberDialog(true);
+                            handleCloseMenuGroup()
+                        }}>Add Member</MenuItem>
+                    </Menu>
+                    <Dialog
+                        open={openAddMemberDialog}
+                        onClose={handleCloseAddMemberDialog}
+                        aria-labelledby={"alert-dialog-title".concat("group"+row.id)}
+                        aria-describedby={"alert-dialog-description".concat("group"+row.id)}>
+                        <DialogTitle
+                            id={"alert-dialog-title".concat("group"+row.id)}>
+                            Add Member
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id={"alert-dialog-description".concat("group"+row.id)}>
+                                Enter UserName to add them to group!
+                            </DialogContentText>
+                            <AddMemberForm formChange={formChange} addMemberForm={addMemberForm}/>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                onClick={handleAddMember}
+                                color="primary">
+                                Add
+                            </Button>
+                            <Button onClick={handleCloseAddMemberDialog} color="primary" autoFocus>
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
