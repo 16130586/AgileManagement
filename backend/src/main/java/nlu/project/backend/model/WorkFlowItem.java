@@ -20,6 +20,8 @@ public class WorkFlowItem {
     private Integer id;
     @Column(name = "name")
     private String name;
+    @Column(name = "_order")
+    private Integer order;
     @Column(name = "color")
     private String color;
     @Column(name = "location")
