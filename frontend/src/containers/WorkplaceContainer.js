@@ -1,8 +1,8 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom';
-import YourWork from './workplace/YourWorkContainer'
-import Project from './workplace/ProjectsContainer'
-import People from './workplace/PeopleContainer'
+import YourWork from './Workplace/YourWorkContainer'
+import Project from './Workplace/ProjectsContainer'
+import People from './Workplace/PeopleContainer'
 import RoadMap from './project/RoadMap'
 import Backlog from './project/Backlog'
 import Board from './project/Board'
