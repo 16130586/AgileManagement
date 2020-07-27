@@ -1,6 +1,6 @@
 package nlu.project.backend.DAO;
 
-import lombok.Data;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
@@ -9,23 +9,27 @@ import org.springframework.stereotype.Component;
 
 @Component
 @NoArgsConstructor
-@Data
 public class UserDAO {
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
-    ProjectRepository projectRepository;
+    UserRoleRepository userRoleRepository;
 
     @Autowired
-    UserRoleRepository userRoleRepository;
+    ProjectRepository projectRepository;
+
 
     @Autowired
     RoleRepository roleRepository;
 
     @Autowired
     BacklogRepository backlogRepository;
+
+    public User getUser(Integer id) {
+        return userRepository.getOne(id);
+    }
 
     public boolean isProductOwner(int userId, int backlogId) {
         User user = userRepository.getOne(userId);
@@ -49,5 +53,18 @@ public class UserDAO {
         if (userRole.getRole().getId() == 1)
             return false;
         return true;
+    }
+
+    public boolean isInProject(Integer projectId, Integer userId) {
+        try {
+            UserRole userRole = userRoleRepository
+                    .findByUserAndProject(userRepository.getOne(userId) , projectRepository.getOne(projectId));
+            if (userRole != null)
+                return true;
+            return false;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new InternalException(e.getMessage());
+        }
     }
 }

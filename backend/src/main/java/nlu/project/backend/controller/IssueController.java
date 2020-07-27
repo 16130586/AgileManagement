@@ -4,8 +4,12 @@ import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.entry.filter.IssueFilterParams;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.issue.IssueParams;
+import nlu.project.backend.entry.issue.IssueTypeParams;
+import nlu.project.backend.model.IssueType;
 import nlu.project.backend.model.response.ApiResponse;
+import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,4 +62,13 @@ public class IssueController extends BaseController{
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 
+    @PostMapping("/types")
+    public ApiResponse createIssueType(HttpServletRequest request , @RequestBody IssueTypeParams issueTypeParams){
+        CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+        issueTypeParams.setCreateByUserId(userDetails.getUser().getId());
+        Object result = issueBusiness.createIssueType(issueTypeParams);
+        if(request == null)
+            return ApiResponse.OnBadRequest("Cannot create new issue!");
+        return ApiResponse.OnSuccess(result , "Created!");
+    }
 }

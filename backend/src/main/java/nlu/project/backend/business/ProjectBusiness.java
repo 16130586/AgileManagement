@@ -3,6 +3,7 @@ package nlu.project.backend.business;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
+import nlu.project.backend.model.IssueType;
 import nlu.project.backend.model.Project;
 import nlu.project.backend.model.WorkFlow;
 import nlu.project.backend.model.WorkFlowItem;
@@ -26,4 +27,5 @@ public interface ProjectBusiness {
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
     WorkFlow deleteWorkFlowItem(WorkFlowParams params);
     void updateWorkFlowDiagram(List<WorkFlowParams> params);
+    List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId);
 }

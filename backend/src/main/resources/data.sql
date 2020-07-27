@@ -10,3 +10,5 @@ INSERT INTO jira.workflow_item(id, name, `_order`, workflow_id) VALUES (1, 'Open
 
 INSERT INTO jira.link_workflow(workflow_from, workflow_to) VALUES (1, 2), (2, 3);
 
+INSERT INTO jira.issue_type(icon_url , `name`, project_id) VALUES(null , 'Task' , NULL);
+INSERT INTO jira.issue_type(icon_url , `name`, project_id) VALUES(null , 'Bug' , NULL);

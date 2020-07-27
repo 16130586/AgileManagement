@@ -4,10 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.entry.filter.IssueFilterParams;
 import nlu.project.backend.entry.issue.IssueParams;
-import nlu.project.backend.model.Issue;
-import nlu.project.backend.model.User;
-import nlu.project.backend.model.WorkFlow;
-import nlu.project.backend.model.WorkFlowItem;
+import nlu.project.backend.entry.issue.IssueTypeParams;
+import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +18,7 @@ import java.util.List;
 public class IssueDAO {
 
     @Autowired
-    IssueRepository issueReposistory;
+    IssueRepository issueRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -62,11 +60,11 @@ public class IssueDAO {
         toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
         toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
 
-        return issueReposistory.save(toSave);
+        return issueRepository.save(toSave);
     }
 
     public Issue update(IssueParams issueParams) {
-        Issue toSave = issueReposistory.getOne(issueParams.id);
+        Issue toSave = issueRepository.getOne(issueParams.id);
 
         toSave.setName(issueParams.name);
         toSave.setDescription(issueParams.name);
@@ -77,12 +75,12 @@ public class IssueDAO {
         toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
         toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
 
-        return issueReposistory.save(toSave);
+        return issueRepository.save(toSave);
     }
 
     public boolean delete(int issueId) {
         try{
-            issueReposistory.deleteById(issueId);
+            issueRepository.deleteById(issueId);
         } catch (Exception e) {
             return false;
         }
@@ -98,14 +96,30 @@ public class IssueDAO {
             User assignment = userRepository.getOne(filter.assignment);
             if (filter.workflowItemId != null) {
                 WorkFlowItem workFlow = workFlowItemRepository.getOne(filter.workflowItemId);
-                return issueReposistory.findByNameLikeAndCodeLikeAndStatusAndAssignment(name, code, workFlow, assignment);
+                return issueRepository.findByNameLikeAndCodeLikeAndStatusAndAssignment(name, code, workFlow, assignment);
             }
-            return issueReposistory.findByNameLikeAndCodeLikeAndAssignment(name, code, assignment);
+            return issueRepository.findByNameLikeAndCodeLikeAndAssignment(name, code, assignment);
         }
         if (filter.workflowItemId != null) {
             WorkFlowItem workFlow = workFlowItemRepository.getOne(filter.workflowItemId);
-            return issueReposistory.findByNameLikeAndCodeLikeAndStatus(name, code, workFlow);
+            return issueRepository.findByNameLikeAndCodeLikeAndStatus(name, code, workFlow);
         }
-        return issueReposistory.findByNameLikeAndCodeLike(name, code);
+        return issueRepository.findByNameLikeAndCodeLike(name, code);
+    }
+
+    public IssueType createIssueType(IssueTypeParams entryParams){
+        IssueType result = null;
+        try {
+            Project project = projectRepository.getOne(entryParams.getId());
+            result = new IssueType();
+            result.setName(entryParams.getName());
+            result.setIconUrl(entryParams.getIconUrl());
+            result.setProject(project);
+            issueTypeRepository.save(result);
+        }catch (Exception e){
+            result = null;
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 }

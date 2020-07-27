@@ -6,6 +6,7 @@ import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
+import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.exception.custom.InvalidInputException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 @Service
@@ -113,6 +115,22 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     @Override
     public void updateWorkFlowDiagram(List<WorkFlowParams> params) {
         projectDAO.updateWorkFlowDiagram(params);
+    }
+
+    @Override
+    public List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId) {
+        boolean isHasReadPermission = userDAO.isInProject(projectId , requestedUserId);
+        if(isHasReadPermission){
+            List<IssueType> result = projectDAO.getIssueTypes(projectId);
+            if(result.size() <= 0)
+                throw new InternalException("This project is missing default issue types");
+            return result;
+        }
+        throw new InvalidParameterException("You cannot read this project's issue types");
+    }
+
+    public boolean isInProject(Integer projectId , Integer userId){
+        return userDAO.isInProject(projectId, userId);
     }
 
 }

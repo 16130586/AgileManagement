@@ -6,6 +6,7 @@ import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
+import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import nlu.project.backend.util.constraint.ConstraintRole;
@@ -14,9 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Component
 @NoArgsConstructor
@@ -45,6 +44,9 @@ public class ProjectDAO {
 
     @Autowired
     WorkFlowItemRepository itemRepository;
+
+    @Autowired
+    IssueTypeRepository issueTypeRepository;
 
     public boolean isExistedProjectName(String name) {
         return projectRepository.existsByName(name);
@@ -268,5 +270,20 @@ public class ProjectDAO {
             items.add(item);
         }
         itemRepository.saveAll(items);
+    }
+
+    public List<IssueType> getIssueTypes(Integer projectId){
+        List<IssueType> result = Collections.emptyList();
+        try{
+            result = issueTypeRepository.findAllByProjectId(projectId);
+            if(result.size() <= 0){
+                return issueTypeRepository.findDefaultIssueTypes();
+            }
+            return result;
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new InternalException(e.getMessage());
+        }
     }
 }

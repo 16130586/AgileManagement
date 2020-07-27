@@ -4,13 +4,18 @@ import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
+import nlu.project.backend.model.IssueType;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
+import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -121,5 +126,13 @@ public class ProjectController extends BaseController{
     public ApiResponse updateDiagramWorkflow(@RequestBody List<WorkFlowParams> params) {
         projectBusiness.updateWorkFlowDiagram(params);
         return ApiResponse.OnSuccess(null, "Update WorkFlow diagram Success!");
+    }
+
+    @GetMapping("/{projectId}/issuetypes")
+    public ApiResponse getIssueTypes(HttpServletRequest request, @PathVariable("projectId") Integer projectId){
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        List<IssueType> issueTypes = projectBusiness.getIssueTypes(projectId, user.getUser().getId());
+        return ApiResponse.OnSuccess(issueTypes , "Request success!");
+
     }
 }
