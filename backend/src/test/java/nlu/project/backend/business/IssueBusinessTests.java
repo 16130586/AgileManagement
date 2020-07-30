@@ -140,7 +140,93 @@ public class IssueBusinessTests {
         boolean result = issueBusiness.delete(issueParams , userDetails);
 
     }
+    @Test
+    public void TestUpdateIssueSuccess() {
+        Issue initIssue = new Issue();
+        initIssue.setId(1);
+        initIssue.setCode("ISS-INIT-CODE");
+        initIssue.setDescription("My first init issue!");
+        initIssue.setName("ISS-INIT-NAME");
+        when(issueRepository.getOne(1)).thenReturn(initIssue);
+        when(issueRepository.save(any(Issue.class))).thenAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                if (arguments != null && arguments.length > 0 && arguments[0] != null) {
+                    return arguments[0];
+                }
+                return null;
+            }
+        });
+        IssueParams issueParams = new IssueParams();
+        issueParams.id = 1;
+        issueParams.projectId = 1;
 
+        //Update
+        final String NEW_NAME = "ISS_NEW_NAME";
+        final String NEW_CODE = "ISS_NEW_CODE";
+        final String NEW_DESC = "ISS_NEW_DESC";
+
+        issueParams.name = NEW_NAME;
+        issueParams.code = NEW_CODE;
+        issueParams.description = NEW_DESC;
+        //
+
+        User user = new User();
+        user.setId(1);
+
+        UserDetails userDetails = new CustomUserDetails(user);
+        Issue result = issueBusiness.update(issueParams , userDetails);
+
+        Assert.assertEquals(result.getName() , NEW_NAME);
+        Assert.assertEquals(result.getCode() , NEW_CODE);
+        Assert.assertEquals(result.getDescription() , NEW_DESC);
+    }
+
+    @Test(expected = InvalidParameterException.class)
+    public void TestUpdateIssueNotSuccess() {
+        // in this test case
+        // the user want to create update issue  of a project
+        // but the user haven't owner permission on that project
+        // then the result is invalid parameter exception
+        Issue initIssue = new Issue();
+        initIssue.setId(1);
+        initIssue.setCode("ISS-INIT-CODE");
+        initIssue.setDescription("My first init issue!");
+        initIssue.setName("ISS-INIT-NAME");
+        when(issueRepository.getOne(1)).thenReturn(initIssue);
+        when(issueRepository.save(any(Issue.class))).thenAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                if (arguments != null && arguments.length > 0 && arguments[0] != null) {
+                    return arguments[0];
+                }
+                return null;
+            }
+        });
+        IssueParams issueParams = new IssueParams();
+        issueParams.id = 1;
+        issueParams.projectId = 2;
+
+        //Update
+        final String NEW_NAME = "ISS_NEW_NAME";
+        final String NEW_CODE = "ISS_NEW_CODE";
+        final String NEW_DESC = "ISS_NEW_DESC";
+
+        issueParams.name = NEW_NAME;
+        issueParams.code = NEW_CODE;
+        issueParams.description = NEW_DESC;
+        //
+
+        User user = new User();
+        user.setId(1);
+
+        UserDetails userDetails = new CustomUserDetails(user);
+        Issue result = issueBusiness.update(issueParams , userDetails);
+
+
+    }
     @Before
     public void setUp() {
         Mockito.when(fileBusiness.save(null)).thenReturn("/imgSavePath");
