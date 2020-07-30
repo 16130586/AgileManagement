@@ -6,7 +6,7 @@ INSERT INTO jira.user(email,password,user_name) VALUES('admin' , '$2a$10$Xs4.Nuk
 
 INSERT INTO jira.workflow(id, name) VALUES (1, 'Default WorkFlow');
 
-INSERT INTO jira.workflow_item(id, name, `_order`, workflow_id) VALUES (1, 'Open', 1, 1), (2, 'Inprogress', 2, 1), (3, 'Close', 3, 1);
+INSERT INTO jira.workflow_item(id, name, `_order`, workflow_id) VALUES (1, 'Not started', 1, 1), (2, 'In progress', 2, 1), (3, 'Done', 3, 1);
 
 INSERT INTO jira.link_workflow(workflow_from, workflow_to) VALUES (1, 2), (2, 3);
 

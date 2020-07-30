@@ -44,18 +44,18 @@ public class IssueBusinessImp implements IssueBusiness {
     public Issue update(IssueParams issueParams, UserDetails userDetails) {
         User user = ((CustomUserDetails)userDetails).getUser();
 
-        if (userDAO.isProductOwner(user.getId(), issueParams.backlogId))
+        if (userDAO.isProductOwner(user.getId(), issueParams.projectId))
             return issueDAO.update(issueParams);
         return null;
     }
 
     @Override
-    public boolean delete(IssueParams issueParams, UserDetails userDetails) {
+    public boolean delete(IssueParams issueParams, UserDetails userDetails) throws InvalidParameterException {
         User user = ((CustomUserDetails)userDetails).getUser();
 
-        if (userDAO.isProductOwner(user.getId(), issueParams.backlogId))
-            return issueDAO.delete(issueParams.id);
-        return false;
+        if (!userDAO.isProductOwner(user.getId(), issueParams.projectId))
+            throw new InvalidParameterException("Invalid parameter!");
+        return issueDAO.delete(issueParams.id);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class IssueBusinessImp implements IssueBusiness {
     }
 
     @Override
-    public IssueType createIssueType(IssueTypeParams issueTypeParams) {
+    public IssueType createIssueType(IssueTypeParams issueTypeParams) throws InvalidParameterException {
 
         boolean isRight = userDAO.isProductOwnerWithProjectId(issueTypeParams.getProjectId() , issueTypeParams.getCreateByUserId());
         if(!isRight) throw new InvalidParameterException("You can't add new issue type to this project");

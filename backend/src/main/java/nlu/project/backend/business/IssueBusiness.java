@@ -7,6 +7,7 @@ import nlu.project.backend.model.Issue;
 import nlu.project.backend.model.IssueType;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 public interface IssueBusiness {
@@ -15,5 +16,5 @@ public interface IssueBusiness {
     boolean delete(IssueParams issueParams, UserDetails userDetails);
     List<Issue> findByFilter(IssueFilterParams filter);
 
-    IssueType createIssueType(IssueTypeParams issueTypeParams);
+    IssueType createIssueType(IssueTypeParams issueTypeParams) throws InvalidParameterException;
 }

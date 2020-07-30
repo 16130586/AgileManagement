@@ -31,17 +31,15 @@ public class UserDAO {
         return userRepository.getOne(id);
     }
 
-    public boolean isProductOwner(int userId, int backlogId) {
+    public boolean isProductOwner(int userId, int projectId) {
         User user = userRepository.getOne(userId);
-        BackLog backlog = backlogRepository.getOne(backlogId);
-        Project project = backlog.getProject();
-
+        //BackLog backlog = backlogRepository.getOne(backlogId);
+        //Project project = backlog.getProject();
+        Project project = projectRepository.getOne(projectId);
         UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
         if (userRole == null)
             return false;
-        if (userRole.getRole().getId() == 1)
-            return false;
-        return true;
+        return userRole.getRole().getId() == 1;
     }
 
     public boolean isProductOwnerWithProjectId(int userId, int projectId) {
@@ -50,9 +48,7 @@ public class UserDAO {
         UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
         if (userRole == null)
             return false;
-        if (userRole.getRole().getId() == 1)
-            return false;
-        return true;
+        return userRole.getRole().getId() == 1;
     }
 
     public boolean isInProject(Integer projectId, Integer userId) {

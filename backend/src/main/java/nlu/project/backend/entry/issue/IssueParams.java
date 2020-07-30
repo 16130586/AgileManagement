@@ -12,4 +12,5 @@ public class IssueParams {
     public String name;
     public String description;
     public Double hours;
+    public int projectId;
 }

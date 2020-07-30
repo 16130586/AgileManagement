@@ -110,7 +110,7 @@ public class IssueDAO {
     public IssueType createIssueType(IssueTypeParams entryParams){
         IssueType result = null;
         try {
-            Project project = projectRepository.getOne(entryParams.getId());
+            Project project = projectRepository.getOne(entryParams.getProjectId());
             result = new IssueType();
             result.setName(entryParams.getName());
             result.setIconUrl(entryParams.getIconUrl());
@@ -120,6 +120,6 @@ public class IssueDAO {
             result = null;
             System.out.println(e.getMessage());
         }
-        return result;
+            return result;
     }
 }
