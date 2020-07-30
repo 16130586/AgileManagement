@@ -49,7 +49,8 @@ public class IssueDAO {
 
     public Issue save(IssueParams issueParams) {
         Issue toSave = new Issue();
-
+        if(issueParams.id > 0)
+            toSave.setId(issueParams.id);
         toSave.setName(issueParams.name);
         toSave.setDescription(issueParams.name);
         toSave.setHours(issueParams.hours);
@@ -67,7 +68,7 @@ public class IssueDAO {
         Issue toSave = issueRepository.getOne(issueParams.id);
 
         toSave.setName(issueParams.name);
-        toSave.setDescription(issueParams.name);
+        toSave.setDescription(issueParams.description);
         toSave.setHours(issueParams.hours);
         toSave.setCode(issueParams.code);
         toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
