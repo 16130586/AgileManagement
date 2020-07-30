@@ -12,8 +12,8 @@ import java.util.List;
 
 public interface IssueBusiness {
     Issue create(IssueParams issueParams, UserDetails userDetails);
-    Issue update(IssueParams issueParams, UserDetails userDetails);
-    boolean delete(IssueParams issueParams, UserDetails userDetails);
+    Issue update(IssueParams issueParams, UserDetails userDetails) throws InvalidParameterException;
+    boolean delete(IssueParams issueParams, UserDetails userDetails) throws InvalidParameterException;
     List<Issue> findByFilter(IssueFilterParams filter);
 
     IssueType createIssueType(IssueTypeParams issueTypeParams) throws InvalidParameterException;

@@ -33,25 +33,25 @@ public class IssueBusinessImp implements IssueBusiness {
 
     @Override
     public Issue create(IssueParams issueParams, UserDetails userDetails) {
-        User user = ((CustomUserDetails)userDetails).getUser();
+        User user = ((CustomUserDetails) userDetails).getUser();
 
-        if (userDAO.isProductOwner(user.getId(), issueParams.backlogId))
+        if (!userDAO.isProductOwner(user.getId(), issueParams.projectId))
             return issueDAO.save(issueParams);
         return null;
     }
 
     @Override
-    public Issue update(IssueParams issueParams, UserDetails userDetails) {
-        User user = ((CustomUserDetails)userDetails).getUser();
+    public Issue update(IssueParams issueParams, UserDetails userDetails) throws InvalidParameterException {
+        User user = ((CustomUserDetails) userDetails).getUser();
 
-        if (userDAO.isProductOwner(user.getId(), issueParams.projectId))
-            return issueDAO.update(issueParams);
-        return null;
+        if (!userDAO.isProductOwner(user.getId(), issueParams.projectId))
+            throw new InvalidParameterException("Invalid parameters!");
+        return issueDAO.update(issueParams);
     }
 
     @Override
     public boolean delete(IssueParams issueParams, UserDetails userDetails) throws InvalidParameterException {
-        User user = ((CustomUserDetails)userDetails).getUser();
+        User user = ((CustomUserDetails) userDetails).getUser();
 
         if (!userDAO.isProductOwner(user.getId(), issueParams.projectId))
             throw new InvalidParameterException("Invalid parameter!");
@@ -66,10 +66,10 @@ public class IssueBusinessImp implements IssueBusiness {
     @Override
     public IssueType createIssueType(IssueTypeParams issueTypeParams) throws InvalidParameterException {
 
-        boolean isRight = userDAO.isProductOwnerWithProjectId(issueTypeParams.getProjectId() , issueTypeParams.getCreateByUserId());
-        if(!isRight) throw new InvalidParameterException("You can't add new issue type to this project");
+        boolean isRight = userDAO.isProductOwnerWithProjectId(issueTypeParams.getProjectId(), issueTypeParams.getCreateByUserId());
+        if (!isRight) throw new InvalidParameterException("You can't add new issue type to this project");
         String iconUrl = null;
-        if(issueTypeParams.getIconFile() != null)
+        if (issueTypeParams.getIconFile() != null)
             iconUrl = fileBusiness.save(issueTypeParams.getIconFile());
         issueTypeParams.setIconFile(null);
         issueTypeParams.setIconUrl(iconUrl);
