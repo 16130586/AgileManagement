@@ -19,7 +19,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.security.InvalidParameterException;
-import java.util.List;
 
 import static org.mockito.Mockito.*;
 
