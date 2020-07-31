@@ -57,12 +57,14 @@ public class ProjectDAO {
     }
 
     public Project getProjectById(int id) {
-        return projectRepository.findById(id).get();
+        return projectRepository.getOne(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project save(ProjectParams projectParams) {
-        String imgUrl = fileBusiness.save(projectParams.file);
+        String imgUrl = "";
+        if (projectParams.file != null)
+            imgUrl = fileBusiness.save(projectParams.file);
         // Project
         Project project = new Project();
         project.setName(projectParams.name);
@@ -77,7 +79,7 @@ public class ProjectDAO {
 
         if(projectParams.leader != projectParams.productOwner){
             // Leader
-            User teamLead = userRepository.findById(projectParams.leader).get();
+            User teamLead = userRepository.getOne(projectParams.leader);
             Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
             UserRole leader = new UserRole();
             leader.setUser(teamLead);
@@ -117,7 +119,7 @@ public class ProjectDAO {
         Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
         UserRole leader = userRoleRepository.findByRoleAndProject(leadRole, project);
         if (leader.getUser().getId() != projectParams.leader) {
-            User newTeamLead = userRepository.findById(projectParams.leader).get();
+            User newTeamLead = userRepository.getOne(projectParams.leader);
             leader.setUser(newTeamLead);
             userRoleRepository.save(leader);
         }
