@@ -94,6 +94,7 @@ public class ProjectBusinessTests {
         when(userRoleRepository.findByRoleAndProject(any(Role.class), any(Project.class))).thenReturn(userRole);
         when(roleRepository.findByName(anyString())).thenReturn(role);
         when(projectRepository.existsByName("Existed Name")).thenReturn(true);
+        when(projectRepository.existsByCode("EXISTED")).thenReturn(true);
         when(projectRepository.getOne(1)).thenReturn(project);
         when(userRepository.getOne(1)).thenReturn(user);
     }
@@ -122,12 +123,31 @@ public class ProjectBusinessTests {
     }
 
     @Test
-    public void testUpdateProject() {
+    public void testUpdateProjectSuccess() {
+        Project project = new Project();
+        project.setCode("OLD");
+        when(projectRepository.getOne(2)).thenReturn(project);
+
         ProjectParams params = new ProjectParams();
-        params.id = 1;
+        params.id = 2;
         params.leader = 1;
         params.name = "Renamed Project";
-        params.key = "TESTED";
+        params.key = "OLD";
+        params.description="This project is for testing";
+        projectBusiness.update(params);
+    }
+
+    @Test(expected = InvalidInputException.class)
+    public void testUpdateProjectFail() {
+        Project project = new Project();
+        project.setCode("OLD");
+        when(projectRepository.getOne(2)).thenReturn(project);
+
+        ProjectParams params = new ProjectParams();
+        params.id = 2;
+        params.leader = 1;
+        params.name = "Update fail Project";
+        params.key = "EXISTED";
         params.description="This project is for testing";
         projectBusiness.update(params);
     }
