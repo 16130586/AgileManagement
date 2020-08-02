@@ -136,14 +136,14 @@ public class ProjectDAO {
     }
 
     public List<Project> findByNameLike(String name) {
-        return projectRepository.findByNameLike(name);
+        return projectRepository.findByNameContaining(name);
     }
 
     public List<Project> findByCode(String key) {
         return projectRepository.findByCode(key);
     }
     public List<Project> findByKeyLike(String key) {
-        return projectRepository.findByCodeLike(key);
+        return projectRepository.findByCodeContaining(key);
     }
 
     public List<Project> findByUser(int userId) {
@@ -172,7 +172,7 @@ public class ProjectDAO {
         String name = (filter.name == null) ? "" : filter.name;
         String key = (filter.key == null) ? "" : filter.key;
         if ( (filter.name != null) || (filter.key != null) ) {
-            result = projectRepository.findByNameLikeAndCodeLike(name, key);
+            result = projectRepository.findByNameContainingAndCodeContaining(name, key);
             result = filterByUserId(result, filter);
             result = filterByOwnerId(result, filter);
             return  result;
