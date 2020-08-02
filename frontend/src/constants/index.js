@@ -6,7 +6,7 @@ export const ASYNC = {
         ASSIGNED_TO_ME : 'load-more.assigned-to-me',
         STARRED : 'load-more.starred',
         PROJECT_GRID : 'load-more.projec-grid',
-        ALL_GROUP:'load-more.all-group'
+        ALL_GROUP:'load-more.all-group',
     },
     FULL_FILLED: {
         TOTAL_ASSIGN_TO_ME : 'full-filled.total-assign-to-me',
@@ -16,14 +16,16 @@ export const ASYNC = {
         STARRED : 'full-filled.starred',
         DELETE_PROJECT: 'full-filled.delete-project',
         PROJECT_GRID : 'full-filled.projec-grid',
-        ALL_GROUP:'full-filled.all-group'
+        ALL_GROUP:'full-filled.all-group',
+        SEARCH_PROJECT: 'full-filled.search-project'
     },
     REQUEST: {
         DELETE_PROJECT : 'request.delete-project',
         CREATE_PROJECT : 'request.create-project',
         CREATE_PROJECT_SUCCESS : 'request.create-project-success',
         CREATE_PROJECT_FAILED : 'request.create-project-failed',
-        FAILED : 'request.failed'
+        FAILED : 'request.failed',
+        SEARCH_PROJECT: 'request.search-project'
     }
    
 }

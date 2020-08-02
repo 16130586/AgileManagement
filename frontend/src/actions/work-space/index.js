@@ -17,5 +17,3 @@ export const fullFilledTotalAssignToMe = (total) => ({type : AsyncEventTypes.FUL
 
 export const fetchAllGroup = () => ({type: AsyncEventTypes.LOAD_MORE.ALL_GROUP})
 export const fullFilledAllGroup = (listGroup) => ({type: AsyncEventTypes.FULL_FILLED.ALL_GROUP, payload: {data: listGroup}})
-
-

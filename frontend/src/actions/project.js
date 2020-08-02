@@ -6,3 +6,6 @@ export const createProjectFailed = (msg) => ({type : AsyncEventTypes.REQUEST.CRE
 export const fetchProjectGrid = () => ({type:AsyncEventTypes.LOAD_MORE.PROJECT_GRID})
 export const fullFilledProjectGrid = (data) => ({type: AsyncEventTypes.FULL_FILLED.PROJECT_GRID, payload: data})
 export const fullFilledDeleteProject = (id) => ({type: AsyncEventTypes.FULL_FILLED.DELETE_PROJECT, payload: id})
+
+export const searchProject = (data) => ({type: AsyncEventTypes.REQUEST.SEARCH_PROJECT, payload: data})
+export const fullFilledSearchProject = (data) => ({type: AsyncEventTypes.FULL_FILLED.SEARCH_PROJECT, payload: data});

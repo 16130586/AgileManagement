@@ -13,6 +13,61 @@ import Icon from '@material-ui/core/Icon'
 import TextField from '@material-ui/core/TextField'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
+import SearchIcon from '@material-ui/icons/Search';
+import { fade, makeStyles } from '@material-ui/core/styles';
+import InputBase from '@material-ui/core/InputBase';
+
+const useStyles = makeStyles((theme) => ({
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
+        },
+    },
+    inputRoot: {
+        color: 'inherit',
+    },
+    root: {
+        flexGrow: 2,
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        //transition: theme.transitions.create('width'),
+        width: '100%',
+        border: '#cad8de solid 1px',
+        borderRadius: "5px",
+        // [theme.breakpoints.up('sm')]: {
+        //     width: '12ch',
+        //     '&:focus': {
+        //         width: '20ch',
+        //     },
+        // },
+    },
+    button: {
+        marginLeft: "10px",
+        marginBottom: "5px"
+    }
+}));
+
 let ProjectNameComponent = function (props) {
     console.log(props)
     return (
@@ -135,15 +190,76 @@ let CreateProjectForm = function (props) {
                 type="text"
                 fullWidth
             />
-           <div style={{display:"flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem"}}>
-               <InputLabel>Select image</InputLabel>
-               <input 
-               onChange={(e) => props.formChange(e)}
-               type="file" 
-               name="img" 
-               accept="image/x-png,image/gif,image/jpeg"/>
-           </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
+                <InputLabel>Select image</InputLabel>
+                <input
+                    onChange={(e) => props.formChange(e)}
+                    type="file"
+                    name="img"
+                    accept="image/x-png,image/gif,image/jpeg" />
+            </div>
         </Fragment>
+    )
+}
+let CreateSearchForm = function (props) {
+    const classes = useStyles()
+
+    let searchValueInput = React.createRef()
+
+    // hooks
+    const [name, setName] = useState('')
+    const [key, setKey] = useState('')
+
+    let handleKeyPress = (event) =>{
+        // only triggered by enter key
+        let ENTER_KEY = 13
+        console.log('name', name);
+        console.log('key', key)
+        if(event.charCode == ENTER_KEY){
+            handleSearch()
+        }
+    }
+    let handleSearch = () => {
+        props.searchProject({
+            name: name,
+            key: key
+        });
+    }
+    return (
+        <div className={classes.search}>
+            <div>
+                <div className={classes.searchIcon}>
+                    <SearchIcon />
+                </div>
+                <InputBase
+                    inputRef={searchValueInput}
+                    onKeyPress={handleKeyPress}
+                    onChange={event => setName(event.target.value)}
+                    name="byName"
+                    placeholder="name..."
+                    classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                    }}
+                    inputProps={{ 'aria-label': 'search' }}
+                />
+                <InputBase
+                    inputRef={searchValueInput}
+                    onKeyPress={handleKeyPress}
+                    onChange={event => setKey(event.target.value)}
+                    name="byName"
+                    placeholder="key...."
+                    classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                    }}
+                    inputProps={{ 'aria-label': 'search' }}
+                />
+                <Button className={classes.button} variant="contained" color="primary" onClick={handleSearch}>
+                    Search
+                </Button>
+            </div>
+        </div>
     )
 }
 let ProjectComponent = function (props) {
@@ -151,6 +267,7 @@ let ProjectComponent = function (props) {
     const handleCloseCreateProjectDialog = () => {
         setOpenDeleteDialog(false)
     }
+   
     const handleDeleteProject = (projectId) => {
         props.deleteProject(projectId)
         handleCloseCreateProjectDialog(false)
@@ -159,21 +276,21 @@ let ProjectComponent = function (props) {
         projectName: '',
         projectKey: '',
         shortDescription: '',
-        img : null
+        img: null
 
     })
     const formChange = function (event) {
         let formData = { ...createProjectForm }
-        if(event.target.name != 'img'){
+        if (event.target.name != 'img') {
             formData[event.target.name] = event.target.value
-           
+
         }
-        else if(event.target.name == 'img'){
+        else if (event.target.name == 'img') {
             formData[event.target.name] = event.target.files[0]
         }
         setCreateProjectForm(formData)
     }
-    const isFormValid = function() {
+    const isFormValid = function () {
         let requiredAllNoneNull = true
         Object.keys(createProjectForm).forEach(name => {
             if (createProjectForm[name] == null || createProjectForm[name] == '' || createProjectForm[name].length == 0)
@@ -181,7 +298,7 @@ let ProjectComponent = function (props) {
         })
         return !requiredAllNoneNull
     }
-    const handleCreateProjectSubmit = function(){
+    const handleCreateProjectSubmit = function () {
         props.createProject(createProjectForm)
     }
     return (
@@ -190,7 +307,14 @@ let ProjectComponent = function (props) {
                 <div className="header__title">
                     Project
                 </div>
+
+                <CreateSearchForm
+                    searchProject={props.searchProject}
+                ></CreateSearchForm>
+
                 <div className="header__list-btns">
+
+
                     <button onClick={() => setOpenDeleteDialog(true)} className="btn btn--blue">
                         Create project
                     </button>
@@ -224,6 +348,7 @@ let ProjectComponent = function (props) {
                     </Button>
                         </DialogActions>
                     </Dialog>
+
                 </div>
             </div>
             <div className="content">

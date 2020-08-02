@@ -9,7 +9,8 @@ import {
     fullFilledDeleteProject,
     fullFilledProjectGrid,
     createProjectSuccess,
-    createProjectFailed
+    createProjectFailed,
+    fullFilledSearchProject
 } from '../../actions/project'
 import { getToken } from '../../common/localStorage'
 
@@ -60,6 +61,7 @@ const projectGridFakeAjax = () =>
     rxjsOf({
         data: remoteData
     }).pipe(delay(1000))
+
 const delelteProjectFakeAjax = (id) =>
     rxjsOf({
         data: id
@@ -103,6 +105,40 @@ export const deleteProject = action$ =>
         map(response => fullFilledDeleteProject(response.data))
     );
 
+export const searchProject = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.SEARCH_PROJECT),
+        mergeMap(action => {
+            const searchURL = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.SEARCH_PROJECT);
+            const requestSettings = {
+                url: searchURL,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body : {
+                    name: action.payload.name,
+                    key: action.payload.key
+                }
+            }
+            return ajax(requestSettings)
+                    .pipe(
+                        mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                        catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
+        }),
+        map(ajax => {
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return fullFilledProjectGrid(ajax.response.data)
+            }
+            else
+                return madeRequestFail(ajax.response.data)
+        })
+    )
 
 export const createProject = action$ =>
     action$.pipe(
