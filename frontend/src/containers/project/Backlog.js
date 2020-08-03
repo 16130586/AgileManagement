@@ -1,13 +1,15 @@
 import React , {useEffect} from 'react'
 import { connect } from 'react-redux'
 import {pageContextualNavigation} from '../../actions/global'
+import BacklogComponent from '../../components/project/BacklogComponent'
 const Backlog = function(props){
+
     useEffect(() => {
         props.getNavigation('BACKLOG', props.match.params)
     }, [])
     const {projectId} = props.match.params
     return(
-        <div>specific project BACKLOG</div>
+      <BacklogComponent data={props.match.params}></BacklogComponent>
     )
 }
 const mapStateToProps = state => {
