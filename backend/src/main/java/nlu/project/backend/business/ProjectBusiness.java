@@ -2,8 +2,10 @@ package nlu.project.backend.business;
 
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.model.Project;
+import nlu.project.backend.model.UserRole;
 import nlu.project.backend.model.WorkFlow;
 import nlu.project.backend.model.WorkFlowItem;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,4 +27,8 @@ public interface ProjectBusiness {
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
     WorkFlow deleteWorkFlowItem(WorkFlowParams params);
+    UserRole addMember(UserRoleParams params);
+    void removeMember(UserRoleParams params);
+    UserRole addRoleToMember(UserRoleParams params);
+    void removeRoleFromMember(UserRoleParams params);
 }

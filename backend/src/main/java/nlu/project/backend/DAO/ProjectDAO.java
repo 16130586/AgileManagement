@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
@@ -254,5 +255,42 @@ public class ProjectDAO {
         WorkFlowItem item = itemRepository.getOne(params.toItemId);
         itemRepository.delete(item);
         return workflowRepository.getOne(params.id);
+    }
+
+    public UserRole addMember(UserRoleParams params) {
+        User user = userRepository.getOne(params.userID);
+        Role defaultRole = roleRepository.getOne(3);
+        Project project = projectRepository.getOne(params.projectID);
+
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(defaultRole);
+        userRole.setProject(project);
+        return userRoleRepository.save(userRole);
+    }
+
+    public void removeMember(UserRoleParams params) {
+        User user = userRepository.getOne(params.userID);
+        Project project = projectRepository.getOne(params.projectID);
+        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        userRoleRepository.delete(userRole);
+    }
+
+    public UserRole addRoleToMember(UserRoleParams params) {
+        User user = userRepository.getOne(params.userID);
+        Role role = roleRepository.getOne(params.roleID);
+        Project project = projectRepository.getOne(params.projectID);
+        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        userRole.setRole(role);
+        return userRoleRepository.save(userRole);
+    }
+
+    public UserRole removeRoleFromMember(UserRoleParams params) {
+        User user = userRepository.getOne(params.userID);
+        Role role = roleRepository.getOne(params.roleID);
+        Project project = projectRepository.getOne(params.projectID);
+        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        userRole.setRole(null);
+        return userRoleRepository.save(userRole);
     }
 }

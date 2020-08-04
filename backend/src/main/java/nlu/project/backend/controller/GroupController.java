@@ -15,27 +15,25 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/group")
+@Secured("ROLE_USER")
 public class GroupController {
 
     @Autowired
     GroupBusiness groupBusiness;
 
     @PostMapping("/create")
-    @Secured("ROLE_USER")
     public ApiResponse create(@RequestBody GroupParams groupParams) {
         Group group = groupBusiness.createGroup(groupParams);
         return ApiResponse.OnSuccess(group, "Create group success!");
     }
 
     @PostMapping("/add")
-    @Secured("ROLE_USER")
     public ApiResponse addUser(@RequestBody GroupParams groupParams) {
         UserGroup userGroup = groupBusiness.addUser(groupParams);
         return ApiResponse.OnSuccess(userGroup, "Add user to group success!");
     }
 
     @PostMapping("/remove")
-    @Secured("ROLE_USER")
     public ApiResponse removeUser(@RequestBody GroupParams groupParams) {
         groupBusiness.removeUser(groupParams);
         return ApiResponse.OnSuccess(null, "Remove user from group success!");

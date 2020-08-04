@@ -5,6 +5,7 @@ import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.exception.custom.InvalidInputException;
 import nlu.project.backend.model.*;
@@ -108,6 +109,26 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     @Override
     public WorkFlow deleteWorkFlowItem(WorkFlowParams params) {
         return projectDAO.deleteWorkFlowItem(params);
+    }
+
+    @Override
+    public UserRole addMember(UserRoleParams params) {
+        return projectDAO.addMember(params);
+    }
+
+    @Override
+    public void removeMember(UserRoleParams params) {
+        projectDAO.removeMember(params);
+    }
+
+    @Override
+    public UserRole addRoleToMember(UserRoleParams params) {
+        return projectDAO.addRoleToMember(params);
+    }
+
+    @Override
+    public void removeRoleFromMember(UserRoleParams params) {
+        projectDAO.removeRoleFromMember(params);
     }
 
 }
