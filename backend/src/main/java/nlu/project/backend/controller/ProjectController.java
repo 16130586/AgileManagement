@@ -92,6 +92,12 @@ public class ProjectController extends BaseController{
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 
+    @GetMapping("/workflow/{projectId}")
+    public ApiResponse getWorkFlow(@PathVariable Integer projectId) {
+        Object result = projectBusiness.getWorkFlow(projectId);
+        return ApiResponse.OnSuccess(result, "Fetch WorkFlow Success!");
+    }
+
     @PostMapping("/workflow/create")
     public ApiResponse createWorkflow(@RequestBody WorkFlowParams params) {
         Object result = projectBusiness.createWorkFlow(params);
@@ -120,12 +126,6 @@ public class ProjectController extends BaseController{
     public ApiResponse deleteLinkWorkFlow(@RequestBody WorkFlowParams params) {
         Object result = projectBusiness.deleteLinkWorkFlow(params);
         return ApiResponse.OnSuccess(result, "Delete Link WorkFlow Item Success!");
-    }
-
-    @PostMapping("/workflow/update-diagram")
-    public ApiResponse updateDiagramWorkflow(@RequestBody List<WorkFlowParams> params) {
-        projectBusiness.updateWorkFlowDiagram(params);
-        return ApiResponse.OnSuccess(null, "Update WorkFlow diagram Success!");
     }
 
     @GetMapping("/{projectId}/issuetypes")

@@ -113,11 +113,6 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public void updateWorkFlowDiagram(List<WorkFlowParams> params) {
-        projectDAO.updateWorkFlowDiagram(params);
-    }
-
-    @Override
     public List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId) {
         boolean isHasReadPermission = userDAO.isInProject(projectId , requestedUserId);
         if(isHasReadPermission){
@@ -127,6 +122,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             return result;
         }
         throw new InvalidParameterException("You cannot read this project's issue types");
+    }
+
+    @Override
+    public List<WorkFlow> getWorkFlow(int projectId) {
+        return projectDAO.getWorkFlowByProjectId(projectId);
     }
 
     public boolean isInProject(Integer projectId , Integer userId){

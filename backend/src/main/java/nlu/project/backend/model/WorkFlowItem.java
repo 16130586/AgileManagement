@@ -1,6 +1,7 @@
 package nlu.project.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,5 +35,6 @@ public class WorkFlowItem {
     @JoinTable(name = "link_workflow",
             joinColumns = @JoinColumn(name = "workflow_from"),
             inverseJoinColumns = @JoinColumn(name = "workflow_to"))
+    @JsonIgnoreProperties("nextItems")
     private List<WorkFlowItem> nextItems;
 }
