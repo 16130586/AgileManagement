@@ -2,8 +2,10 @@ package nlu.project.backend.controller;
 
 import nlu.project.backend.business.UserBusiness;
 import nlu.project.backend.entry.ValidateTokenParams;
+import nlu.project.backend.entry.project.GroupParams;
 import nlu.project.backend.entry.user.LoginParams;
 import nlu.project.backend.entry.user.RegistryParams;
+import nlu.project.backend.model.Group;
 import nlu.project.backend.model.User;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
@@ -12,6 +14,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -48,4 +52,5 @@ public class UserController {
         CustomUserDetails userDetails = (CustomUserDetails) request.getAttribute("user");
         return ApiResponse.OnSuccess(userDetails.getUser(), "Get info success!");
     }
+
 }
