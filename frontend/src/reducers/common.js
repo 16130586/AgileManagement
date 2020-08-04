@@ -18,11 +18,12 @@ import RoadMap from '../components/navigation/contextual-items/project/RoadMap';
 import Backlog from '../components/navigation/contextual-items/project/Backlog';
 import Boards from '../components/navigation/contextual-items/project/Boards';
 import Settings from '../components/navigation/contextual-items/project/Settings';
+import WorkFlow from "../components/navigation/contextual-items/project/Workflow";
 
 let globalNavigationItemsConfig = [YourWork, Projects, DashBoard, People, Filter]
 Filter.prototype.component = FilterSelections
 
-let projectNavigationItemsConfig = [Projects,RoadMap, Backlog, Boards, Settings]
+let projectNavigationItemsConfig = [Projects,RoadMap, Backlog, Boards, WorkFlow, Settings]
 
 const initState = {
     isAppLoad: false,
@@ -55,7 +56,7 @@ const Common = (state = initState, action) => {
             nextState = { ...state, forceRedirectTo: '/login', isAppLoad: true }
             break;
         case AsyncEventTypes.REQUEST.CREATE_PROJECT_SUCCESS:
-            nextState = { ...state, forceRedirectTo: `/project/${action.payload.id}`, isAppLoad: true }
+            nextState = { ...state, forceRedirectTo: `/project/${action.payload.id}/roadmap`, isAppLoad: true }
             break;
         case RouterTypes.REDIRECT:
             console.log(action)
@@ -71,6 +72,7 @@ const Common = (state = initState, action) => {
                 case 'ROADMAP':
                 case 'BACKLOG':
                 case 'BOARDS':
+                case 'WORKFLOW':
                 case 'SETTINGS':
                     let projectItemsWithData = []
                     for (let i = 0; i < projectNavigationItemsConfig.length; i++) {
