@@ -5,6 +5,7 @@ export const BACKEND_API = {
         SIGN_UP: "/user/registry",
         VALIDATE_TOKEN: "/user/validateToken",
         CREATE_PROJECT: "/project/create",
-        PROJECT_GET_ALL: "/project/jointIn"
+        PROJECT_GET_ALL: "/project/jointIn",
+        WORKFLOW_CHART: "/chart/workflow"
     }
 }

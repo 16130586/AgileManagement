@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {pageContextualNavigation} from '../../actions/global'
 
 import WorkFlowComponent from "../../components/workplace/project/WorkFlowComponent";
+import {fetchAllWorkFlow, fullFilledUpdateWorkFlowLocation, updateWorkFlowLocation} from "../../actions/project";
 
 const fakeWorkFlowList = [
     {
@@ -42,22 +43,29 @@ const fakeWorkFlowList = [
 ]
 
 const WorkFlow = function(props){
+    const listWorkFlow = props.listWorkFlow;
+    const fetchWorkFlows = props.fetchAllWorkFlow;
+    const {projectId} = props.match.params
+
     useEffect(() => {
         props.getNavigation('WORKFLOW', props.match.params)
+        fetchWorkFlows(projectId)
     }, [])
-    const {projectId} = props.match.params
     return(
-        <WorkFlowComponent listWorkFlow={fakeWorkFlowList}/>
+        <WorkFlowComponent listWorkFlow={listWorkFlow} updateWFLOC={props.updateWorkFlowLocation} fullFilledWFLOC={props.fullFilledUpdateWorkFlowLocation}/>
     )
 }
 const mapStateToProps = state => {
     return {
-
+        listWorkFlow: state.WorkFlow_Reducer
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        getNavigation : (pageName, data) => dispatch(pageContextualNavigation(pageName,data))
+        getNavigation : (pageName, data) => dispatch(pageContextualNavigation(pageName,data)),
+        fetchAllWorkFlow: (projectId) => dispatch(fetchAllWorkFlow(projectId)),
+        updateWorkFlowLocation: (data) => dispatch(updateWorkFlowLocation(data)),
+        fullFilledUpdateWorkFlowLocation: (data) => dispatch(fullFilledUpdateWorkFlowLocation(data))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(WorkFlow)

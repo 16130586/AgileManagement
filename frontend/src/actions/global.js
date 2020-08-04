@@ -5,6 +5,7 @@ export const validateToken = (token) => ({type : AuthEventTypes.VALIDATE_TOKEN ,
 export const tokenValid = (user) => ({type : AuthEventTypes.TOKEN_VALID , payload : user})
 export const tokenInValid = () => ({type : AuthEventTypes.TOKEN_IN_VALID , payload : null})
 export const madeRequestFail = (msg) => ({type : AsyncEventTypes.REQUEST.FAILED, payload: msg})
+export const madeRequestSuccess = (msg) => ({type : AsyncEventTypes.REQUEST.SUCCESS, payload: msg})
 export const login = (userName,password) => ({type : AuthEventTypes.LOGIN, payload: {userName , password}})
 export const loginSuccess = (token) => ({type : AuthEventTypes.LOGIN_SUCCESS, payload : token})
 export const loginFailed = () => ({type : AuthEventTypes.LOGIN_FAILED, payload: "Your credentials are in-correct!"})

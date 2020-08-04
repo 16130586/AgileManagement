@@ -6,3 +6,7 @@ export const createProjectFailed = (msg) => ({type : AsyncEventTypes.REQUEST.CRE
 export const fetchProjectGrid = () => ({type:AsyncEventTypes.LOAD_MORE.PROJECT_GRID})
 export const fullFilledProjectGrid = (data) => ({type: AsyncEventTypes.FULL_FILLED.PROJECT_GRID, payload: data})
 export const fullFilledDeleteProject = (id) => ({type: AsyncEventTypes.FULL_FILLED.DELETE_PROJECT, payload: id})
+export const fetchAllWorkFlow = (projectId) => ({type: AsyncEventTypes.LOAD_MORE.ALL_WORKFLOW, payload: projectId})
+export const fullFilledAllWorkFlow = (data) => ({type: AsyncEventTypes.FULL_FILLED.ALL_WORKFLOW, payload: data})
+export const updateWorkFlowLocation = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_WORKFLOW_LOC, payload: data})
+export const fullFilledUpdateWorkFlowLocation = (data) => ({type: AsyncEventTypes.FULL_FILLED.UPDATE_WORKFLOW_LOC, payload: data})

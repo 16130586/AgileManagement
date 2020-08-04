@@ -114,7 +114,7 @@ let WorkFlow = function (props) {
         }
         return null;
     }
-    const [currentWorkFlow, setCurrentWorkFlow] = React.useState(listWorkFlow[0])
+    const [currentWorkFlow, setCurrentWorkFlow] = React.useState(listWorkFlow.length > 0 ? listWorkFlow[0] : null)
 
     const handleWorkFlowSelected = (id) => {
         setCurrentWorkFlow(getWorkFlowById(id));
@@ -248,6 +248,7 @@ let WorkFlow = function (props) {
                             ))}
                         </List>
                     </div>
+                    {currentWorkFlow != null &&
                     <div style={{backgroundColor: "#f5f5f5"}}>
                         <div style={{backgroundColor: "rgb(229 229 229)"}}>
                             <span style={{padding: "0 16px", color: "rgba(0, 0, 0, 0.54)", fontWeight: "500", lineHeight: "48px", fontSize: "15px"}}>
@@ -272,7 +273,6 @@ let WorkFlow = function (props) {
                                 </DialogContent>
                                 <DialogActions>
                                     <Button
-                                        disabled={isFormValid()}
                                         onClick={handleAddWorkFlowItemSubmit}
                                         color="primary">
                                         Add
@@ -306,9 +306,13 @@ let WorkFlow = function (props) {
                                     <Button onClick={handleCloseAddLinkWorkFlowDialog} color="primary" autoFocus>Quit</Button>
                                 </DialogActions>
                             </Dialog>
+                            <button onClick={() => props.updateWFLOC(currentWorkFlow)} style={{border: "none", padding: "8px", backgroundColor: "#f6f6f6", marginLeft: "8px"}}>
+                                Save Diagram
+                            </button>
                         </div>
-                        <WorkFlowChart nodeDataArray={currentWorkFlow.nodeDataArray} linkDataArray={currentWorkFlow.linkDataArray}/>
+                        <WorkFlowChart workFlowId={currentWorkFlow.id} updateWFLOC={props.updateWFLOC} fullFilledWFLOC={props.fullFilledWFLOC} nodeDataArray={currentWorkFlow.nodeDataArray} linkDataArray={currentWorkFlow.linkDataArray}/>
                     </div>
+                        }
                 </div>
             </div>
         </div>

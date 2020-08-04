@@ -37,13 +37,20 @@ function initDiagram() {
     return diagram;
 }
 
-function handleModelChange(changes) {
-    // Do change state
-}
-
 function WorkFlowChart(props) {
     const nodeDataArray = props.nodeDataArray;
     const linkDataArray = props.linkDataArray;
+
+    const updateWorkFlowLoc = {
+        workFlowId: props.workFlowId,
+        data: null
+    }
+
+    function handleModelChange(changes) {
+        updateWorkFlowLoc.data = changes.modifiedNodeData[0]
+        props.fullFilledWFLOC(updateWorkFlowLoc);
+    }
+
     return (
         <div style={{height: "100%"}}>
             <ReactDiagram
