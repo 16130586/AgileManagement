@@ -47,8 +47,10 @@ function WorkFlowChart(props) {
     }
 
     function handleModelChange(changes) {
-        updateWorkFlowLoc.data = changes.modifiedNodeData[0]
-        props.fullFilledWFLOC(updateWorkFlowLoc);
+        if ( changes != undefined && changes.modifiedNodeData != undefined && changes.modifiedNodeData.length == 1) {
+            updateWorkFlowLoc.data = changes.modifiedNodeData[0]
+            props.fullFilledWFLOC(updateWorkFlowLoc);
+        }
     }
 
     return (

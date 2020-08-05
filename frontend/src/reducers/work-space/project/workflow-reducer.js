@@ -17,7 +17,28 @@ const workFlowReducer = (state = All_WorkFlow, action) => {
                         })
                     }
                 })
-            console.log(nextState)
+            break;
+        case AsynTypes.FULL_FILLED.NEW_WORKFLOW:
+            let newWorkflow = {
+                id: action.payload.id,
+                name: action.payload.name,
+                nodeDataArray: [],
+                linkDataArray: []
+            }
+            nextState.push(newWorkflow)
+            break;
+        case AsynTypes.FULL_FILLED.NEW_WORKFLOW_ITEM:
+            let newNodeData = {
+                key: action.payload.id,
+                text: action.payload.name,
+                color: action.payload.color,
+                loc: action.payload.location
+            }
+            nextState.forEach(workFlow => {
+                if (workFlow.id == action.payload.workFlow.id) {
+                    return workFlow.nodeDataArray.push(newNodeData);
+                }
+            })
             break;
         default:
             break;

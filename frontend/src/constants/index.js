@@ -19,7 +19,10 @@ export const ASYNC = {
         PROJECT_GRID : 'full-filled.projec-grid',
         ALL_GROUP:'full-filled.all-group',
         ALL_WORKFLOW : 'full-filled.all-workflow',
-        UPDATE_WORKFLOW_LOC: 'full-filled.update-workflow-location'
+        UPDATE_WORKFLOW_LOC: 'full-filled.update-workflow-location',
+        NEW_WORKFLOW: 'full-filled.new-workflow',
+        NEW_WORKFLOW_ITEM : 'full-filled.new-workflow-item',
+        NEW_WORKFLOW_LINK : 'full-filled.new-workflow-link'
     },
     REQUEST: {
         DELETE_PROJECT : 'request.delete-project',
@@ -28,7 +31,10 @@ export const ASYNC = {
         CREATE_PROJECT_FAILED : 'request.create-project-failed',
         FAILED : 'request.failed',
         SUCCESS: 'request.success',
-        UPDATE_WORKFLOW_LOC: 'request.update-workflow-location'
+        UPDATE_WORKFLOW_LOC: 'request.update-workflow-location',
+        CREATE_WORKFLOW : 'request.create-workflow',
+        ADD_WORKFLOW_ITEM : 'request.add-workflow-item',
+        ADD_WORKFLOW_LINK : 'request.add-workflow-link'
     }
    
 }

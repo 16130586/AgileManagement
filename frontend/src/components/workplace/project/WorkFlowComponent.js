@@ -75,6 +75,7 @@ let AddLinkWorkFlowForm = function (props) {
                 fullWidth
                 margin="dense"
             >
+                <option selected disabled value="0">Select Item...</option>
                 {nodeDataArray.map((option) => (
                     <option key={option.key} value={option.key}>
                         {option.text}
@@ -94,6 +95,7 @@ let AddLinkWorkFlowForm = function (props) {
                 fullWidth
                 margin="dense"
             >
+                <option selected disabled value="0">Select Item...</option>
                 {nodeDataArray.map((option) => (
                     <option key={option.key} value={option.key}>
                         {option.text}
@@ -127,6 +129,7 @@ let WorkFlow = function (props) {
     }
 
     const [createWorkFlowForm, setCreateWorkFlowForm] = React.useState({
+        projectId: props.projectId,
         name: ''
     })
 
@@ -136,7 +139,7 @@ let WorkFlow = function (props) {
         setCreateWorkFlowForm(formData)
     }
 
-    const isFormValid = () => {
+    const isFormCreateWorkFlowValid = () => {
         let requiredAllNoneNull = true
         Object.keys(createWorkFlowForm).forEach(name => {
             if (createWorkFlowForm[name] == null || createWorkFlowForm[name] == '' || createWorkFlowForm[name].length == 0)
@@ -146,8 +149,8 @@ let WorkFlow = function (props) {
     }
 
     const handleCreateWorkFlowSubmit = function(){
-        console.log(createWorkFlowForm)
-        props.createProject(createWorkFlowForm)
+        props.createWorkFlow(createWorkFlowForm)
+        handleCloseCreateWorkFlowDialog()
     }
 
     // add workflow-item form
@@ -157,18 +160,24 @@ let WorkFlow = function (props) {
     }
 
     const [addWorkFlowItemForm, setAddWorkFlowItemForm] = React.useState({
+        workFlowId: '',
         name: ''
     })
 
     const formAddWorkFlowItemChange = function (event) {
         let formData = { ...addWorkFlowItemForm }
         formData[event.target.name] = event.target.value
+        formData.workFlowId = currentWorkFlow.id
         setAddWorkFlowItemForm(formData)
     }
 
+    const isFormAddWorkFlowItemValid = () => {
+        return addWorkFlowItemForm.name == null || addWorkFlowItemForm.name == '' || addWorkFlowItemForm.name.length == 0
+    }
+
     const handleAddWorkFlowItemSubmit = function(){
-        console.log(addWorkFlowItemForm)
-        props.createProject(addWorkFlowItemForm)
+        props.addWorkFlowItem(addWorkFlowItemForm)
+        handleCloseAddWorkFlowItemDialog()
     }
 
     // add link-workflow form
@@ -188,9 +197,18 @@ let WorkFlow = function (props) {
         setAddLinkWorkFlowForm(formData)
     }
 
+    const isFormAddWorkFlowLinkValid = () => {
+        let requiredAllNoneNull = true
+        Object.keys(addLinkWorkFlowForm).forEach(name => {
+            if (addLinkWorkFlowForm[name] == null || addLinkWorkFlowForm[name] == 0)
+                requiredAllNoneNull = false
+        })
+        return !requiredAllNoneNull
+    }
+
     const handleAddLinkWorkFlowSubmit = function(){
-        console.log(addLinkWorkFlowForm)
-        props.createProject(addLinkWorkFlowForm)
+        props.addWorkFlowLink(addLinkWorkFlowForm)
+        handleCloseAddLinkWorkFlowDialog()
     }
 
     return(
@@ -219,7 +237,7 @@ let WorkFlow = function (props) {
                         </DialogContent>
                         <DialogActions>
                             <Button
-                                disabled={isFormValid()}
+                                disabled={isFormCreateWorkFlowValid()}
                                 onClick={handleCreateWorkFlowSubmit}
                                 color="primary">
                                 Create now
@@ -243,7 +261,7 @@ let WorkFlow = function (props) {
                             }>
                             {listWorkFlow.map((item) => (
                                 <ListItem button onClick={() => handleWorkFlowSelected(item.id)}>
-                                    <ListItemText id={"workflow"+item.id} primary={item.name} />
+                                    <ListItemText key={item.id} id={"workflow"+item.id} primary={item.name} />
                                 </ListItem>
                             ))}
                         </List>
@@ -273,6 +291,7 @@ let WorkFlow = function (props) {
                                 </DialogContent>
                                 <DialogActions>
                                     <Button
+                                        disabled={isFormAddWorkFlowItemValid()}
                                         onClick={handleAddWorkFlowItemSubmit}
                                         color="primary">
                                         Add
@@ -299,6 +318,7 @@ let WorkFlow = function (props) {
                                 </DialogContent>
                                 <DialogActions>
                                     <Button
+                                        disabled={isFormAddWorkFlowLinkValid()}
                                         onClick={handleAddLinkWorkFlowSubmit}
                                         color="primary">
                                         Add

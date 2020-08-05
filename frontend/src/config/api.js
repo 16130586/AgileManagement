@@ -6,6 +6,9 @@ export const BACKEND_API = {
         VALIDATE_TOKEN: "/user/validateToken",
         CREATE_PROJECT: "/project/create",
         PROJECT_GET_ALL: "/project/jointIn",
-        WORKFLOW_CHART: "/chart/workflow"
+        WORKFLOW_CHART: "/chart/workflow",
+        CREATE_WORKFLOW: "/project/workflow/create",
+        ADD_WORKFLOW_ITEM: "/project/workflow/add-item",
+        ADD_WORKFLOW_LINK : "/project/workflow/add-link"
     }
 }

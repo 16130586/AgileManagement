@@ -29,7 +29,7 @@ public class WorkFlowItem {
     private String location;
     @ManyToOne
     @JoinColumn(name = "workflow_id")
-    @JsonIgnore
+    @JsonIgnoreProperties("items")
     private WorkFlow workFlow;
     @ManyToMany
     @JoinTable(name = "link_workflow",

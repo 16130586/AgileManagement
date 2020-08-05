@@ -3,7 +3,13 @@ import { connect } from 'react-redux'
 import {pageContextualNavigation} from '../../actions/global'
 
 import WorkFlowComponent from "../../components/workplace/project/WorkFlowComponent";
-import {fetchAllWorkFlow, fullFilledUpdateWorkFlowLocation, updateWorkFlowLocation} from "../../actions/project";
+import {
+    fetchAllWorkFlow,
+    fullFilledUpdateWorkFlowLocation,
+    updateWorkFlowLocation,
+    createWorkFlow,
+    addWorkFlowItem, addWorkFlowLink
+} from "../../actions/project";
 
 const fakeWorkFlowList = [
     {
@@ -52,7 +58,15 @@ const WorkFlow = function(props){
         fetchWorkFlows(projectId)
     }, [])
     return(
-        <WorkFlowComponent listWorkFlow={listWorkFlow} updateWFLOC={props.updateWorkFlowLocation} fullFilledWFLOC={props.fullFilledUpdateWorkFlowLocation}/>
+        <WorkFlowComponent
+            listWorkFlow={listWorkFlow}
+            updateWFLOC={props.updateWorkFlowLocation}
+            fullFilledWFLOC={props.fullFilledUpdateWorkFlowLocation}
+            createWorkFlow={props.createWorkFlow}
+            addWorkFlowItem={props.addWorkFlowItem}
+            addWorkFlowLink={props.addWorkFlowLink}
+            projectId={projectId}
+        />
     )
 }
 const mapStateToProps = state => {
@@ -65,7 +79,10 @@ const mapDispatchToProps = dispatch => {
         getNavigation : (pageName, data) => dispatch(pageContextualNavigation(pageName,data)),
         fetchAllWorkFlow: (projectId) => dispatch(fetchAllWorkFlow(projectId)),
         updateWorkFlowLocation: (data) => dispatch(updateWorkFlowLocation(data)),
-        fullFilledUpdateWorkFlowLocation: (data) => dispatch(fullFilledUpdateWorkFlowLocation(data))
+        fullFilledUpdateWorkFlowLocation: (data) => dispatch(fullFilledUpdateWorkFlowLocation(data)),
+        createWorkFlow: (data) => dispatch(createWorkFlow(data)),
+        addWorkFlowItem: (data) => dispatch(addWorkFlowItem(data)),
+        addWorkFlowLink: (data) => dispatch(addWorkFlowLink(data))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(WorkFlow)

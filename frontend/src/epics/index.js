@@ -5,7 +5,13 @@ import {fetchTotalAssignToMeEpic , fetchWorkOnEpic} from './work-space/your-work
 import {deleteProject , fetchProjects , createProject} from './work-space/project'
 import {validateToken, login, signUp} from './global'
 import {fetchGroup}  from "./work-space/people/group/index";
-import {fetchWorkFlows, updateWorkFlows} from "./work-space/project/workflow-epic";
+import {
+    fetchWorkFlows,
+    updateWorkFlows,
+    createWorkFlow,
+    addWorkFlowItem,
+    addWorkFlowLink
+} from "./work-space/project/workflow-epic";
 
 export default combineEpics(
     login,
@@ -20,5 +26,8 @@ export default combineEpics(
     createProject,
     fetchGroup,
     fetchWorkFlows,
-    updateWorkFlows
+    updateWorkFlows,
+    createWorkFlow,
+    addWorkFlowItem,
+    addWorkFlowLink
 );
