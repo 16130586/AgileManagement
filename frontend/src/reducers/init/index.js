@@ -21,3 +21,5 @@ export let WorkSpace_YourWork_AssignToMe_Init = {
 export let All_Group_Init = {
     data : []
 }
+
+export let All_WorkFlow = []

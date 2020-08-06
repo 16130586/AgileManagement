@@ -132,11 +132,6 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public void updateWorkFlowDiagram(List<WorkFlowParams> params) {
-        projectDAO.updateWorkFlowDiagram(params);
-    }
-
-    @Override
     public List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId) {
         boolean isHasReadPermission = userDAO.isInProject(projectId , requestedUserId);
         if(isHasReadPermission){
@@ -155,7 +150,10 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             throw new InvalidParameterException("Invalid parameters!");
         return sprintDAO.findWorkingSprints(projectId);
     }
-
+    @Override
+    public List<WorkFlow> getWorkFlow(int projectId) {
+        return projectDAO.getWorkFlowByProjectId(projectId);
+    }
     @Override
     public List<Issue> getBacklogItems(Integer projectId, CustomUserDetails user) {
         Project project = projectDAO.getProjectById(projectId);

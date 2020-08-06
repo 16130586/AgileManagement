@@ -10,6 +10,7 @@ import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import nlu.project.backend.util.constraint.ConstraintRole;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -259,15 +260,12 @@ public class ProjectDAO {
         return workflowRepository.getOne(params.id);
     }
 
-    public void updateWorkFlowDiagram(List<WorkFlowParams> params) {
-        List<WorkFlowItem> items = new LinkedList<>();
-        WorkFlowItem item;
-        for (WorkFlowParams param : params) {
-            item = itemRepository.getOne(param.fromItemId);
-            item.setLocation(param.location);
-            items.add(item);
-        }
-        itemRepository.saveAll(items);
+    public WorkFlow updateWorkFlow(WorkFlow workFlow) {
+        return workflowRepository.save(workFlow);
+    }
+
+    public WorkFlow getWorkFlowById(int id) {
+        return workflowRepository.getOne(id);
     }
 
     public List<IssueType> getIssueTypes(Integer projectId){
@@ -283,5 +281,10 @@ public class ProjectDAO {
             System.out.println(e.getMessage());
             throw new InternalException(e.getMessage());
         }
+    }
+
+    public List<WorkFlow> getWorkFlowByProjectId(int projectId) {
+        Project project = projectRepository.getOne(projectId);
+        return workflowRepository.findByProject(project);
     }
 }

@@ -6,6 +6,7 @@ import People from './Workplace/PeopleContainer'
 import RoadMap from './project/RoadMap'
 import Backlog from './project/Backlog'
 import Board from './project/Board'
+import WorkFlow from "./project/WorkFlow";
 import Settings from './project/Settings'
 let WorkplaceContainer = function (props) {
 
@@ -27,6 +28,7 @@ let WorkplaceContainer = function (props) {
                 <Route path="/project/:projectId/roadmap" component={RoadMap} />
                 <Route path="/project/:projectId/backlog" component={Backlog} />
                 <Route path="/project/:projectId/boards" component={Board} />
+                <Route path="/project/:projectId/workflow" component={WorkFlow} />
                 <Route path="/project/:projectId/settings/details" component={Settings} />
                 <Route exact path="/">
                     <div>Welcome</div>

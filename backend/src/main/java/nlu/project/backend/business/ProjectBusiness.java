@@ -24,8 +24,8 @@ public interface ProjectBusiness {
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
     WorkFlow deleteWorkFlowItem(WorkFlowParams params);
-    void updateWorkFlowDiagram(List<WorkFlowParams> params);
     List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId);
     List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails user);
+    List<WorkFlow> getWorkFlow(int projectId);
     List<Issue> getBacklogItems(Integer projectId, CustomUserDetails user);
 }
