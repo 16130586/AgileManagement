@@ -3,10 +3,8 @@ package nlu.project.backend.business;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
-import nlu.project.backend.model.IssueType;
-import nlu.project.backend.model.Project;
-import nlu.project.backend.model.WorkFlow;
-import nlu.project.backend.model.WorkFlowItem;
+import nlu.project.backend.model.*;
+import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -28,4 +26,6 @@ public interface ProjectBusiness {
     WorkFlow deleteWorkFlowItem(WorkFlowParams params);
     void updateWorkFlowDiagram(List<WorkFlowParams> params);
     List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId);
+    List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails user);
+    List<Issue> getBacklogItems(Integer projectId, CustomUserDetails user);
 }

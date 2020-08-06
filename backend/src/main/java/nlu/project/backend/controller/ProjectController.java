@@ -135,4 +135,17 @@ public class ProjectController extends BaseController{
         return ApiResponse.OnSuccess(issueTypes , "Request success!");
 
     }
+
+    @GetMapping("/{projectId}/backlog")
+    public ApiResponse backlog(HttpServletRequest request, @PathVariable("projectId") Integer projectId){
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.getBacklogItems(projectId, user);
+        return ApiResponse.OnSuccess(result , "Request backlog success!");
+    }
+    @GetMapping("/{projectId}/workingSprints")
+    public ApiResponse workingSprints(HttpServletRequest request, @PathVariable("projectId") Integer projectId){
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.getWorkingSprints(projectId, user);
+        return ApiResponse.OnSuccess(result , "Request sprints success!");
+    }
 }

@@ -12,6 +12,7 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +29,11 @@ public class Project {
     @Column(name="imgUrl")
     private String imgUrl;
 
+
+    @JsonIgnore
+    @JoinColumn(name="backlog_id" , nullable = true)
+    @OneToOne
+    private BackLog backlog;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="leader_id", nullable = true)
     private User leader;

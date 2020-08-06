@@ -1,9 +1,14 @@
 package nlu.project.backend.business.impl;
 
 import nlu.project.backend.DAO.ProjectDAO;
+import nlu.project.backend.DAO.SprintDAO;
 import nlu.project.backend.DAO.UserDAO;
+import nlu.project.backend.business.FileBusiness;
+import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.business.ProjectBusiness;
+import nlu.project.backend.business.SprintBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
+import nlu.project.backend.entry.filter.SprintFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.exception.custom.InternalException;
@@ -25,12 +30,26 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     @Autowired
     UserDAO userDAO;
 
+    @Autowired
+    SprintDAO sprintDAO;
+
+    @Autowired
+    IssueBusiness issueBusiness;
+
+    @Autowired
+    FileBusiness fileBusiness;
+
     @Override
     public Project create(ProjectParams projectParams) {
         if (projectDAO.isExistedProjectName(projectParams.name))
             throw new InvalidInputException("Project's Name already exists");
         if (projectDAO.isExistedProjectCode(projectParams.key))
             throw new InvalidInputException("Project's Key already exists");
+        String imgUrl = "";
+        if (projectParams.file != null)
+            imgUrl = fileBusiness.save(projectParams.file);
+        // Project
+         projectParams.setImgUrl(imgUrl);
          return projectDAO.save(projectParams);
     }
 
@@ -127,6 +146,21 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             return result;
         }
         throw new InvalidParameterException("You cannot read this project's issue types");
+    }
+
+    @Override
+    public List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails cusUser) {
+        User user = cusUser.getUser();
+        if (!userDAO.isProductOwner(user.getId(), projectId))
+            throw new InvalidParameterException("Invalid parameters!");
+        return sprintDAO.findWorkingSprints(projectId);
+    }
+
+    @Override
+    public List<Issue> getBacklogItems(Integer projectId, CustomUserDetails user) {
+        Project project = projectDAO.getProjectById(projectId);
+        Integer backlogId = project.getBacklog().getId();
+        return issueBusiness.findInBacklog(backlogId);
     }
 
     public boolean isInProject(Integer projectId , Integer userId){

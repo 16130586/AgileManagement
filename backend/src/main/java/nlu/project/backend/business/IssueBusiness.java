@@ -17,4 +17,6 @@ public interface IssueBusiness {
     List<Issue> findByFilter(IssueFilterParams filter);
 
     IssueType createIssueType(IssueTypeParams issueTypeParams) throws InvalidParameterException;
+
+    List<Issue> findInBacklog(Integer backlogId);
 }

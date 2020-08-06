@@ -36,8 +36,6 @@ public class ProjectDAO {
     @Autowired
     BacklogRepository backlogRepository;
 
-    @Autowired
-    FileBusiness fileBusiness;
 
     @Autowired
     WorkflowRepository workflowRepository;
@@ -62,20 +60,18 @@ public class ProjectDAO {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project save(ProjectParams projectParams) {
-        String imgUrl = "";
-        if (projectParams.file != null)
-            imgUrl = fileBusiness.save(projectParams.file);
-        // Project
+
         Project project = new Project();
         project.setName(projectParams.name);
         project.setCode(projectParams.key);
         project.setDescription(projectParams.description);
-        project.setImgUrl(imgUrl);
+        project.setImgUrl(projectParams.imgUrl);
         projectRepository.save(project);
         // Backlog
         BackLog backLog = new BackLog();
         backLog.setProject(project);
         backlogRepository.save(backLog);
+        project.setBacklog(backLog);
 
         if(projectParams.leader != projectParams.productOwner){
             // Leader
