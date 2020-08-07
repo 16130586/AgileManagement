@@ -37,4 +37,8 @@ public class WorkFlowItem {
             inverseJoinColumns = @JoinColumn(name = "workflow_to"))
     @JsonIgnoreProperties("nextItems")
     private List<WorkFlowItem> nextItems;
+    @Column(name = "is_start", columnDefinition = "boolean default false")
+    private boolean isStart;
+    @Column(name = "is_end", columnDefinition = "boolean default false")
+    private boolean isEnd;
 }
