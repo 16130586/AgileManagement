@@ -6,6 +6,7 @@ export const createProjectFailed = (msg) => ({type : AsyncEventTypes.REQUEST.CRE
 export const fetchProjectGrid = () => ({type:AsyncEventTypes.LOAD_MORE.PROJECT_GRID})
 export const fullFilledProjectGrid = (data) => ({type: AsyncEventTypes.FULL_FILLED.PROJECT_GRID, payload: data})
 export const fullFilledDeleteProject = (id) => ({type: AsyncEventTypes.FULL_FILLED.DELETE_PROJECT, payload: id})
+
 export const fetchAllWorkFlow = (projectId) => ({type: AsyncEventTypes.LOAD_MORE.ALL_WORKFLOW, payload: projectId})
 export const fullFilledAllWorkFlow = (data) => ({type: AsyncEventTypes.FULL_FILLED.ALL_WORKFLOW, payload: data})
 export const updateWorkFlowItem = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_WORKFLOW_LOC, payload: data})
@@ -18,3 +19,5 @@ export const addWorkFlowLink = (data) => ({type: AsyncEventTypes.REQUEST.ADD_WOR
 export const fullFilledNewWorkFlowLink = (data) => ({type: AsyncEventTypes.FULL_FILLED.NEW_WORKFLOW_LINK, payload: data})
 export const fullFilledRemovedWorkFlowItem = (workFlowId, data) => ({type: AsyncEventTypes.FULL_FILLED.REMOVE_WORKFLOW_ITEM, payload: {workFlowId: workFlowId, data: data}})
 export const fullFilledRemovedWorkFlowLink = (workFlowId, data) => ({type: AsyncEventTypes.FULL_FILLED.REMOVE_WORKFLOW_LINK, payload: {workFlowId: workFlowId, data: data}})
+export const fetchBacklogPage = (projectId) => ({type: AsyncEventTypes.LOAD_MORE.BACKLOG_PAGE , payload: projectId})
+export const fullFilledBacklogPage = (data) => ({type: AsyncEventTypes.FULL_FILLED.BACKLOG_PAGE , payload: data})

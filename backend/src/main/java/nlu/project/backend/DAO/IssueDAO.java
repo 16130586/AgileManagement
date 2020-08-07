@@ -10,6 +10,7 @@ import nlu.project.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -122,5 +123,14 @@ public class IssueDAO {
             System.out.println(e.getMessage());
         }
             return result;
+    }
+    public List<Issue> findInBacklog(Integer backlogId){
+        try{
+            return issueRepository.findInBacklog(backlogId);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return Collections.emptyList();
     }
 }

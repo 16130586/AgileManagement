@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -75,5 +76,10 @@ public class IssueBusinessImp implements IssueBusiness {
         issueTypeParams.setIconUrl(iconUrl);
         IssueType result = issueDAO.createIssueType(issueTypeParams);
         return result;
+    }
+
+    @Override
+    public List<Issue> findInBacklog(Integer backlogId) {
+      return issueDAO.findInBacklog(backlogId);
     }
 }

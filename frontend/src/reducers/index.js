@@ -8,6 +8,7 @@ import WorkSpace_YourWork_AssignToMe from './work-space/your-work/assign-to-me-r
 import WorkSpace_Project from './work-space/project'
 import People_Group from './work-space/people/group-reducer'
 import WorkFlow_Reducer from './work-space/project/workflow-reducer'
+import Project_Backlog from './project/backlog-reducer'
 export default combineReducers({
     Common,
     Login,
@@ -17,5 +18,6 @@ export default combineReducers({
     WorkSpace_YourWork_AssignToMe,
     WorkSpace_Project,
     People_Group,
-    WorkFlow_Reducer
+    WorkFlow_Reducer,
+    Project_Backlog,
 })
