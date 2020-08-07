@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, createRef } from 'react'
+import React, { Fragment, useState, useEffect, createRef, useRef } from 'react'
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
@@ -9,6 +9,7 @@ import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select';
 import Icon from '@material-ui/core/Icon'
 
 import Dialog from '@material-ui/core/Dialog'
@@ -22,6 +23,7 @@ import TextField from '@material-ui/core/TextField';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { ReactReduxContext } from 'react-redux';
 import { DropDownList } from '@progress/kendo-react-dropdowns';
+import * as moment from 'moment'
 let MyBreadCrumbs = function (props) {
     let projectId = 0;
     return (
@@ -79,7 +81,8 @@ const AccordionDetails = withStyles(theme => ({
     }
 }))(MuiAccordionDetails);
 
-let BacklogItem = function (props) {
+let IssueItem = function (props) {
+    const data = props.data
     let [anchorEl, setAnchorEl] = React.useState(null)
     const handleOpenMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -92,8 +95,8 @@ let BacklogItem = function (props) {
         <div style={{ width: "100%", display: "flex", alignItems: "center" }}>
             <div>
                 <img />
-                <Typography className="ml-1" style={{ display: "inline-block" }}>Backlog item name</Typography>
-                <Typography className="ml-2" style={{ display: "inline-block" }}>Content</Typography>
+                <Typography className="ml-1" style={{ display: "inline-block" }}>{data.name}</Typography>
+                <Typography className="ml-2" style={{ display: "inline-block" }}>{data.description}</Typography>
             </div>
             <div style={{ display: "flex", marginLeft: "auto" }}>
                 <Icon
@@ -113,11 +116,9 @@ let BacklogItem = function (props) {
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}
                         disabled
                     >Actions</MenuItem>
-                    <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}
-                    >Add flag</MenuItem>
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>
                         Coppy issue link</MenuItem>
-                    <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>Delete</MenuItem>
+                    <MenuItem onClick={(e) => { e.stopPropagation(); }}>Delete</MenuItem>
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}
                         disabled
                     >
@@ -126,9 +127,9 @@ let BacklogItem = function (props) {
                         XXXX sprint name</MenuItem>
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>
                         XXXX sprint name</MenuItem>
-                    <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>
+                    <MenuItem onClick={(e) => { e.stopPropagation(); props.topOfBacklog(data.id, data.backLog.id) }}>
                         Top of backlog</MenuItem>
-                    <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>
+                    <MenuItem onClick={(e) => { e.stopPropagation(); props.bottomOfBacklog(data.id, data.backLog.id) }}>
                         Bottom of backlog</MenuItem>
                 </Menu>
             </div>
@@ -231,6 +232,7 @@ let CreateNewBacklogItem = function (props) {
     )
 }
 let SprintComponent = function (props) {
+    const data = props.data
     let [anchorEl, setAnchorEl] = React.useState(null)
     let [isExpanding, setExpanding] = React.useState(false)
 
@@ -245,9 +247,23 @@ let SprintComponent = function (props) {
     const handleCloseEditDialog = () => {
         setOpenEditDialog(false)
     }
-    const handleEditSprint = (sprintId) => {
-        console.log('edit ' + sprintId)
+
+    const [editSprint, setEditSprint] = useState({ newName: data.name, newGoal: data.goal })
+    const handleEditSprintSubmit = (sprintId) => {
         handleCloseEditDialog()
+        handleCloseOptsMenu()
+        props.editSprint({
+            sprintId: sprintId,
+            name: editSprint.newName,
+            goal: editSprint.newGoal
+        })
+    }
+    const handleEditSprintChange = (event) => {
+        let newState = {
+            ...editSprint
+        }
+        newState[event.target.name] = event.target.value
+        setEditSprint(newState)
     }
 
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
@@ -256,8 +272,19 @@ let SprintComponent = function (props) {
     }
 
     const handleDeleteSprint = (sprintId) => {
-        console.log('delete ' + sprintId)
         handleCloseDeleteDialog()
+        handleCloseOptsMenu()
+        props.deleteSprint(sprintId)
+    }
+    const handleMoveUpSprint = (sprintId) => {
+        handleCloseDeleteDialog()
+        handleCloseOptsMenu()
+        props.moveUpSprint(sprintId)
+    }
+    const handleMoveDownSprint = (sprintId) => {
+        handleCloseDeleteDialog()
+        handleCloseOptsMenu()
+        props.moveDownSprint(sprintId)
     }
 
     const [openCompleteDialog, setOpenCompleteDialog] = React.useState(false)
@@ -265,10 +292,87 @@ let SprintComponent = function (props) {
         setOpenCompleteDialog(false)
     }
 
-    const handleCompleteSprint = (sprintId) => {
-        console.log('complete ' + sprintId)
-        handleCloseCompleteDialog()
+
+    const [openStartSprintDialog, setOpenStartSprintDialog] = React.useState(false)
+    const handleCloseStartSprintDialog = () => {
+        setOpenStartSprintDialog(false)
     }
+
+
+    const durations = [
+        { id: 1, text: "1 week" },
+        { id: 2, text: "2 weeks" },
+        { id: 3, text: "3 weeks" },
+        { id: 4, text: "custom" }
+    ]
+    const dateFormat = 'YYYY-MM-DD'
+
+    const [startSprintState, setStartSprintState] = useState({
+        name: data.name,
+        duration: durations[0],
+        startDate: moment().format(dateFormat),
+        endDate: moment().add(7, 'days').format(dateFormat),
+        goal: data.goal,
+        isStartDateDisabled: true,
+        isEndDateDisable: true
+    })
+
+
+    const handleStartSprintChange = (event) => {
+        let newState = { ...startSprintState }
+        if (event.target.name !== 'duration') {
+            newState[event.target.name] = event.target.value
+            setStartSprintState(newState)
+        } else if (event.target.name === 'duration') {
+            let selectedDuration = durations[
+                durations.findIndex(dr => dr.id == event.target.value)
+            ]
+            let newStartDate = ''
+            let newEndDate = ''
+            let newSsStartDateDisabled = true
+            let newIsEndDateDisable = true
+
+            if (selectedDuration.id <= 3) {
+                newStartDate = moment().format(dateFormat)
+                newEndDate = moment().add(7 * selectedDuration.id, 'days').format(dateFormat)
+            } else {
+                newStartDate = moment().format(dateFormat)
+                newEndDate = moment().add(7, 'days').format(dateFormat)
+                newSsStartDateDisabled = false
+                newIsEndDateDisable = false
+            }
+            setStartSprintState(
+                {
+                    ...startSprintState,
+                    duration: selectedDuration,
+                    startDate: newStartDate,
+                    endDate: newEndDate,
+                    isStartDateDisabled: newSsStartDateDisabled,
+                    isEndDateDisable: newIsEndDateDisable
+                }
+            )
+        }
+
+    }
+  
+    const handleStartSprintSubmit = (sprintId) => {
+        handleCloseStartSprintDialog()
+    
+        let submitData = {
+            sprintId : sprintId,
+            startDate : startSprintState.startDate,
+            endDate : startSprintState.endDate,
+            name : startSprintState.name,
+            goal : startSprintState.goal
+        }
+        console.log(submitData)
+        props.startSprint(submitData)
+    }
+    const handleCompleteSprint = (sprintId) => {
+        handleCloseCompleteDialog()
+        console.log('close' + sprintId)
+    }
+
 
     return (
         <Fragment>
@@ -287,8 +391,23 @@ let SprintComponent = function (props) {
 
                     <div style={{ display: "flex", width: "100%" }}>
                         <div style={{ flexGrow: 2, display: "flex", alignItems: "center" }}>
-                            <Typography>Project key here | Sprint name here</Typography>
-                            <span className="ml-1">total sprint backlog count here</span>
+                            <Typography>
+                                <span className="text--bold" style={{ textTransform: "uppercase" }}>
+                                    {data.project.code}
+                                </span>
+                                <span className="text--bold ml-1" style={{ textTransform: "capitalize" }}>
+                                    {data.name}
+                                </span>
+                            </Typography>
+                            <span className="ml-1"
+                                style={{
+                                    color: "rgb(107, 119, 140)",
+                                    marginLeft: ".7rem",
+                                    fontSize: "1rem"
+                                }}
+                            >
+                                {data.issues.length} issues
+                            </span>
                         </div>
                         <div style={{ flexGrow: 8, display: "flex", flexDirection: "row-reverse" }}>
                             <Icon
@@ -305,14 +424,33 @@ let SprintComponent = function (props) {
                                 open={Boolean(anchorEl)}
                                 onClose={handleCloseOptsMenu}
                             >
-                                <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>Move sprint up</MenuItem>
-                                <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>Move sprint down</MenuItem>
+                                <MenuItem onClick={(e) => { e.stopPropagation(); handleMoveUpSprint(data.id) }}>Move sprint up</MenuItem>
+                                <MenuItem onClick={(e) => { e.stopPropagation(); handleMoveDownSprint(data.id) }}>Move sprint down</MenuItem>
                                 <MenuItem onClick={(e) => { e.stopPropagation(); setOpenEditDialog(true) }}>Edit sprint</MenuItem>
                                 <MenuItem onClick={(e) => { e.stopPropagation(); setOpenDeleteDialog(true) }}>Delete sprint</MenuItem>
                             </Menu>
 
-                            <Button className="my-btn--hover" style={{ backgroundColor: "rgba(9,30,66,0.04)", marginRight: "1rem" }}>Start sprint</Button>
-                            <Button onClick={(event) => { event.stopPropagation(); setOpenCompleteDialog(true) }} className="my-btn--hover" style={{ backgroundColor: "rgba(9,30,66,0.04)", marginRight: "1rem" }}>Complete sprint</Button>
+                            <Button
+                                onClick={(event) => {
+                                    event.stopPropagation()
+                                    setOpenStartSprintDialog(true)
+                                }}
+                                variant="contained"
+                                color="primary"
+                                disabled={!props.canStart}
+                                style={{
+                                    marginRight: "1rem"
+                                }}>Start sprint
+                            </Button>
+                            {data.status == 1 &&
+                                <Button
+                                    onClick={(event) => { event.stopPropagation(); setOpenCompleteDialog(true) }}
+                                    className="my-btn--hover" style={{
+                                        backgroundColor: "rgba(9,30,66,0.04)",
+                                        marginRight: "1rem"
+                                    }}>Complete sprint
+                                </Button>
+                            }
                             <span>2</span>
                             <span>3</span>
                             <span>4</span>
@@ -324,19 +462,30 @@ let SprintComponent = function (props) {
                                 aria-describedby={"edit-dialog-description".concat(genratedId)}>
                                 <DialogTitle
                                     id={"edit-dialog-title".concat(genratedId)}>
-                                    Edit sprint: Project key - sprint name
-                                 </DialogTitle>
+                                    Edit sprint: {data.project.code} - {data.name}
+                                </DialogTitle>
                                 <DialogContent>
                                     <DialogContentText id={"edit-dialog-description".concat(genratedId)}>
                                     </DialogContentText>
                                     <div style={{ width: "100%", height: "auto" }}>
                                         <div style={{ display: "flex", flexDirection: "column" }}>
                                             <label>Sprint name*</label>
-                                            <TextField value="Sprint name" className="mt-1" style={{ width: "50%" }} variant="outlined" />
+                                            <TextField
+                                                name="newName"
+                                                onClick={(event) => event.stopPropagation()}
+                                                onChange={(event) => handleEditSprintChange(event)}
+                                                value={editSprint.newName}
+                                                className="mt-1"
+                                                style={{ width: "50%" }}
+                                                variant="outlined" />
                                         </div>
                                         <div className="mt-2" style={{ display: "flex", flexDirection: "column" }}>
                                             <label>Sprint goal</label>
                                             <TextareaAutosize
+                                                name="newGoal"
+                                                onClick={(event) => event.stopPropagation()}
+                                                onChange={(event) => handleEditSprintChange(event)}
+                                                value={editSprint.newGoal}
                                                 className="mt-1"
                                                 rows={8}
                                                 rowsMax={16}
@@ -346,11 +495,11 @@ let SprintComponent = function (props) {
                                 </DialogContent>
                                 <DialogActions>
                                     <Button
-                                        onClick={(e) => { e.stopPropagation(); handleEditSprint(0) }}
+                                        onClick={(e) => { e.stopPropagation(); handleEditSprintSubmit(data.id) }}
                                         color="primary">
                                         Update
                                     </Button>
-                                    <Button onClick={(e) => { e.stopPropagation(); handleCloseEditDialog() }} color="primary" autoFocus>
+                                    <Button onClick={(e) => { e.stopPropagation(); handleCloseEditDialog(); handleCloseOptsMenu() }} color="primary" autoFocus>
                                         Cancle
                                     </Button>
                                 </DialogActions>
@@ -366,16 +515,16 @@ let SprintComponent = function (props) {
                                  </DialogTitle>
                                 <DialogContent>
                                     <DialogContentText id={"delete-dialog-description".concat(genratedId)}>
-                                        Are you sure you want to delete sprint Project Key - Sprint Name?
+                                        Are you sure you want to delete sprint {data.project.code} - {data.name}?
                                     </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
                                     <Button
-                                        onClick={(e) => { e.stopPropagation(); handleDeleteSprint(0) }}
+                                        onClick={(e) => { e.stopPropagation(); handleDeleteSprint(data.id) }}
                                         color="primary">
                                         Delete
                                     </Button>
-                                    <Button onClick={(e) => { e.stopPropagation(); handleCloseDeleteDialog() }} color="primary" autoFocus>
+                                    <Button onClick={(e) => { e.stopPropagation(); handleCloseDeleteDialog(); handleCloseOptsMenu() }} color="primary" autoFocus>
                                         Cancle
                                     </Button>
                                 </DialogActions>
@@ -405,12 +554,133 @@ let SprintComponent = function (props) {
                                     </Button>
                                 </DialogActions>
                             </Dialog>
+                            <Dialog
+                                fullWidth={true}
+                                open={openStartSprintDialog}
+                                onClose={handleCloseStartSprintDialog}
+                                aria-labelledby={"start-sprint-dialog-title".concat(genratedId)}
+                                aria-describedby={"start-sprint-description".concat(genratedId)}>
+                                <DialogTitle
+                                    id={"start-sprint-dialog-title".concat(genratedId)}>
+                                    Start sprint
+                                 </DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText id={"delete-dialog-description".concat(genratedId)}>
+                                        {data.issues.length} issues will be included in this sprint.
+                                    </DialogContentText>
+                                    <div
+                                        onClick={(event) => event.stopPropagation()}
+                                        style={{ width: "100%", height: "auto" }}>
+                                        <div style={{
+                                            display: "flex",
+                                            flexDirection: "column"
+                                        }}>
+                                            <label>Sprint name*</label>
+                                            <TextField
+                                                name="name"
+                                                onClick={(event) => event.stopPropagation()}
+                                                onChange={(event) => handleStartSprintChange(event)}
+                                                value={startSprintState.name}
+                                                className="mt-1"
+                                                style={{ width: "50%" }}
+                                                variant="outlined" />
+                                        </div>
+                                        <div className="mt-2"
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column"
+                                            }}>
+                                            <label>Duration*</label>
+                                            <Select
+                                                name="duration"
+                                                className="mt-1"
+                                                style={{ width: "50%" }}
+                                                onClick={(e) => e.stopPropagation()}
+                                                value={startSprintState.duration.id}
+                                                onChange={(event) => handleStartSprintChange(event)}
+                                            >
+                                                {durations.map(dr =>
+                                                    <MenuItem
+                                                        className="ml-1"
+                                                        value={dr.id}>
+                                                        {dr.text}
+                                                    </MenuItem>)
+                                                }
+                                            </Select>
+                                        </div>
+                                        <div className="mt-2"
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column"
+                                            }}>
+                                            <label>Start date*</label>
+                                            <TextField
+                                                name="startDate"
+                                                onChange={(event) => handleStartSprintChange(event)}
+                                                disabled={startSprintState.isStartDateDisabled}
+                                                type="date"
+                                                value={startSprintState.startDate}
+                                            />
+                                        </div>
+                                        <div className="mt-2"
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column"
+                                            }}>
+                                            <label>End date*</label>
+                                            <TextField
+                                                name="endDate"
+                                                onChange={(event) => handleStartSprintChange(event)}
+                                                disabled={startSprintState.isEndDateDisable}
+                                                type="date"
+                                                value={startSprintState.endDate}
+                                            />
+                                        </div>
+                                        <div className="mt-2"
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column"
+                                            }}>
+                                            <label>Sprint goal</label>
+                                            <TextareaAutosize
+                                                name="goal"
+                                                onChange={(event) => handleStartSprintChange(event)}
+                                                onClick={(event) => event.stopPropagation()}
+                                                value={startSprintState.goal}
+                                                className="mt-1"
+                                                rows={8}
+                                                rowsMax={16}
+                                            />
+                                        </div>
+                                    </div>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleStartSprintSubmit(data.id)
+                                        }}
+                                        color="primary"
+                                        variant="contained">
+                                        Start
+                                    </Button>
+                                    <Button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleCloseStartSprintDialog();
+                                        }}
+                                        color="default" autoFocus>
+                                        Cancle
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
+
                         </div>
                     </div>
                 </AccordionSummary>
                 <AccordionDetails>
                     <div style={{ width: "96%", marginLeft: "auto", display: "flex", flexDirection: "column" }}>
-                        {(props.issues == null || props.isues.length == 0) &&
+                        {(data.issues == null || data.issues.length == 0) &&
                             <div className="pd-1" style={{ paddingTop: "0px", border: "2px solid rgb(223, 225, 230)", borderStyle: "dashed" }}>
                                 <Typography>
                                     Plan your sprint
@@ -418,6 +688,14 @@ let SprintComponent = function (props) {
                                     the work for this sprint. Select <bold>Start</bold> sprint when your're ready
                                 </Typography>
                             </div>
+                        }
+                        {(data.issues != null && data.issues.length > 0) &&
+                            data.issues.map(iss =>
+                                <IssueItem data={iss}
+                                    topOfBacklog={props.topOfBacklog}
+                                    bottomOfBacklog={props.bottomOfBacklog}
+                                    deleteSprint={props.deleteSprint}
+                                />)
                         }
                         <CreateNewBacklogItem className="mt-1" />
                     </div>
@@ -430,7 +708,7 @@ let SprintComponent = function (props) {
 let BacklogComponent = function (props) {
     let [isExpanding, setExpanding] = React.useState(false)
     let genratedId = "backlog-component".concat("_").concat(Date.now()).concat(Math.random() * 10)
-
+    console.log(props)
     return (
         <Fragment>
             <Accordion
@@ -449,13 +727,21 @@ let BacklogComponent = function (props) {
                     <div style={{ display: "flex", width: "100%" }}>
                         <div style={{ flexGrow: 2, display: "flex", alignItems: "center" }}>
                             <Typography>Backlog</Typography>
-                            <span className="ml-1">total sprint backlog count here</span>
+                            <span className="ml-1"
+                                style={{
+                                    color: "rgb(107, 119, 140)",
+                                    marginLeft: ".7rem",
+                                    fontSize: "1rem"
+                                }}
+                            >
+                                {props.backlogItems.length} issues
+                            </span>
                         </div>
                         <div style={{ flexGrow: 8, display: "flex", flexDirection: "row-reverse" }}>
                             <Button
-                            onClick={(event) => event.stopPropagation()} 
-                            className="my-btn--hover" 
-                            style={{ backgroundColor: "rgba(9,30,66,0.04)" }}>Create sprint</Button>
+                                onClick={(event) => { event.stopPropagation(); props.createSprint() }}
+                                className="my-btn--hover"
+                                style={{ backgroundColor: "rgba(9,30,66,0.04)" }}>Create sprint</Button>
                             <span>2</span>
                             <span>3</span>
                             <span>4</span>
@@ -496,14 +782,36 @@ let BacklogComponent = function (props) {
 }
 
 let BacklogSpaceComponent = function (props) {
-    let sprints = [1, 2, 3, 4, 5, 6, 7, 8]
+    const sprints = props.workingSprints
+    const anySprintStarted = sprints.filter(sprint => sprint.status == 1)
+
+    const isSprintCanStart = (sprintId) => {
+        if (anySprintStarted != null && anySprintStarted.length > 0) {
+            return false;
+        }
+        const idoSprint = sprints.findIndex(sprint => sprint.id == sprintId)
+        return idoSprint == 0 && sprints[idoSprint].issues != null
+            && sprints[idoSprint].issues.length > 0
+    }
     return (
         <Fragment>
             <MyBreadCrumbs />
             {
-                sprints && sprints.map(sprint => <SprintComponent sprint={sprint} />)
+                sprints && sprints.map(sprint =>
+                    <SprintComponent
+                        data={sprint}
+                        canStart={isSprintCanStart(sprint.id)}
+                        deleteSprint={props.deleteSprint}
+                        moveUpSprint={props.moveUpSprint}
+                        moveDownSprint={props.moveDownSprint}
+                        editSprint={props.editSprint}
+                        startSprint={props.startSprint}
+                    />)
             }
-            <BacklogComponent />
+            <BacklogComponent
+                backlogItems={props.backlogItems}
+                createSprint={() => props.createSprint(props.projectId)}
+            />
         </Fragment>
     )
 }

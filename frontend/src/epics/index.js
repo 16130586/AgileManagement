@@ -13,7 +13,16 @@ import {
     addWorkFlowLink
 } from "./work-space/project/workflow-epic";
 
-import {fetchBacklogPage as Project_Backlog_Page} from "./project/backlog" 
+import {fetchBacklogPage as Project_Backlog_Page,
+        topOfBacklog as Project_Top_Of_Backlog,
+        bottomOfBacklog as Project_Bottom_Of_Backlog,
+        deleteSprint as Project_Delete_Sprint,
+        moveUp as Project_Move_Up_Sprint,
+        moveDown as Project_Move_Down_Sprint,
+        createSprint as Project_Create_Sprint,
+        editSprint as Project_Edit_Sprint,
+        startSprint as Project_Start_Sprint,
+} from "./project/backlog" 
 export default combineEpics(
     login,
     signUp,
@@ -32,4 +41,12 @@ export default combineEpics(
     addWorkFlowItem,
     addWorkFlowLink,
     Project_Backlog_Page,
+    Project_Top_Of_Backlog,
+    Project_Bottom_Of_Backlog,
+    Project_Delete_Sprint,
+    Project_Move_Up_Sprint,
+    Project_Move_Down_Sprint,
+    Project_Create_Sprint,
+    Project_Edit_Sprint,
+    Project_Start_Sprint,
 );
