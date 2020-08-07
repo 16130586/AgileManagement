@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class StartSprintParams {
     public Integer sprintId;
-    public Date planDateEnd;
-    public Date planDateStart;
+    public Date endDate;
+    public Date startDate;
+    public String name;
+    public String goal;
 }

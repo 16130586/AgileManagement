@@ -27,6 +27,14 @@ export const ASYNC = {
         REMOVE_WORKFLOW_ITEM : 'full-filled.remove-workflow-item',
         REMOVE_WORKFLOW_LINK : 'full-filled.remove-workflow-link',
         BACKLOG_PAGE : 'full-filled.project.backlog-items',
+        TOP_OF_BACKLOG : 'full-filled.project.top-of-backlog',
+        BOTTOM_OF_BACKLOG : 'full-filled.project.bottom-of-backlog',
+        DELETE_SPRINT : 'full-filled.project.delete-sprint',
+        MOVE_UP_SPRINT : 'full-filled.project.move-up-sprint',
+        MOVE_DOWN_SPRINT : 'full-filled.project.move-down-sprint',
+        CREATE_SPRINT : 'full-filled.project.create-sprint',
+        EDIT_SPRINT : 'full-filled.project.edit-sprint',
+        START_SPRINT : 'full-filled.project.start-sprint',
     },
     REQUEST: {
         DELETE_PROJECT : 'request.delete-project',
@@ -39,6 +47,14 @@ export const ASYNC = {
         CREATE_WORKFLOW : 'request.create-workflow',
         ADD_WORKFLOW_ITEM : 'request.add-workflow-item',
         ADD_WORKFLOW_LINK : 'request.add-workflow-link',
+        TOP_OF_BACKLOG : 'request.project.top-of-backlog',
+        BOTTOM_OF_BACKLOG : 'request.project.bottom-of-backlog',
+        DELETE_SPRINT : 'request.project.delete-sprint',
+        MOVE_UP_SPRINT : 'request.project.move-up-sprint',
+        MOVE_DOWN_SPRINT : 'request.project.move-down-sprint',
+        CREATE_SPRINT : 'request-filled.project.create-sprint',
+        EDIT_SPRINT : 'request.project.edit-sprint',
+        START_SPRINT : 'request.project.start-sprint',
     }
    
 }

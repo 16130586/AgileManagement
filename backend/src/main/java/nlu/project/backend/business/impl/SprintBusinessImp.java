@@ -59,6 +59,7 @@ public class SprintBusinessImp implements SprintBusiness {
         adding.setProject(project);
         adding.setName(nextName);
         adding.setStatus(0);
+        adding.setIssues(Collections.emptyList());
         if (workingSprints.size() > 0)
             adding.setOrder(workingSprints.get(workingSprints.size() - 1).getOrder() + 1);
         else
@@ -87,8 +88,10 @@ public class SprintBusinessImp implements SprintBusiness {
         Sprint sprint = sprintDAO.getOne(entry.sprintId);
         if (!userDAO.isProductOwner(user.getId(), sprint.getProject().getId()))
             throw new InvalidParameterException("Invalid parameters!");
-        sprint.setDateBegin(entry.planDateStart);
-        sprint.setPlanDateEnd(entry.planDateEnd);
+        sprint.setDateBegin(entry.startDate);
+        sprint.setPlanDateEnd(entry.endDate);
+        sprint.setName(entry.name);
+        sprint.setGoal(entry.goal);
         sprint.setStatus(1);
         sprintDAO.update(sprint);
         return sprint;
@@ -110,6 +113,13 @@ public class SprintBusinessImp implements SprintBusiness {
         sprints.get(idoSprint-1).setOrder(previousOrder);
         sprintDAO.update(requestedSprint);
         sprintDAO.update(sprints.get(idoSprint - 1));
+
+        Collections.sort(sprints, new Comparator<Sprint>() {
+            @Override
+            public int compare(Sprint o1, Sprint o2) {
+                return o1.getOrder() - o2.getOrder();
+            }
+        });
         return sprints;
     }
 
@@ -129,6 +139,13 @@ public class SprintBusinessImp implements SprintBusiness {
         sprints.get(idoSprint+ 1).setOrder(previousOrder);
         sprintDAO.update(requestedSprint);
         sprintDAO.update(sprints.get(idoSprint + 1));
+
+        Collections.sort(sprints, new Comparator<Sprint>() {
+            @Override
+            public int compare(Sprint o1, Sprint o2) {
+                return o1.getOrder() - o2.getOrder();
+            }
+        });
         return sprints;
     }
 
