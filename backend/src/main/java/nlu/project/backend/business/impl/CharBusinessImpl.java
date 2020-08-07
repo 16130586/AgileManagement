@@ -2,6 +2,7 @@ package nlu.project.backend.business.impl;
 
 import nlu.project.backend.DAO.ProjectDAO;
 import nlu.project.backend.business.ChartBusiness;
+import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.model.WorkFlow;
 import nlu.project.backend.model.WorkFlowItem;
 import nlu.project.backend.model.chart.LinkData;
@@ -22,18 +23,6 @@ public class CharBusinessImpl implements ChartBusiness {
     public List<WorkFlowChart> getWorkFlowChart(int projectId) {
         List<WorkFlow> workFlows = projectDAO.getWorkFlowByProjectId(projectId);
         return parseWorkFlowToChartData(workFlows);
-    }
-
-    @Override
-    public void updateWorkFlow(WorkFlowChart chart) {
-        WorkFlow workFlow = projectDAO.getWorkFlowById(chart.id);
-
-        // update Workflow-Item
-        updateWorkFlowItem(workFlow.getItems(), chart.getNodeDataArray());
-
-        // remove Link-Workflow - this behavior just remove link, not add
-        updateRemoveWorkFlowLink(workFlow.getItems(), chart.linkDataArray);
-        projectDAO.updateWorkFlow(workFlow);
     }
 
     private List<WorkFlowChart> parseWorkFlowToChartData(List<WorkFlow> workFlows) {
@@ -87,22 +76,45 @@ public class CharBusinessImpl implements ChartBusiness {
         return result;
     }
 
-    private void updateWorkFlowItem(List<WorkFlowItem> items, List<NodeData> nodeDataArray) {
-        for (int i = 0; i < items.size(); i++) {
-            items.get(i).setName(nodeDataArray.get(i).text);
-            items.get(i).setLocation(nodeDataArray.get(i).loc);
-            items.get(i).setColor(nodeDataArray.get(i).color);
+    @Override
+    public void updateWorkFlow(WorkFlowChart chart) {
+        WorkFlow workFlow = projectDAO.getWorkFlowById(chart.id);
+
+        // update Workflow-Item
+        updateWorkFlowItem(workFlow.getItems(), chart.getNodeDataArray(), workFlow.getId());
+
+        // remove Link-Workflow - this behavior just remove link, not add
+        updateRemoveWorkFlowLink(workFlow.getItems(), chart.linkDataArray);
+        projectDAO.updateWorkFlow(workFlow);
+    }
+
+    private void updateWorkFlowItem(List<WorkFlowItem> items, List<NodeData> nodeDataArray, int workflowId) {
+        NodeData nodeData;
+        WorkFlowParams params;
+        for (WorkFlowItem item : items) {
+            nodeData = getNodeDataById(item.getId(), nodeDataArray);
+            if ( nodeData != null) {
+                item.setName(nodeData.text);
+                item.setLocation(nodeData.loc);
+                item.setColor(nodeData.color);
+            } else {
+                params = new WorkFlowParams();
+                params.toItemId = item.getId();
+                projectDAO.deleteWorkFlowItem(params);
+            }
         }
     }
 
     private void updateRemoveWorkFlowLink(List<WorkFlowItem> items, List<LinkData> linkDataArray) {
+        List<WorkFlowItem> removedList = new ArrayList<>();
         for (WorkFlowItem item : items) {
             List<WorkFlowItem> nextItems = item.getNextItems();
             for (WorkFlowItem next : nextItems) {
                 if (!isExistedLinkData(next, linkDataArray, item.getId())) {
-                    items.remove(next);
+                    removedList.add(next);
                 }
             }
+            nextItems.removeAll(removedList);
         }
     }
 
@@ -114,5 +126,13 @@ public class CharBusinessImpl implements ChartBusiness {
             }
         }
         return false;
+    }
+
+    private NodeData getNodeDataById(int id, List<NodeData> nodeDataArray) {
+        for (NodeData node : nodeDataArray) {
+            if (node.key == id)
+                return node;
+        }
+        return null;
     }
 }

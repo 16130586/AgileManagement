@@ -254,10 +254,10 @@ public class ProjectDAO {
         return itemRepository.save(item);
     }
 
-    public WorkFlow deleteWorkFlowItem(WorkFlowParams params) {
+    public WorkFlowItem deleteWorkFlowItem(WorkFlowParams params) {
         WorkFlowItem item = itemRepository.getOne(params.toItemId);
-        itemRepository.delete(item);
-        return workflowRepository.getOne(params.id);
+        item.setWorkFlow(null);
+        return itemRepository.save(item);
     }
 
     public WorkFlow updateWorkFlow(WorkFlow workFlow) {

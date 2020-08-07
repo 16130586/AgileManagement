@@ -23,7 +23,7 @@ public interface ProjectBusiness {
     WorkFlowItem addWorkFlowItem(WorkFlowParams params);
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
-    WorkFlow deleteWorkFlowItem(WorkFlowParams params);
+    WorkFlowItem deleteWorkFlowItem(WorkFlowParams params);
     List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId);
     List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails user);
     List<WorkFlow> getWorkFlow(int projectId);

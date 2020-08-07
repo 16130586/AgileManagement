@@ -13,6 +13,9 @@ export const fullFilledAllWorkFlow = (data) => ({type: AsyncEventTypes.FULL_FILL
 export const updateWorkFlowLocation = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_WORKFLOW_LOC, payload: data})
 export const fullFilledUpdateWorkFlowLocation = (data) => ({type: AsyncEventTypes.FULL_FILLED.UPDATE_WORKFLOW_LOC, payload: data})
 
+export const updateWorkFlowItem = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_WORKFLOW_LOC, payload: data})
+export const fullFilledUpdateWorkFlowItem = (data) => ({type: AsyncEventTypes.FULL_FILLED.UPDATE_WORKFLOW_LOC, payload: data})
+
 export const createWorkFlow = (data) => ({type: AsyncEventTypes.REQUEST.CREATE_WORKFLOW, payload: data})
 export const fullFilledNewWorkFlow = (data) => ({type: AsyncEventTypes.FULL_FILLED.NEW_WORKFLOW, payload: data})
 
@@ -21,6 +24,8 @@ export const fullFilledNewWorkFlowItem = (data) => ({type: AsyncEventTypes.FULL_
 
 export const addWorkFlowLink = (data) => ({type: AsyncEventTypes.REQUEST.ADD_WORKFLOW_LINK, payload: data})
 export const fullFilledNewWorkFlowLink = (data) => ({type: AsyncEventTypes.FULL_FILLED.NEW_WORKFLOW_LINK, payload: data})
+export const fullFilledRemovedWorkFlowItem = (workFlowId, data) => ({type: AsyncEventTypes.FULL_FILLED.REMOVE_WORKFLOW_ITEM, payload: {workFlowId: workFlowId, data: data}})
+export const fullFilledRemovedWorkFlowLink = (workFlowId, data) => ({type: AsyncEventTypes.FULL_FILLED.REMOVE_WORKFLOW_LINK, payload: {workFlowId: workFlowId, data: data}})
 
 export const fetchBacklogPage = (projectId) => ({type: AsyncEventTypes.LOAD_MORE.BACKLOG_PAGE , payload: projectId})
 export const fullFilledBacklogPage = (data) => ({type: AsyncEventTypes.FULL_FILLED.BACKLOG_PAGE , payload: data})
@@ -51,3 +56,4 @@ export const fullFilledRequestEditSprint = (sprint) => ({type: AsyncEventTypes.F
 
 export const requestStartSprint = (data) => ({type: AsyncEventTypes.REQUEST.START_SPRINT , payload: data})
 export const fullFilledRequestStartSprint = (sprint) => ({type: AsyncEventTypes.FULL_FILLED.START_SPRINT , payload: sprint})
+

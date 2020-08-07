@@ -24,6 +24,8 @@ export const ASYNC = {
         NEW_WORKFLOW: 'full-filled.new-workflow',
         NEW_WORKFLOW_ITEM : 'full-filled.new-workflow-item',
         NEW_WORKFLOW_LINK : 'full-filled.new-workflow-link',
+        REMOVE_WORKFLOW_ITEM : 'full-filled.remove-workflow-item',
+        REMOVE_WORKFLOW_LINK : 'full-filled.remove-workflow-link',
         BACKLOG_PAGE : 'full-filled.project.backlog-items',
         TOP_OF_BACKLOG : 'full-filled.project.top-of-backlog',
         BOTTOM_OF_BACKLOG : 'full-filled.project.bottom-of-backlog',

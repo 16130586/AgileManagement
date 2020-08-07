@@ -127,7 +127,7 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public WorkFlow deleteWorkFlowItem(WorkFlowParams params) {
+    public WorkFlowItem deleteWorkFlowItem(WorkFlowParams params) {
         return projectDAO.deleteWorkFlowItem(params);
     }
 

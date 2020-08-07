@@ -19,3 +19,7 @@ INSERT INTO jira.issue_type(icon_url , `name`, project_id) VALUES(null , 'Task' 
 INSERT INTO jira.issue_type(icon_url , `name`, project_id) VALUES(null , 'Bug' , NULL);
 
 UPDATE jira.project SET workflow_id = 2;
+UPDATE jira.workflow SET start_status_id = 1 WHERE id = 1;
+UPDATE jira.workflow SET end_status_id = 3 WHERE id = 1;
+UPDATE jira.workflow SET start_status_id = 4 WHERE id = 2;
+UPDATE jira.workflow SET end_status_id = 7 WHERE id = 2;

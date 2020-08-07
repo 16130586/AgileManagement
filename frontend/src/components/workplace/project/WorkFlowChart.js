@@ -16,7 +16,21 @@ function initDiagram() {
                 'clickCreatingTool.archetypeNodeData': { text: 'new node', color: 'lightblue' },
                 model: $(go.GraphLinksModel,
                     {
-                        linkKeyProperty: 'key'  // IMPORTANT! must be defined for merges and data sync when using GraphLinksModel
+                        linkKeyProperty: 'key',  // IMPORTANT! must be defined for merges and data sync when using GraphLinksModel
+                        // positive keys for nodes
+                        makeUniqueKeyFunction: (m, data) => {
+                            let k = data.key || 1;
+                            while (m.findNodeDataForKey(k)) k++;
+                            data.key = k;
+                            return k;
+                        },
+                        // negative keys for links
+                        makeUniqueLinkKeyFunction: (m, data) => {
+                            let k = data.key || -1;
+                            while (m.findLinkDataForKey(k)) k--;
+                            data.key = k;
+                            return k;
+                        }
                     })
             });
 
@@ -41,15 +55,22 @@ function WorkFlowChart(props) {
     const nodeDataArray = props.nodeDataArray;
     const linkDataArray = props.linkDataArray;
 
-    const updateWorkFlowLoc = {
+    const updateWorkFlowItem = {
         workFlowId: props.workFlowId,
         data: null
     }
 
     function handleModelChange(changes) {
-        if ( changes != undefined && changes.modifiedNodeData != undefined && changes.modifiedNodeData.length == 1) {
-            updateWorkFlowLoc.data = changes.modifiedNodeData[0]
-            props.fullFilledWFLOC(updateWorkFlowLoc);
+        console.log(changes)
+        if ( changes.removedNodeKeys != undefined && changes.removedNodeKeys.length == 1 && changes.modifiedNodeData == undefined) {
+            if (changes.removedLinkKeys != undefined) {
+                props.removeWorkFlowLink(props.workFlowId, changes.removedLinkKeys)
+            }
+            return props.removeWorkFlowItem(props.workFlowId, changes.removedNodeKeys[0])
+        }
+        if ( changes.modifiedNodeData != undefined && changes.modifiedNodeData.length == 1) {
+            updateWorkFlowItem.data = changes.modifiedNodeData[0]
+            return props.updateWorkFlowItem(updateWorkFlowItem);
         }
     }
 
