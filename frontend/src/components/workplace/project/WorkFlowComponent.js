@@ -67,6 +67,7 @@ let AddLinkWorkFlowForm = function (props) {
                 select
                 name="from"
                 label="From Item"
+                defaultValue="0"
                 onChange={(e) => props.formAddLinkWorkFlowChange(e)}
                 SelectProps={{
                     native: true,
@@ -75,7 +76,7 @@ let AddLinkWorkFlowForm = function (props) {
                 fullWidth
                 margin="dense"
             >
-                <option selected disabled value="0">Select Item...</option>
+                <option disabled value="0">Select Item...</option>
                 {nodeDataArray.map((option) => (
                     <option key={option.key} value={option.key}>
                         {option.text}
@@ -87,6 +88,7 @@ let AddLinkWorkFlowForm = function (props) {
                 select
                 name="to"
                 label="To Item"
+                defaultValue="0"
                 onChange={(e) => props.formAddLinkWorkFlowChange(e)}
                 SelectProps={{
                     native: true,
@@ -95,7 +97,7 @@ let AddLinkWorkFlowForm = function (props) {
                 fullWidth
                 margin="dense"
             >
-                <option selected disabled value="0">Select Item...</option>
+                <option disabled value="0">Select Item...</option>
                 {nodeDataArray.map((option) => (
                     <option key={option.key} value={option.key}>
                         {option.text}
@@ -195,6 +197,7 @@ let WorkFlow = function (props) {
         let formData = { ...addLinkWorkFlowForm }
         formData[event.target.name] = event.target.value
         setAddLinkWorkFlowForm(formData)
+        console.log(formData)
     }
 
     const isFormAddWorkFlowLinkValid = () => {
@@ -260,8 +263,8 @@ let WorkFlow = function (props) {
                                 </ListSubheader>
                             }>
                             {listWorkFlow.map((item) => (
-                                <ListItem button onClick={() => handleWorkFlowSelected(item.id)}>
-                                    <ListItemText key={item.id} id={"workflow"+item.id} primary={item.name} />
+                                <ListItem button key={item.id} onClick={() => handleWorkFlowSelected(item.id)}>
+                                    <ListItemText id={"workflow"+item.id} primary={item.name} />
                                 </ListItem>
                             ))}
                         </List>
@@ -326,11 +329,18 @@ let WorkFlow = function (props) {
                                     <Button onClick={handleCloseAddLinkWorkFlowDialog} color="primary" autoFocus>Quit</Button>
                                 </DialogActions>
                             </Dialog>
-                            <button onClick={() => props.updateWFLOC(currentWorkFlow)} style={{border: "none", padding: "8px", backgroundColor: "#f6f6f6", marginLeft: "8px"}}>
+                            <button onClick={() => props.updateWorkFlow(currentWorkFlow)} style={{border: "none", padding: "8px", backgroundColor: "#f6f6f6", marginLeft: "8px"}}>
                                 Save Diagram
                             </button>
                         </div>
-                        <WorkFlowChart workFlowId={currentWorkFlow.id} updateWFLOC={props.updateWFLOC} fullFilledWFLOC={props.fullFilledWFLOC} nodeDataArray={currentWorkFlow.nodeDataArray} linkDataArray={currentWorkFlow.linkDataArray}/>
+                        <WorkFlowChart
+                            workFlowId={currentWorkFlow.id}
+                            updateWorkFlowItem={props.updateWorkFlowItem}
+                            nodeDataArray={currentWorkFlow.nodeDataArray}
+                            linkDataArray={currentWorkFlow.linkDataArray}
+                            removeWorkFlowItem={props.removeWorkFlowItem}
+                            removeWorkFlowLink={props.removeWorkFlowLink}
+                        />
                     </div>
                         }
                 </div>

@@ -22,7 +22,10 @@ export const ASYNC = {
         UPDATE_WORKFLOW_LOC: 'full-filled.update-workflow-location',
         NEW_WORKFLOW: 'full-filled.new-workflow',
         NEW_WORKFLOW_ITEM : 'full-filled.new-workflow-item',
-        NEW_WORKFLOW_LINK : 'full-filled.new-workflow-link'
+        NEW_WORKFLOW_LINK : 'full-filled.new-workflow-link',
+        REMOVE_WORKFLOW_ITEM : 'full-filled.remove-workflow-item',
+        REMOVE_WORKFLOW_LINK : 'full-filled.remove-workflow-link'
+
     },
     REQUEST: {
         DELETE_PROJECT : 'request.delete-project',

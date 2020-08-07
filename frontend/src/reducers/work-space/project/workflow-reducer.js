@@ -25,7 +25,7 @@ const workFlowReducer = (state = All_WorkFlow, action) => {
                 nodeDataArray: [],
                 linkDataArray: []
             }
-            nextState.push(newWorkflow)
+            nextState = [...nextState, newWorkflow]
             break;
         case AsynTypes.FULL_FILLED.NEW_WORKFLOW_ITEM:
             let newNodeData = {
@@ -34,16 +34,75 @@ const workFlowReducer = (state = All_WorkFlow, action) => {
                 color: action.payload.color,
                 loc: action.payload.location
             }
-            nextState.forEach(workFlow => {
+            nextState = nextState.map(workFlow => {
                 if (workFlow.id == action.payload.workFlow.id) {
-                    return workFlow.nodeDataArray.push(newNodeData);
+                    workFlow.nodeDataArray = [...workFlow.nodeDataArray, newNodeData]
                 }
+                return workFlow
             })
+            break;
+        case AsynTypes.FULL_FILLED.NEW_WORKFLOW_LINK:
+            let newLinkData = {
+                key: -1,
+                from: action.payload.id,
+                to: action.payload.nextItems[action.payload.nextItems.length - 1].id
+            }
+            nextState = nextState.map(workFlow => {
+                if (workFlow.id == action.payload.workFlow.id) {
+                    let linkArray = workFlow.linkDataArray;
+                    if (linkArray.length > 0)
+                        newLinkData.key = linkArray[linkArray.length-1].key-1
+                    workFlow.linkDataArray = [...workFlow.linkDataArray, newLinkData]
+                }
+                return workFlow
+            })
+            break;
+        case AsynTypes.FULL_FILLED.REMOVE_WORKFLOW_ITEM:
+            let removedIndex;
+            nextState = nextState.map(workFlow => {
+                if (workFlow.id == action.payload.workFlowId) {
+                    workFlow.nodeDataArray.forEach((node, index) => {
+                        if (node.key == action.payload.data) {
+                            return workFlow.nodeDataArray = [...workFlow.nodeDataArray.slice(0, index), ...workFlow.nodeDataArray.slice(index+1)]
+                        }
+                    })
+
+                }
+                return workFlow
+            })
+            break;
+        case AsynTypes.FULL_FILLED.REMOVE_WORKFLOW_LINK:
+            let i = 0;
+            nextState = nextState.map(workFlow => {
+                if (workFlow.id == action.payload.workFlowId) {
+                    while (i < workFlow.linkDataArray.length) {
+                        console.log(i + " : " +isExistedInRemovedList(workFlow.linkDataArray[i].key, action.payload.data))
+                        if (isExistedInRemovedList(workFlow.linkDataArray[i].key, action.payload.data)) {
+                            workFlow.linkDataArray = [...workFlow.linkDataArray.slice(0, i), ...workFlow.linkDataArray.slice(i+1)]
+                            console.log("found item " + i)
+                        }
+                        else
+                            i++
+                    }
+                }
+                return workFlow;
+            })
+            console.log("new state")
+            console.log(nextState)
             break;
         default:
             break;
     }
     return nextState;
+}
+
+const isExistedInRemovedList = (key, list) => {
+    let result = false;
+    list.forEach(i => {
+        if (key == i)
+            return result = true;
+    })
+    return result;
 }
 
 export default workFlowReducer;

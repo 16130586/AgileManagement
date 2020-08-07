@@ -5,10 +5,10 @@ import {pageContextualNavigation} from '../../actions/global'
 import WorkFlowComponent from "../../components/workplace/project/WorkFlowComponent";
 import {
     fetchAllWorkFlow,
-    fullFilledUpdateWorkFlowLocation,
-    updateWorkFlowLocation,
+    fullFilledUpdateWorkFlowItem,
+    updateWorkFlowItem,
     createWorkFlow,
-    addWorkFlowItem, addWorkFlowLink
+    addWorkFlowItem, addWorkFlowLink, fullFilledRemovedWorkFlowItem, fullFilledRemovedWorkFlowLink
 } from "../../actions/project";
 
 const fakeWorkFlowList = [
@@ -60,12 +60,14 @@ const WorkFlow = function(props){
     return(
         <WorkFlowComponent
             listWorkFlow={listWorkFlow}
-            updateWFLOC={props.updateWorkFlowLocation}
-            fullFilledWFLOC={props.fullFilledUpdateWorkFlowLocation}
+            updateWorkFlow={props.updateWorkFlow}
+            updateWorkFlowItem={props.fullFilledUpdateWorkFlowItem}
             createWorkFlow={props.createWorkFlow}
             addWorkFlowItem={props.addWorkFlowItem}
             addWorkFlowLink={props.addWorkFlowLink}
             projectId={projectId}
+            removeWorkFlowItem={props.fullFilledRemovedWorkFlowItem}
+            removeWorkFlowLink={props.fullFilledRemovedWorkFlowLink}
         />
     )
 }
@@ -78,11 +80,14 @@ const mapDispatchToProps = dispatch => {
     return {
         getNavigation : (pageName, data) => dispatch(pageContextualNavigation(pageName,data)),
         fetchAllWorkFlow: (projectId) => dispatch(fetchAllWorkFlow(projectId)),
-        updateWorkFlowLocation: (data) => dispatch(updateWorkFlowLocation(data)),
-        fullFilledUpdateWorkFlowLocation: (data) => dispatch(fullFilledUpdateWorkFlowLocation(data)),
+        updateWorkFlow: (data) => dispatch(updateWorkFlowItem(data)),
+        fullFilledUpdateWorkFlowItem: (data) => dispatch(fullFilledUpdateWorkFlowItem(data)),
         createWorkFlow: (data) => dispatch(createWorkFlow(data)),
         addWorkFlowItem: (data) => dispatch(addWorkFlowItem(data)),
-        addWorkFlowLink: (data) => dispatch(addWorkFlowLink(data))
+        addWorkFlowLink: (data) => dispatch(addWorkFlowLink(data)),
+        fullFilledRemovedWorkFlowItem: (workFlowId, data) => dispatch(fullFilledRemovedWorkFlowItem(workFlowId, data)),
+        fullFilledRemovedWorkFlowLink: (workFlowId, data) => dispatch(fullFilledRemovedWorkFlowLink(workFlowId, data))
+
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(WorkFlow)
