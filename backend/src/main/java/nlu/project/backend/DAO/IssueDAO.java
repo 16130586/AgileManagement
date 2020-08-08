@@ -65,7 +65,7 @@ public class IssueDAO {
         return issueRepository.save(toSave);
     }
 
-    public Issue update(IssueParams issueParams) {
+    public Issue patch(IssueParams issueParams) {
         Issue toSave = issueRepository.getOne(issueParams.id);
 
         toSave.setName(issueParams.name);
@@ -79,7 +79,9 @@ public class IssueDAO {
 
         return issueRepository.save(toSave);
     }
-
+    public Issue update(Issue iss){
+        return issueRepository.saveAndFlush(iss);
+    }
     public boolean delete(int issueId) {
         try{
             issueRepository.deleteById(issueId);
@@ -132,5 +134,9 @@ public class IssueDAO {
             System.out.println(e.getMessage());
         }
         return Collections.emptyList();
+    }
+
+    public Issue getOne(int issueId) {
+        return issueRepository.getOne(issueId);
     }
 }

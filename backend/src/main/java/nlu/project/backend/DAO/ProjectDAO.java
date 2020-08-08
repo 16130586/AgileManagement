@@ -67,6 +67,7 @@ public class ProjectDAO {
         project.setCode(projectParams.key);
         project.setDescription(projectParams.description);
         project.setImgUrl(projectParams.imgUrl);
+        project.setCurrentWorkFlow(workflowRepository.findDefault().get(0));
         projectRepository.save(project);
         // Backlog
         BackLog backLog = new BackLog();
