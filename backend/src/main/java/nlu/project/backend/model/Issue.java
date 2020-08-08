@@ -42,9 +42,14 @@ public class Issue {
     private String description;
     @Column(name = "hours")
     private Double hours;
+
+    @Column(name = "story_point")
+    private int storyPoint;
     @ManyToOne
     @JoinColumn(name = "priority_id")
     private Priority priority;
 
+    @Column(name="order_in_backlog")
+    private Integer orderInBacklog;
 
 }

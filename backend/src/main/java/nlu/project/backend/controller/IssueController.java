@@ -5,6 +5,7 @@ import nlu.project.backend.entry.filter.IssueFilterParams;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.entry.issue.IssueTypeParams;
+import nlu.project.backend.entry.issue.MoveToBacklog;
 import nlu.project.backend.entry.issue.MoveToParams;
 import nlu.project.backend.model.IssueType;
 import nlu.project.backend.model.response.ApiResponse;
@@ -78,6 +79,28 @@ public class IssueController extends BaseController{
                                          @RequestBody MoveToParams params){
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
         Object result = issueBusiness.moveIssueToSprint(params , userDetails);
+        if(result == null)
+            return ApiResponse.OnBadRequest("Cannot move");
+        return ApiResponse.OnSuccess(params , "move!");
+    }
+    @PostMapping("/{id}/topBacklog")
+    public ApiResponse moveIssueToTopBacklog(HttpServletRequest request,
+                                             @RequestBody MoveToBacklog params){
+            params.top = true;
+            params.bottom = false;
+            CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+            Object result = issueBusiness.moveToBacklog(params , userDetails);
+            if(result == null)
+                return ApiResponse.OnBadRequest("Cannot move");
+            return ApiResponse.OnSuccess(params , "move!");
+    }
+    @PostMapping("/{id}/bottomBacklog")
+    public ApiResponse moveIssueToBottomBacklog(HttpServletRequest request,
+                                             @RequestBody MoveToBacklog params){
+        params.top = false;
+        params.bottom = true;
+        CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+        Object result = issueBusiness.moveToBacklog(params , userDetails);
         if(result == null)
             return ApiResponse.OnBadRequest("Cannot move");
         return ApiResponse.OnSuccess(params , "move!");
