@@ -13,8 +13,8 @@ export const BACKEND_API = {
         PROJECT_GET_BACKLOG_ITEMS : "/project/{projectId}/backlog",
         PROJECT_GET_WORKING_SPRINTS : "/project/{projectId}/workingSprints",
         DELETE_SPRINT : "/sprint/{id}",
-        TOP_OF_BACKLOG : "",
-        BOTTOM_OF_BACKLOG : "",
+        TOP_OF_BACKLOG : "/issue/{id}/topBacklog",
+        BOTTOM_OF_BACKLOG : "/issue/{id}/bottomBacklog",
         MOVE_UP_SPRINT : "/sprint/{id}/moveUp",
         MOVE_DOWN_SPRINT: "/sprint/{id}/moveDown",
         CREATE_SPRINT: "/sprint",
@@ -22,5 +22,6 @@ export const BACKEND_API = {
         START_SPRINT : "/sprint/{id}/start",
         DELETE_ISSUE : "/issue/delete",
         MOVE_ISSUE: "/issue/move",
+        PROJECT_GET_ISSUE_TYPES: '/project/{projectId}/issuetypes',
     }
 }

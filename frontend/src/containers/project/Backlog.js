@@ -40,6 +40,7 @@ const Backlog = function (props) {
             startSprint={props.startSprint}
             deleteIssue={props.deleteIssue}
             moveIssueToSprint={props.moveIssueToSprint}
+            issueTypes={props.issueTypes}
         >
         </BacklogComponent>
     )
@@ -48,15 +49,16 @@ const mapStateToProps = state => {
     return {
         backlogItems: state.Project_Backlog.backlogItems,
         workingSprints: state.Project_Backlog.workingSprints,
-        isLoadBacklogPage: state.Project_Backlog.isLoadBacklogPage
+        issueTypes : state.Project_Backlog.issueTypes,
+        isLoadBacklogPage: state.Project_Backlog.isLoadBacklogPage,
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
         getNavigation: (pageName, data) => dispatch(pageContextualNavigation(pageName, data)),
         fetchBacklogPage: (projectId) => dispatch(fetchBacklogPage(projectId)),
-        topOfBacklog: (issueId, backlogId) => dispatch(requestTopOfBacklog(issueId, backlogId)),
-        bottomOfBacklog: (issueId, backlogId) => dispatch(requestBottomOfBacklog(issueId, backlogId)),
+        topOfBacklog: (issueId, sprintId) => dispatch(requestTopOfBacklog(issueId, sprintId)),
+        bottomOfBacklog: (issueId, sprintId) => dispatch(requestBottomOfBacklog(issueId, sprintId)),
         deleteSprint: (sprintId) => dispatch(requestDeleteSprint(sprintId)),
         moveUpSprint: (sprintId) => dispatch(requestMoveUpSprint(sprintId)),
         moveDownSprint: (sprintId) => dispatch(requestMoveDownSprint(sprintId)),
@@ -64,12 +66,7 @@ const mapDispatchToProps = dispatch => {
         editSprint: (data) => dispatch(requestEditSprint(data)),
         startSprint: (data) => dispatch(requestStartSprint(data)),
         deleteIssue: (issueId, projectId) => dispatch(requestDeleteIssue(issueId, projectId)),
-
-        moveIssueToSprint: (fromSprintId, toSprintId, issueId) =>
-        {
-            console.log(fromSprintId + " " + toSprintId + " " +  issueId);
-            return dispatch(requestMoveIssueToSprint(fromSprintId, toSprintId, issueId))
-        },
+        moveIssueToSprint: (fromSprintId, toSprintId, issueId) => dispatch(requestMoveIssueToSprint(fromSprintId, toSprintId, issueId)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Backlog)

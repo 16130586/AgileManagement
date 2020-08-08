@@ -1,5 +1,5 @@
 import { ASYNC as AsyncEventTypes } from '../../constants/index'
-const init = { isLoadBacklogPage: false, backlogItems: [], workingSprints: [] }
+const init = { isLoadBacklogPage: false, backlogItems: [], workingSprints: [], issueTypes: [] }
 const Backlog = (state = init, action) => {
     let nextState = state
     let sprintId = -1
@@ -11,7 +11,8 @@ const Backlog = (state = init, action) => {
             nextState = {
                 isLoadBacklogPage: true,
                 backlogItems: action.payload.backlogItems,
-                workingSprints: action.payload.workingSprints
+                workingSprints: action.payload.workingSprints,
+                issueTypes : action.payload.issueTypes,
             }
             break;
         case AsyncEventTypes.FULL_FILLED.CREATE_SPRINT:
@@ -42,16 +43,44 @@ const Backlog = (state = init, action) => {
             }
             break;
         case AsyncEventTypes.FULL_FILLED.TOP_OF_BACKLOG:
-            nextState = {
-                ...nextState,
-                backlogItems: action.payload
-            }
+            (function () {
+                issueId = action.payload.issueId
+                sprintId = action.payload.sprintId
+                let spIdo = nextState.workingSprints.findIndex(sp => sp.id == sprintId)
+                let issIdo = nextState.workingSprints[spIdo].issues.findIndex(is => is.id == issueId)
+                let targetIss = nextState.workingSprints[spIdo].issues[issIdo]
+                targetIss.sprint = null
+                let newIssues = [...nextState.workingSprints[spIdo].issues.slice(0, issIdo),
+                ...nextState.workingSprints[spIdo].issues.slice(issIdo + 1)]
+                nextState.workingSprints[spIdo].issues = newIssues
+
+                nextState.backlogItems.unshift(targetIss)
+                nextState = {
+                    ...nextState,
+                    workingSprints: [...nextState.workingSprints],
+                    backlogItems: [...nextState.backlogItems]
+                }
+            })()
             break;
         case AsyncEventTypes.FULL_FILLED.BOTTOM_OF_BACKLOG:
-            nextState = {
-                ...nextState,
-                backlogItems: action.payload
-            }
+            (function(){
+                issueId = action.payload.issueId
+                sprintId = action.payload.sprintId
+                let spIdo = nextState.workingSprints.findIndex(sp => sp.id == sprintId)
+                let issIdo = nextState.workingSprints[spIdo].issues.findIndex(is => is.id == issueId)
+                let targetIss = nextState.workingSprints[spIdo].issues[issIdo]
+                targetIss.sprint = null
+                let newIssues = [...nextState.workingSprints[spIdo].issues.slice(0, issIdo),
+                ...nextState.workingSprints[spIdo].issues.slice(issIdo + 1)]
+                nextState.workingSprints[spIdo].issues = newIssues
+    
+                nextState.backlogItems.push(targetIss)
+                nextState = {
+                    ...nextState,
+                    workingSprints: [...nextState.workingSprints],
+                    backlogItems: [...nextState.backlogItems]
+                }
+            })()
             break;
         case AsyncEventTypes.FULL_FILLED.MOVE_UP_SPRINT:
         case AsyncEventTypes.FULL_FILLED.MOVE_DOWN_SPRINT:
@@ -141,18 +170,30 @@ const Backlog = (state = init, action) => {
                     }
                     newWorkingSprints.push({ ...sprint, issues: newIss })
                 })
-                
+
                 let idoOfToSprint = newWorkingSprints.findIndex(sp => sp.id == toSprintId)
-                if(targetIssue == null) console.log('null nha cu')
-                newWorkingSprints[idoOfToSprint].issues.push(targetIssue)
-                
-                console.log(newWorkingSprints)
-                nextState = {
-                    ...nextState,
-                    workingSprints: newWorkingSprints
+                //sprint a to sprint b
+                if (fromSprintId > 0 && targetIssue != null) {
+                    newWorkingSprints[idoOfToSprint].issues.push(targetIssue)
+                    nextState = {
+                        ...nextState,
+                        workingSprints: newWorkingSprints
+                    }
+                }
+                // backlog to sprint
+                if (fromSprintId == -1 && targetIssue == null) {
+                    let ido = nextState.backlogItems.findIndex(iss => iss.id == issueId)
+                    targetIssue = { ...nextState.backlogItems[ido] }
+                    newWorkingSprints[idoOfToSprint].issues.push(targetIssue)
+                    let newBacklogItems = [...nextState.backlogItems.slice(0, ido),
+                    ...nextState.backlogItems.slice(ido + 1)]
+                    nextState = {
+                        ...nextState,
+                        workingSprints: newWorkingSprints,
+                        backlogItems: newBacklogItems
+                    }
                 }
             })()
-
             break;
         default:
             break;

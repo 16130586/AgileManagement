@@ -33,11 +33,11 @@ export const fullFilledBacklogPage = (data) => ({ type: AsyncEventTypes.FULL_FIL
 export const requestDeleteSprint = (sprintId) => ({ type: AsyncEventTypes.REQUEST.DELETE_SPRINT, payload: sprintId })
 export const fullFilledRequestDeleteSprint = (sprintId) => ({ type: AsyncEventTypes.FULL_FILLED.DELETE_SPRINT, payload: sprintId })
 
-export const requestTopOfBacklog = (issueId, backlogId) => ({ type: AsyncEventTypes.REQUEST.TOP_OF_BACKLOG, payload: { issueId, backlogId } })
-export const fullFilledRequestTopOfBacklog = (backlogItems) => ({ type: AsyncEventTypes.FULL_FILLED.TOP_OF_BACKLOG, payload: backlogItems })
+export const requestTopOfBacklog = (issueId, sprintId) => ({ type: AsyncEventTypes.REQUEST.TOP_OF_BACKLOG, payload: { issueId, sprintId } })
+export const fullFilledRequestTopOfBacklog = (data) => ({ type: AsyncEventTypes.FULL_FILLED.TOP_OF_BACKLOG, payload: data })
 
-export const requestBottomOfBacklog = (issueId, backlogId) => ({ type: AsyncEventTypes.REQUEST.BOTTOM_OF_BACKLOG, payload: { issueId, backlogId } })
-export const fullFilledRequestBottomOfBacklog = (backlogItems) => ({ type: AsyncEventTypes.FULL_FILLED.BOTTOM_OF_BACKLOG, payload: backlogItems })
+export const requestBottomOfBacklog = (issueId, sprintId) => ({ type: AsyncEventTypes.REQUEST.BOTTOM_OF_BACKLOG, payload: { issueId, sprintId } })
+export const fullFilledRequestBottomOfBacklog = (data) => ({ type: AsyncEventTypes.FULL_FILLED.BOTTOM_OF_BACKLOG, payload: data })
 
 
 export const requestMoveUpSprint = (sprintId) => ({ type: AsyncEventTypes.REQUEST.MOVE_UP_SPRINT, payload: sprintId })
