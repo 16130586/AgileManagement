@@ -1,19 +1,18 @@
 package nlu.project.backend.business.impl;
 
 import lombok.NoArgsConstructor;
+import nlu.project.backend.DAO.IssueDAO;
 import nlu.project.backend.DAO.ProjectDAO;
 import nlu.project.backend.DAO.SprintDAO;
 import nlu.project.backend.DAO.UserDAO;
+import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.business.SprintBusiness;
 import nlu.project.backend.entry.filter.SprintFilterParams;
 import nlu.project.backend.entry.sprint.CreateSprintParams;
 import nlu.project.backend.entry.sprint.EditSprintParams;
 import nlu.project.backend.entry.sprint.StartSprintParams;
-import nlu.project.backend.model.Issue;
-import nlu.project.backend.model.Project;
-import nlu.project.backend.model.Sprint;
-import nlu.project.backend.model.User;
+import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 @Service
 @NoArgsConstructor
@@ -36,6 +37,9 @@ public class SprintBusinessImp implements SprintBusiness {
 
     @Autowired
     ProjectDAO projectDAO;
+
+    @Autowired
+    IssueDAO issueDAO;
 
     @Autowired
     ProjectBusiness productBusiness;
@@ -78,6 +82,28 @@ public class SprintBusinessImp implements SprintBusiness {
             throw new InvalidParameterException("Invalid parameters!");
         sprint.setDateEnd(new Date(System.currentTimeMillis()));
         sprint.setStatus(2);
+        Project project = sprint.getProject();
+        WorkFlowItem endStatus = project.getCurrentWorkFlow().getItems().stream().filter(new Predicate<WorkFlowItem>() {
+            @Override
+            public boolean test(WorkFlowItem workFlowItem) {
+                return workFlowItem.isEnd();
+            }
+        }).findFirst().get();
+        List<Issue> issues = sprint.getIssues();
+        if (issues.size() > 0)
+            issues.forEach(new Consumer<Issue>() {
+                @Override
+                public void accept(Issue issue) {
+                    if (issue.getStatus().isStart()) {
+                        issue.setSprint(null);
+                        issueDAO.update(issue);
+                    }
+                    if(!issue.getStatus().isStart() && !issue.getStatus().isEnd()){
+                        issue.setStatus(endStatus);
+                        issueDAO.update(issue);
+                    }
+                }
+            });
         sprintDAO.update(sprint);
         return sprint;
     }
@@ -104,13 +130,13 @@ public class SprintBusinessImp implements SprintBusiness {
 
         List<Sprint> sprints = sprintDAO.findWorkingSprints(ownerProject.getId());
         int idoSprint = sprints.indexOf(requestedSprint);
-        if(idoSprint < 0) throw new InternalError("Cannot find index of sprint: " + sprintId);
-        if(idoSprint == 0){
+        if (idoSprint < 0) throw new InternalError("Cannot find index of sprint: " + sprintId);
+        if (idoSprint == 0) {
             return sprints;
         }
         int previousOrder = requestedSprint.getOrder();
         requestedSprint.setOrder(sprints.get(idoSprint - 1).getOrder());
-        sprints.get(idoSprint-1).setOrder(previousOrder);
+        sprints.get(idoSprint - 1).setOrder(previousOrder);
         sprintDAO.update(requestedSprint);
         sprintDAO.update(sprints.get(idoSprint - 1));
 
@@ -130,13 +156,13 @@ public class SprintBusinessImp implements SprintBusiness {
 
         List<Sprint> sprints = sprintDAO.findWorkingSprints(ownerProject.getId());
         int idoSprint = sprints.indexOf(requestedSprint);
-        if(idoSprint < 0) throw new InternalError("Cannot find index of sprint: " + sprintId);
-        if(idoSprint == (sprints.size() - 1)){
+        if (idoSprint < 0) throw new InternalError("Cannot find index of sprint: " + sprintId);
+        if (idoSprint == (sprints.size() - 1)) {
             return sprints;
         }
         int previousOrder = requestedSprint.getOrder();
         requestedSprint.setOrder(sprints.get(idoSprint + 1).getOrder());
-        sprints.get(idoSprint+ 1).setOrder(previousOrder);
+        sprints.get(idoSprint + 1).setOrder(previousOrder);
         sprintDAO.update(requestedSprint);
         sprintDAO.update(sprints.get(idoSprint + 1));
 

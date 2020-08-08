@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Component
 @NoArgsConstructor
@@ -50,18 +51,42 @@ public class IssueDAO {
 
     public Issue save(IssueParams issueParams) {
         Issue toSave = new Issue();
-        if(issueParams.id > 0)
+        if(issueParams.id != null && issueParams.id > 0)
             toSave.setId(issueParams.id);
-        toSave.setName(issueParams.name);
-        toSave.setDescription(issueParams.name);
+
+        toSave.setDescription(issueParams.description);
         toSave.setHours(issueParams.hours);
         toSave.setCode(issueParams.code);
-        toSave.setBackLog(backlogRepository.getOne(issueParams.backlogId));
-        toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
-        toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
-        toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
-        toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
-
+        if(issueParams.storyPoint == null)
+            toSave.setStoryPoint(0);
+        else
+            toSave.setStoryPoint(issueParams.storyPoint);
+        Project project = projectRepository.getOne(issueParams.projectId);
+        toSave.setName(project.getCode().toUpperCase() + "-" + (project.getBacklog().getIssues().size() + 1));
+        if(issueParams.backlogId != null)
+            toSave.setBackLog(backlogRepository.getOne(issueParams.backlogId));
+        else
+            toSave.setBackLog(project.getBacklog());
+        if(issueParams.userAssignment != null)
+            toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
+        if(issueParams.priorityId != null)
+            toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
+        toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueTypeId));
+        if(issueParams.workflowItemId != null)
+            toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
+        else {
+            List<WorkFlowItem> workFlowItems = project.getCurrentWorkFlow().getItems();
+            WorkFlowItem started = workFlowItems.stream().filter(new Predicate<WorkFlowItem>() {
+                @Override
+                public boolean test(WorkFlowItem workFlowItem) {
+                    return workFlowItem.isStart();
+                }
+            }).findFirst().get();
+            toSave.setStatus(started);
+        }
+        if(issueParams.sprintId != null && issueParams.sprintId > 0){
+            toSave.setSprint(sprintRepository.getOne(issueParams.sprintId));
+        }
         return issueRepository.save(toSave);
     }
 
@@ -74,7 +99,7 @@ public class IssueDAO {
         toSave.setCode(issueParams.code);
         toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
         toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
-        toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
+        toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueTypeId));
         toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
 
         return issueRepository.save(toSave);

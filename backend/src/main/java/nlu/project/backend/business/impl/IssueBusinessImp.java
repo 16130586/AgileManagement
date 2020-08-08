@@ -42,8 +42,8 @@ public class IssueBusinessImp implements IssueBusiness {
         User user = ((CustomUserDetails) userDetails).getUser();
 
         if (!userDAO.isProductOwner(user.getId(), issueParams.projectId))
-            return issueDAO.save(issueParams);
-        return null;
+            throw new InvalidParameterException("Invalid parameters!");
+        return issueDAO.save(issueParams);
     }
 
     @Override

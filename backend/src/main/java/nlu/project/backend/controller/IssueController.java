@@ -29,9 +29,6 @@ public class IssueController extends BaseController{
     @PostMapping("/create")
     public ApiResponse createIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
         Object result = issueBusiness.create(issueParams, getUser(request));
-        // if result khac null thi tao thanh cong
-        // neu result khong tao duoc thi tra ve tao that bai
-        // ApiResponse.BadRequesr()
         if (result == null) {
             return ApiResponse.OnBadRequest("Create Issue Failed");
         }

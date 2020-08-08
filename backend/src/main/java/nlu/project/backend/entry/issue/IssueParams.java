@@ -1,16 +1,18 @@
 package nlu.project.backend.entry.issue;
 
 public class IssueParams {
-    public int id;
-    public int issueType;
-    public int sprintId;
-    public int backlogId;
-    public int userAssignment;
-    public int workflowItemId;
-    public int priorityId;
+    public Integer id;
+    public Integer issueTypeId;
+    public Integer sprintId;
+    public Integer backlogId;
+    public Integer userAssignment;
+    public Integer workflowItemId;
+    public Integer priorityId;
     public String code;
     public String name;
     public String description;
     public Double hours;
-    public int projectId;
+    public Integer projectId;
+    public Integer storyPoint;
+
 }
