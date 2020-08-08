@@ -25,11 +25,5 @@ public class WorkFlow {
     private Project project;
     @OneToMany(mappedBy = "workFlow")
     private List<WorkFlowItem> items;
-    @OneToOne
-    @JoinColumn(name = "start_status_id")
-    private WorkFlowItem startStatus;
-    @OneToOne
-    @JoinColumn(name = "end_status_id")
-    private WorkFlowItem endStatus;
 
 }
