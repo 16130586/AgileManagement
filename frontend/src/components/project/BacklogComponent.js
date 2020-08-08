@@ -217,6 +217,10 @@ let IssueItem = function (props) {
 let CreateNewBacklogItem = function (props) {
     const self = createRef()
     const [isOpenCreateInput, setIsOpenCreateInput] = useState(false)
+
+    let [cbIssueValue, setCbIssueValue] = useState(props.issueTypes == null ? null : props.issueTypes[0])
+    let [issueDescription, setIssueDescription] = useState('')
+
     let handleClickDismiss = (event) => {
         const { target } = event
         if (self.current && !self.current.contains(target)) {
@@ -232,10 +236,17 @@ let CreateNewBacklogItem = function (props) {
     let handleEnterPress = (event) => {
         if ('Enter' === event.key) {
             setIsOpenCreateInput(false)
+            props.createNewIssue({
+                issueDescription: issueDescription,
+                issueTypeId: cbIssueValue.id,
+                sprintId: props.sprintId,
+                projectId: props.projectId
+            })
+            setIssueDescription('')
+            setCbIssueValue(props.issueTypes == null ? null : props.issueTypes[0])
         }
     }
-    console.log(props.issueTypes)
-    let [cbIssueValue, setCbIssueValue] = useState(props.issueTypes == null ? null : props.issueTypes[0])
+
 
     const itemRender = (li, itemProps) => {
         const iconSrc = itemProps.dataItem.iconUrl
@@ -289,6 +300,8 @@ let CreateNewBacklogItem = function (props) {
                         footer={<span className="mt-1">footer</span>}
                     />
                     <TextField className="ml-1"
+                        onChange={(event) => { setIssueDescription(event.target.value) }}
+                        value={issueDescription}
                         onKeyPress={handleEnterPress}
                         autoFocus={true}
                         fullWidth={true}
@@ -314,11 +327,14 @@ let SprintComponent = function (props) {
             issueSumary[iss.status.id].statusName = ''
             issueSumary[iss.status.id].isStart = false
             issueSumary[iss.status.id].isEnd = false
+            issueSumary[iss.status.id].count = 0
+
         }
         issueSumary[iss.status.id].totalStoryPoint += iss.storyPoint
         issueSumary[iss.status.id].statusName = iss.status.name
         issueSumary[iss.status.id].isStart = iss.status.start
         issueSumary[iss.status.id].isEnd = iss.status.end
+        issueSumary[iss.status.id].count += 1
     });
 
     const storyPoints = []
@@ -468,6 +484,7 @@ let SprintComponent = function (props) {
     }
     const handleCompleteSprint = (sprintId) => {
         handleCloseCompleteDialog()
+        props.completeSprint(sprintId)
     }
 
 
@@ -527,18 +544,20 @@ let SprintComponent = function (props) {
                                 <MenuItem onClick={(e) => { e.stopPropagation(); setOpenDeleteDialog(true) }}>Delete sprint</MenuItem>
                             </Menu>
 
-                            <Button
-                                onClick={(event) => {
-                                    event.stopPropagation()
-                                    setOpenStartSprintDialog(true)
-                                }}
-                                variant="contained"
-                                color="primary"
-                                disabled={!props.canStart}
-                                style={{
-                                    marginRight: "1rem"
-                                }}>Start sprint
-                            </Button>
+                            {data.status != 1 &&
+                                <Button
+                                    onClick={(event) => {
+                                        event.stopPropagation()
+                                        setOpenStartSprintDialog(true)
+                                    }}
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={!props.canStart}
+                                    style={{
+                                        marginRight: "1rem"
+                                    }}>Start sprint
+                            </Button>}
+
                             {data.status == 1 &&
                                 <Button
                                     onClick={(event) => { event.stopPropagation(); setOpenCompleteDialog(true) }}
@@ -635,16 +654,33 @@ let SprintComponent = function (props) {
                                 aria-describedby={"complete-dialog-description".concat(genratedId)}>
                                 <DialogTitle
                                     id={"complete-dialog-title".concat(genratedId)}>
-                                    Complete Sprint - key , sprint name
-                                 </DialogTitle>
+                                    Complete Sprint {data.code && '-'.concat(data.code)}{data.name && '-'.concat(data.name)}
+                                </DialogTitle>
                                 <DialogContent>
                                     <DialogContentText id={"delete-dialog-description".concat(genratedId)}>
-                                        There are numbers issues in this sprint
+                                        The sprint contains:
                                     </DialogContentText>
+                                    <div>
+                                        {Object.keys(issueSumary).length > 0 &&
+                                            <ul>
+                                                {Object.keys(issueSumary).map(key =>
+                                                    <li className="mt-1">
+                                                        {issueSumary[key].count}
+                                                        {issueSumary[key].count > 1 && ' items are '}
+                                                        {issueSumary[key].count <= 1 && ' item is '}
+                                                        <span style={{ textTransform: 'lowercase' }}>
+                                                            {issueSumary[key].statusName}
+                                                        </span>
+                                                    </li>
+                                                )}
+
+                                            </ul>
+                                        }
+                                    </div>
                                 </DialogContent>
                                 <DialogActions>
                                     <Button
-                                        onClick={(e) => { e.stopPropagation(); handleCompleteSprint(0) }}
+                                        onClick={(e) => { e.stopPropagation(); handleCompleteSprint(data.id) }}
                                         color="primary">
                                         Complete sprint
                                     </Button>
@@ -807,6 +843,7 @@ let SprintComponent = function (props) {
                             issueTypes={props.issueTypes}
                             sprintId={props.data.id}
                             projectId={props.projectId}
+                            createNewIssue={props.createNewIssue}
                         />
                     </div>
                 </AccordionDetails>
@@ -923,10 +960,12 @@ let BacklogComponent = function (props) {
                                     moveIssueToSprint={props.moveIssueToSprint}
                                 />)
                         }
-                        <CreateNewBacklogItem 
-                        className="mt-1" 
-                        issueTypes={props.issueTypes}
-                        projectId={props.projectId} />
+                        <CreateNewBacklogItem
+                            className="mt-1"
+                            issueTypes={props.issueTypes}
+                            projectId={props.projectId}
+                            createNewIssue={props.createNewIssue}
+                        />
                     </div>
                 </AccordionDetails>
             </Accordion>
@@ -935,8 +974,9 @@ let BacklogComponent = function (props) {
 }
 
 let BacklogSpaceComponent = function (props) {
-    console.log('123123' + JSON.stringify(props.issueTypes))
-    const anySprintStarted = props.workingSprints.filter(sprint => sprint.status == 1)
+    const anySprintStarted = []
+    if (props.workingSprints != null)
+        props.workingSprints.filter(sprint => sprint.status == 1)
 
     const isSprintCanStart = (sprintId) => {
         if (anySprintStarted != null && anySprintStarted.length > 0) {
@@ -967,6 +1007,8 @@ let BacklogSpaceComponent = function (props) {
                         moveIssueToSprint={props.moveIssueToSprint}
                         topOfBacklog={props.topOfBacklog}
                         bottomOfBacklog={props.bottomOfBacklog}
+                        createNewIssue={props.createNewIssue}
+                        completeSprint={props.completeSprint}
 
                     />)
             }
@@ -979,6 +1021,7 @@ let BacklogSpaceComponent = function (props) {
                 deleteIssue={props.deleteIssue}
                 moveSprintTo={props.moveSprintTo}
                 moveIssueToSprint={props.moveIssueToSprint}
+                createNewIssue={props.createNewIssue}
             />
         </Fragment>
     )

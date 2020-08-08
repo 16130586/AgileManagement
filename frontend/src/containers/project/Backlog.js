@@ -9,7 +9,8 @@ import {
     requestMoveUpSprint, requestMoveDownSprint,
     requestCreateSprint, requestEditSprint,
     requestStartSprint, requestDeleteIssue,
-    requestMoveIssueToSprint,
+    requestMoveIssueToSprint, requestCreateNewIssue,
+    requestCompleteSprint,
 }
     from '../../actions/project'
 const Backlog = function (props) {
@@ -41,6 +42,8 @@ const Backlog = function (props) {
             deleteIssue={props.deleteIssue}
             moveIssueToSprint={props.moveIssueToSprint}
             issueTypes={props.issueTypes}
+            createNewIssue={props.createNewIssue}
+            completeSprint={props.completeSprint}
         >
         </BacklogComponent>
     )
@@ -67,6 +70,8 @@ const mapDispatchToProps = dispatch => {
         startSprint: (data) => dispatch(requestStartSprint(data)),
         deleteIssue: (issueId, projectId) => dispatch(requestDeleteIssue(issueId, projectId)),
         moveIssueToSprint: (fromSprintId, toSprintId, issueId) => dispatch(requestMoveIssueToSprint(fromSprintId, toSprintId, issueId)),
+        createNewIssue: (data) => dispatch(requestCreateNewIssue(data)),
+        completeSprint: (sprintId) => dispatch(requestCompleteSprint(sprintId)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Backlog)

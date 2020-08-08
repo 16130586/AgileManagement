@@ -65,3 +65,10 @@ export const fullFilledRequestDeleteIssue = (issue) => ({ type: AsyncEventTypes.
 
 export const requestMoveIssueToSprint = (fromSprintId, toSprintId, issueId) => ({ type: AsyncEventTypes.REQUEST.MOVE_ISSUE, payload: {fromSprintId, toSprintId , issueId} })
 export const fullFilledRequestMoveIssueToSprint = (data) => ({ type: AsyncEventTypes.FULL_FILLED.MOVE_ISSUE, payload: data })
+
+export const requestCreateNewIssue = (data) => ({ type: AsyncEventTypes.REQUEST.CREATE_NEW_ISSUE, payload: data })
+export const fullFilledRequestCreateNewIssue = (data) => ({ type: AsyncEventTypes.FULL_FILLED.CREATE_NEW_ISSUE, payload: data })
+
+
+export const requestCompleteSprint = (sprintId) => ({ type: AsyncEventTypes.REQUEST.COMPLETE_SPRINT, payload: sprintId })
+export const fullFilledRequestCompleteSprint = (sprint) => ({ type: AsyncEventTypes.FULL_FILLED.COMPLETE_SPRINT, payload: sprint })

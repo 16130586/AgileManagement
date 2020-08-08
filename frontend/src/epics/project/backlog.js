@@ -12,7 +12,8 @@ import {
     fullFilledRequestMoveUpSprint, fullFilledRequestMoveDownSprint,
     fullFilledRequestCreateSprint, fullFilledRequestEditSprint,
     fullFilledRequestStartSprint, fullFilledRequestDeleteIssue,
-    fullFilledRequestMoveIssueToSprint,
+    fullFilledRequestMoveIssueToSprint, fullFilledRequestCreateNewIssue,
+    fullFilledRequestCompleteSprint,
 } from '../../actions/project'
 
 export const fetchBacklogPage = action$ =>
@@ -59,7 +60,7 @@ export const fetchBacklogPage = action$ =>
             return forkJoin({
                 backlogItemsRequest: ajax(getBacklogItemsSettings),
                 workingSprintsRequest: ajax(getWorkingSprintsSettings),
-                issueTypes : ajax(getIssueTypesSettings),
+                issueTypes: ajax(getIssueTypesSettings),
             })
                 .pipe(
                     mergeMap(ajaxResponse =>
@@ -70,7 +71,7 @@ export const fetchBacklogPage = action$ =>
                                 data: {
                                     backlogItems: ajaxResponse.backlogItemsRequest.response.data,
                                     workingSprints: ajaxResponse.workingSprintsRequest.response.data,
-                                    issueTypes : ajaxResponse.issueTypes.response.data
+                                    issueTypes: ajaxResponse.issueTypes.response.data
                                 }
                             }
                         })
@@ -496,3 +497,81 @@ export const moveIssueToSprint = action$ =>
                 return madeRequestFail(ajax.response.data)
         })
     )
+
+
+export const createNewIssue = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.CREATE_NEW_ISSUE),
+        mergeMap(action => {
+            const createNewIssueURl = BACKEND_API.BASE_URL
+                .concat(BACKEND_API.ACTIONS.CREATE_NEW_ISSUE)
+
+            const createNewIssueSettings = {
+                url: createNewIssueURl,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: {
+                    sprintId : action.payload.sprintId,
+                    projectId : parseInt(action.payload.projectId),
+                    issueTypeId : action.payload.issueTypeId,
+                    description : action.payload.issueDescription,
+                }
+            }
+
+            return ajax(createNewIssueSettings)
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message }))
+                )
+        }),
+        map(ajax => {
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return fullFilledRequestCreateNewIssue(ajax.response.data)
+            }
+            else
+                return madeRequestFail(ajax.response.data)
+        })
+    );
+
+    export const completeSprint = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.COMPLETE_SPRINT),
+        mergeMap(action => {
+            const sprintId = action.payload
+            const completeSprintUrl = BACKEND_API.BASE_URL
+                .concat(BACKEND_API.ACTIONS.COMPLETE_SPRINT)
+
+            const completeSprintSettings = {
+                url: completeSprintUrl.replace('{id}' , sprintId),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            }
+
+            return ajax(completeSprintSettings)
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message }))
+                )
+        }),
+        map(ajax => {
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return fullFilledRequestCompleteSprint(ajax.response.data)
+            }
+            else
+                return madeRequestFail(ajax.response.data)
+        })
+    );

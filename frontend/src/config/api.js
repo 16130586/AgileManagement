@@ -23,5 +23,7 @@ export const BACKEND_API = {
         DELETE_ISSUE : "/issue/delete",
         MOVE_ISSUE: "/issue/move",
         PROJECT_GET_ISSUE_TYPES: '/project/{projectId}/issuetypes',
+        CREATE_NEW_ISSUE : '/issue/create',
+        COMPLETE_SPRINT: '/sprint/{id}/end',
     }
 }
