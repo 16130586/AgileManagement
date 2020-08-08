@@ -84,7 +84,6 @@ export const fetchBacklogPage = action$ =>
             if (ajax.response == null)
                 return madeRequestFail('No response from server!')
             else if (ajax.status > 0 && ajax.response.status < 400) {
-                console.log(ajax.response.data)
                 return fullFilledBacklogPage(ajax.response.data)
             }
             else
@@ -132,11 +131,9 @@ export const topOfBacklog = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.TOP_OF_BACKLOG),
         mergeMap(action => {
-            console.log(action)
             const issueId = action.payload.issueId
             const topOfBacklogUrl = BACKEND_API.BASE_URL
                 .concat(BACKEND_API.ACTIONS.TOP_OF_BACKLOG)
-            console.log(topOfBacklogUrl)
             const topOfBacklogSettings = {
                 url: topOfBacklogUrl.replace("{id}", issueId),
                 method: 'POST',
@@ -149,7 +146,6 @@ export const topOfBacklog = action$ =>
                     sprintId: action.payload.sprintId
                 }
             }
-            console.log(topOfBacklogSettings)
             return ajax(topOfBacklogSettings)
                 .pipe(
                     mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
@@ -173,7 +169,6 @@ export const bottomOfBacklog = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.BOTTOM_OF_BACKLOG),
         mergeMap(action => {
-            console.log(action)
             const issueId = action.payload.issueId
             const bottomOfBacklogUrl = BACKEND_API.BASE_URL
                 .concat(BACKEND_API.ACTIONS.BOTTOM_OF_BACKLOG)
@@ -403,7 +398,6 @@ export const startSprint = action$ =>
             if (ajax.response == null)
                 return madeRequestFail('No response from server!')
             else if (ajax.status > 0 && ajax.response.status < 400) {
-                console.log(ajax.response.data)
                 return fullFilledRequestStartSprint(ajax.response.data)
             }
             else
@@ -417,7 +411,6 @@ export const deleteIssue = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.DELETE_ISSUE),
         mergeMap(action => {
-            console.log(action)
             const deleteIssueUrl = BACKEND_API.BASE_URL
                 .concat(BACKEND_API.ACTIONS.DELETE_ISSUE)
 
@@ -446,7 +439,6 @@ export const deleteIssue = action$ =>
             if (ajax.response == null)
                 return madeRequestFail('No response from server!')
             else if (ajax.status > 0 && ajax.response.status < 400) {
-                console.log(ajax.response.data)
                 return fullFilledRequestDeleteIssue(ajax.response.data)
             }
             else
@@ -459,7 +451,6 @@ export const moveIssueToSprint = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.MOVE_ISSUE),
         mergeMap(action => {
-            console.log(action)
             const moveIssueUrl = BACKEND_API.BASE_URL
                 .concat(BACKEND_API.ACTIONS.MOVE_ISSUE)
 
@@ -490,7 +481,6 @@ export const moveIssueToSprint = action$ =>
             if (ajax.response == null)
                 return madeRequestFail('No response from server!')
             else if (ajax.status > 0 && ajax.response.status < 400) {
-                console.log(ajax.response.data)
                 return fullFilledRequestMoveIssueToSprint(ajax.response.data)
             }
             else

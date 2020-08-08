@@ -168,7 +168,6 @@ const Backlog = (state = init, action) => {
                     if (sprint.id == fromSprintId) {
                         let ido = newIss.findIndex(iss => iss.id == issueId)
                         targetIssue = newIss[ido]
-                        console.log(ido + " " + JSON.stringify(targetIssue))
                         newIss = [...newIss.slice(0, ido), ...newIss.slice(ido + 1)]
 
                     }

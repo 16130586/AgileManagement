@@ -14,7 +14,6 @@ import {
 }
     from '../../actions/project'
 const Backlog = function (props) {
-    console.log(props)
     const { projectId } = props.match.params
     useEffect(() => {
         props.getNavigation('BACKLOG', props.match.params)

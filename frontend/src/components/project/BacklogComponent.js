@@ -318,7 +318,6 @@ let CreateNewBacklogItem = function (props) {
 }
 let SprintComponent = function (props) {
     const data = props.data
-    console.log(data)
     const issueSumary = {}
     data.issues.forEach(iss => {
         if (issueSumary[iss.status.id] == null) {
@@ -556,7 +555,8 @@ let SprintComponent = function (props) {
                                     style={{
                                         marginRight: "1rem"
                                     }}>Start sprint
-                            </Button>}
+                            </Button>
+                            }
 
                             {data.status == 1 &&
                                 <Button
