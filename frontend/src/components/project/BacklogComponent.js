@@ -82,6 +82,7 @@ const AccordionDetails = withStyles(theme => ({
 }))(MuiAccordionDetails);
 
 let IssueItem = function (props) {
+    console.log(props)
     const data = props.data
     let [anchorEl, setAnchorEl] = React.useState(null)
     const handleOpenMenu = (event) => {
@@ -90,7 +91,14 @@ let IssueItem = function (props) {
     const handleCloseOptsMenu = () => {
         setAnchorEl(null);
     };
+
     let genratedId = "backlog-item".concat("_").concat(Date.now()).concat(Math.random() * 10)
+
+    const handleDelete = (issueId, projectId) => {
+        handleCloseOptsMenu()
+        console.log(issueId + "   " + projectId)
+        props.deleteIssue(issueId, projectId)
+    }
     return (
         <div style={{ width: "100%", display: "flex", alignItems: "center" }}>
             <div>
@@ -118,15 +126,24 @@ let IssueItem = function (props) {
                     >Actions</MenuItem>
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>
                         Coppy issue link</MenuItem>
-                    <MenuItem onClick={(e) => { e.stopPropagation(); }}>Delete</MenuItem>
+                    <MenuItem onClick={(e) => { e.stopPropagation(); handleDelete(data.id, props.projectId) }}>Delete</MenuItem>
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}
                         disabled
                     >
                         Move to</MenuItem>
-                    <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>
-                        XXXX sprint name</MenuItem>
-                    <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>
-                        XXXX sprint name</MenuItem>
+                    {props.sprints != null && props.sprints.length > 0 &&
+
+                        props.sprints.filter(s1 => s1.id != props.sprint.id).map(sprint =>
+                            <MenuItem
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCloseOptsMenu();
+                                    props.moveIssueToSprint(props.sprint.id , sprint.id , data.id)
+                                }}>
+                                {sprint.name}</MenuItem>
+                        )
+                    }
+
                     <MenuItem onClick={(e) => { e.stopPropagation(); props.topOfBacklog(data.id, data.backLog.id) }}>
                         Top of backlog</MenuItem>
                     <MenuItem onClick={(e) => { e.stopPropagation(); props.bottomOfBacklog(data.id, data.backLog.id) }}>
@@ -232,6 +249,7 @@ let CreateNewBacklogItem = function (props) {
     )
 }
 let SprintComponent = function (props) {
+    //console.log(props)
     const data = props.data
     let [anchorEl, setAnchorEl] = React.useState(null)
     let [isExpanding, setExpanding] = React.useState(false)
@@ -354,18 +372,16 @@ let SprintComponent = function (props) {
         }
 
     }
-  
+
     const handleStartSprintSubmit = (sprintId) => {
         handleCloseStartSprintDialog()
-    
         let submitData = {
-            sprintId : sprintId,
-            startDate : startSprintState.startDate,
-            endDate : startSprintState.endDate,
-            name : startSprintState.name,
-            goal : startSprintState.goal
+            sprintId: sprintId,
+            startDate: startSprintState.startDate,
+            endDate: startSprintState.endDate,
+            name: startSprintState.name,
+            goal: startSprintState.goal
         }
-        console.log(submitData)
         props.startSprint(submitData)
     }
     const handleCompleteSprint = (sprintId) => {
@@ -691,10 +707,15 @@ let SprintComponent = function (props) {
                         }
                         {(data.issues != null && data.issues.length > 0) &&
                             data.issues.map(iss =>
-                                <IssueItem data={iss}
+                                <IssueItem
+                                    data={iss}
+                                    sprint={data}
+                                    sprints={props.sprints}
                                     topOfBacklog={props.topOfBacklog}
                                     bottomOfBacklog={props.bottomOfBacklog}
-                                    deleteSprint={props.deleteSprint}
+                                    deleteIssue={props.deleteIssue}
+                                    projectId={props.projectId}
+                                    moveIssueToSprint={props.moveIssueToSprint}
                                 />)
                         }
                         <CreateNewBacklogItem className="mt-1" />
@@ -756,7 +777,7 @@ let BacklogComponent = function (props) {
                             display: "flex",
                             flexDirection: "column"
                         }}>
-                        {(props.issues == null || props.isues.length == 0) &&
+                        {(props.backlogItems == null || props.backlogItems.length == 0) &&
                             <div className="pd-1"
                                 style={{
                                     paddingTop: "0px",
@@ -772,6 +793,17 @@ let BacklogComponent = function (props) {
                                     Your backlog is empty.
                                 </Typography>
                             </div>
+                        }
+                        {(props.backlogItems != null && props.backlogItems.length > 0) &&
+                            props.backlogItems.map(iss =>
+                                <IssueItem
+                                    data={iss}
+                                    sprints={props.sprints}
+                                    projectId={props.projectId}
+                                    topOfBacklog={props.topOfBacklog}
+                                    bottomOfBacklog={props.bottomOfBacklog}
+                                    deleteIssue={props.deleteIssue}
+                                />)
                         }
                         <CreateNewBacklogItem className="mt-1" />
                     </div>
@@ -795,22 +827,33 @@ let BacklogSpaceComponent = function (props) {
     }
     return (
         <Fragment>
-            <MyBreadCrumbs />
+            <MyBreadCrumbs />   
             {
                 sprints && sprints.map(sprint =>
                     <SprintComponent
+                        projectId={props.projectId}
                         data={sprint}
+                        sprints={sprints}
                         canStart={isSprintCanStart(sprint.id)}
                         deleteSprint={props.deleteSprint}
                         moveUpSprint={props.moveUpSprint}
                         moveDownSprint={props.moveDownSprint}
                         editSprint={props.editSprint}
                         startSprint={props.startSprint}
+                        deleteIssue={props.deleteIssue}
+                        moveSprintTo={props.moveSprintTo}
+                        moveIssueToSprint={props.moveIssueToSprint}
+
                     />)
             }
             <BacklogComponent
+                projectId={props.projectId}
+                sprints={sprints}
                 backlogItems={props.backlogItems}
                 createSprint={() => props.createSprint(props.projectId)}
+                deleteIssue={props.deleteIssue}
+                moveSprintTo={props.moveSprintTo}
+                moveIssueToSprint={props.moveIssueToSprint}
             />
         </Fragment>
     )

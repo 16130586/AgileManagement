@@ -19,6 +19,8 @@ export const BACKEND_API = {
         MOVE_DOWN_SPRINT: "/sprint/{id}/moveDown",
         CREATE_SPRINT: "/sprint",
         EDIT_SPRINT : "/sprint/{id}",
-        START_SPRINT : "/sprint/{id}/start"
+        START_SPRINT : "/sprint/{id}/start",
+        DELETE_ISSUE : "/issue/delete",
+        MOVE_ISSUE: "/issue/move",
     }
 }

@@ -10,7 +10,8 @@ import { fullFilledBacklogPage, fullFilledRequestDeleteSprint,
         fullFilledRequestTopOfBacklog , fullFilledRequestBottomOfBacklog,
         fullFilledRequestMoveUpSprint , fullFilledRequestMoveDownSprint,
         fullFilledRequestCreateSprint , fullFilledRequestEditSprint,
-        fullFilledRequestStartSprint  ,
+        fullFilledRequestStartSprint  , fullFilledRequestDeleteIssue,
+        fullFilledRequestMoveIssueToSprint, 
  } from '../../actions/project'
 
 export const fetchBacklogPage = action$ =>
@@ -374,6 +375,93 @@ action$.pipe(
         else if (ajax.status > 0 && ajax.response.status < 400) {
             console.log(ajax.response.data)
             return fullFilledRequestStartSprint(ajax.response.data)
+        }
+        else
+            return madeRequestFail(ajax.response.data)
+    })
+)
+
+
+
+export const deleteIssue = action$ =>
+action$.pipe(
+    ofType(AsyncTypes.REQUEST.DELETE_ISSUE),
+    mergeMap(action => {
+        console.log(action)
+        const deleteIssueUrl = BACKEND_API.BASE_URL
+            .concat(BACKEND_API.ACTIONS.DELETE_ISSUE)
+
+        const deleteIssueSettings = {
+            url: deleteIssueUrl,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body : {
+                id : action.payload.issueId,
+                projectId: parseInt(action.payload.projectId)
+            }
+        }
+
+        return ajax(deleteIssueSettings)
+            .pipe(
+                mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message }))
+            )
+    }),
+    map(ajax => {
+        if (ajax.status == 0)
+            return madeRequestFail(ajax.response)
+        if (ajax.response == null)
+            return madeRequestFail('No response from server!')
+        else if (ajax.status > 0 && ajax.response.status < 400) {
+            console.log(ajax.response.data)
+            return fullFilledRequestDeleteIssue(ajax.response.data)
+        }
+        else
+            return madeRequestFail(ajax.response.data)
+    })
+)
+
+
+export const moveIssueToSprint = action$ =>
+action$.pipe(
+    ofType(AsyncTypes.REQUEST.MOVE_ISSUE),
+    mergeMap(action => {
+        console.log(action)
+        const moveIssueUrl = BACKEND_API.BASE_URL
+            .concat(BACKEND_API.ACTIONS.MOVE_ISSUE)
+
+        const moveIssueUrlSettings = {
+            url: moveIssueUrl,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body : {
+                issueId : action.payload.issueId,
+                fromSprintId: action.payload.fromSprintId,
+                toSprintId : action.payload.toSprintId,
+              
+            }
+        }
+
+        return ajax(moveIssueUrlSettings)
+            .pipe(
+                mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message }))
+            )
+    }),
+    map(ajax => {
+        if (ajax.status == 0)
+            return madeRequestFail(ajax.response)
+        if (ajax.response == null)
+            return madeRequestFail('No response from server!')
+        else if (ajax.status > 0 && ajax.response.status < 400) {
+            console.log(ajax.response.data)
+            return fullFilledRequestMoveIssueToSprint(ajax.response.data)
         }
         else
             return madeRequestFail(ajax.response.data)

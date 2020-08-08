@@ -24,9 +24,9 @@ const Backlog = (state = init, action) => {
         case AsyncEventTypes.FULL_FILLED.EDIT_SPRINT:
         case AsyncEventTypes.FULL_FILLED.START_SPRINT:
             idoSprint = nextState.workingSprints.findIndex(sprint => sprint.id == action.payload.id)
-            nextSprints =[...nextState.workingSprints.slice(0, idoSprint),
-                action.payload 
-                ,...nextState.workingSprints.slice(idoSprint + 1)]
+            nextSprints = [...nextState.workingSprints.slice(0, idoSprint),
+            action.payload
+                , ...nextState.workingSprints.slice(idoSprint + 1)]
             nextState = {
                 ...nextState,
                 workingSprints: nextSprints
@@ -59,6 +59,100 @@ const Backlog = (state = init, action) => {
                 ...nextState,
                 workingSprints: action.payload
             }
+            break;
+        case AsyncEventTypes.FULL_FILLED.DELETE_ISSUE:
+            (function () {
+                const issueId = action.payload.id
+                let isInWorkingSprints = false
+                let isInBacklog = false
+
+                let idoInWorkingSprints = -1
+                let idoIssue = -1
+
+                let idoInBacklog = -1
+                nextState.workingSprints.forEach((sprint, index) => {
+                    sprint.issues.forEach((issue, issIndex) => {
+                        if (issue.id == issueId) {
+                            isInWorkingSprints = true
+                            idoInWorkingSprints = index
+                            idoIssue = issIndex
+                        }
+                    })
+                })
+
+                nextState.backlogItems.forEach((iss, index) => {
+                    if (iss.id == issueId) {
+                        isInBacklog = true
+                        idoIssue = index
+                    }
+                })
+
+                if (isInWorkingSprints) {
+
+                    let newWorkingSprints = []
+
+                    nextState.workingSprints.forEach((sprint, index) => {
+                        let newIssues = []
+                        sprint.issues.forEach((iss, issIndex) => {
+                            if (!(index == idoInWorkingSprints && issIndex == idoIssue)) {
+                                newIssues.push(iss)
+                            }
+
+                        })
+                        newWorkingSprints.push({ ...sprint, issues: newIssues })
+                    })
+                    nextState = {
+                        ...nextState,
+                        workingSprints: newWorkingSprints
+                    }
+                }
+                if (isInBacklog) {
+                    nextState = {
+                        ...nextState,
+                        backlogItems: [
+                            ...nextState.backlogItems.slice(0, idoIssue),
+                            ...nextState.backlogItems.slice(idoIssue + 1)
+                        ]
+                    }
+                }
+            })()
+            break;
+
+        case AsyncEventTypes.FULL_FILLED.MOVE_ISSUE:
+            (function () {
+                let fromSprintId = action.payload.fromSprintId
+                let toSprintId = action.payload.toSprintId
+                issueId = action.payload.issueId
+
+                let newWorkingSprints = []
+                let targetIssue = null
+
+                nextState.workingSprints.forEach((sprint, sIndex) => {
+                    let newIss = []
+                    sprint.issues.forEach((issue, issIndex) => {
+                        newIss.push({ ...issue })
+                    })
+                    if (sprint.id == fromSprintId) {
+                        let ido = newIss.findIndex(iss => iss.id == issueId)
+                        targetIssue = newIss[ido]
+                        console.log(ido + " " + JSON.stringify(targetIssue))
+                        newIss = [...newIss.slice(0, ido), ...newIss.slice(ido + 1)]
+
+                    }
+                    newWorkingSprints.push({ ...sprint, issues: newIss })
+                })
+                
+                let idoOfToSprint = newWorkingSprints.findIndex(sp => sp.id == toSprintId)
+                if(targetIssue == null) console.log('null nha cu')
+                newWorkingSprints[idoOfToSprint].issues.push(targetIssue)
+                
+                console.log(newWorkingSprints)
+                nextState = {
+                    ...nextState,
+                    workingSprints: newWorkingSprints
+                }
+            })()
+
             break;
         default:
             break;

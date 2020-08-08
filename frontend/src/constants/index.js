@@ -35,6 +35,8 @@ export const ASYNC = {
         CREATE_SPRINT : 'full-filled.project.create-sprint',
         EDIT_SPRINT : 'full-filled.project.edit-sprint',
         START_SPRINT : 'full-filled.project.start-sprint',
+        DELETE_ISSUE : 'full-filled.project.delete-issue',
+        MOVE_ISSUE : 'full-filled.project.move-issue',
     },
     REQUEST: {
         DELETE_PROJECT : 'request.delete-project',
@@ -55,6 +57,8 @@ export const ASYNC = {
         CREATE_SPRINT : 'request-filled.project.create-sprint',
         EDIT_SPRINT : 'request.project.edit-sprint',
         START_SPRINT : 'request.project.start-sprint',
+        DELETE_ISSUE : 'request.project.delete-issue',
+        MOVE_ISSUE : 'request.project.move-issue',
     }
    
 }
