@@ -2,10 +2,13 @@ package nlu.project.backend.controller;
 
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.entry.filter.IssueFilterParams;
-import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.entry.issue.SubTaskParams;
+import nlu.project.backend.entry.issue.IssueTypeParams;
+import nlu.project.backend.entry.issue.MoveToBacklog;
+import nlu.project.backend.entry.issue.MoveToParams;
 import nlu.project.backend.model.response.ApiResponse;
+import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +27,6 @@ public class IssueController extends BaseController{
     @PostMapping("/create")
     public ApiResponse createIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
         Object result = issueBusiness.create(issueParams, getUser(request));
-        // if result khac null thi tao thanh cong
-        // neu result khong tao duoc thi tra ve tao that bai
-        // ApiResponse.BadRequesr()
         if (result == null) {
             return ApiResponse.OnBadRequest("Create Issue Failed");
         }
@@ -34,7 +34,7 @@ public class IssueController extends BaseController{
 
     }
 
-    @PostMapping("/update")
+    @PostMapping("/patch")
     public ApiResponse updateIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
         Object result = issueBusiness.update(issueParams, getUser(request));
         if (result == null) {
@@ -50,7 +50,7 @@ public class IssueController extends BaseController{
         if (result.equals(Boolean.FALSE)) {
             return ApiResponse.OnBadRequest("Delete Issue Failed");
         }
-        return ApiResponse.OnCreatedSuccess(result, "Delete Issue Success!");
+        return ApiResponse.OnCreatedSuccess(issueParams, "Delete Issue Success!");
     }
 
     @PostMapping("/searchByFilter")
@@ -83,4 +83,45 @@ public class IssueController extends BaseController{
         return ApiResponse.OnSuccess(result, "Get SubTask Success!");
     }
 
+    @PostMapping("/types")
+    public ApiResponse createIssueType(HttpServletRequest request , @RequestBody IssueTypeParams issueTypeParams){
+        CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+        issueTypeParams.setCreateByUserId(userDetails.getUser().getId());
+        Object result = issueBusiness.createIssueType(issueTypeParams);
+        if(result == null)
+            return ApiResponse.OnBadRequest("Cannot create new issue!");
+        return ApiResponse.OnSuccess(result , "Created!");
+    }
+
+    @PostMapping("/move")
+    public ApiResponse moveIssueToSprint(HttpServletRequest request ,
+                                         @RequestBody MoveToParams params){
+        CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+        Object result = issueBusiness.moveIssueToSprint(params , userDetails);
+        if(result == null)
+            return ApiResponse.OnBadRequest("Cannot move");
+        return ApiResponse.OnSuccess(params , "move!");
+    }
+    @PostMapping("/{id}/topBacklog")
+    public ApiResponse moveIssueToTopBacklog(HttpServletRequest request,
+                                             @RequestBody MoveToBacklog params){
+            params.top = true;
+            params.bottom = false;
+            CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+            Object result = issueBusiness.moveToBacklog(params , userDetails);
+            if(result == null)
+                return ApiResponse.OnBadRequest("Cannot move");
+            return ApiResponse.OnSuccess(params , "move!");
+    }
+    @PostMapping("/{id}/bottomBacklog")
+    public ApiResponse moveIssueToBottomBacklog(HttpServletRequest request,
+                                             @RequestBody MoveToBacklog params){
+        params.top = false;
+        params.bottom = true;
+        CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+        Object result = issueBusiness.moveToBacklog(params , userDetails);
+        if(result == null)
+            return ApiResponse.OnBadRequest("Cannot move");
+        return ApiResponse.OnSuccess(params , "move!");
+    }
 }

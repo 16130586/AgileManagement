@@ -14,4 +14,5 @@ public class ProjectParams {
     public Integer leader;
     public Integer productOwner;
     public MultipartFile file;
+    public String imgUrl;
 }

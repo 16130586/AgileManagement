@@ -7,16 +7,17 @@ import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
+import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import nlu.project.backend.util.constraint.ConstraintRole;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Component
 @NoArgsConstructor
@@ -37,14 +38,15 @@ public class ProjectDAO {
     @Autowired
     BacklogRepository backlogRepository;
 
-    @Autowired
-    FileBusiness fileBusiness;
 
     @Autowired
     WorkflowRepository workflowRepository;
 
     @Autowired
     WorkFlowItemRepository itemRepository;
+
+    @Autowired
+    IssueTypeRepository issueTypeRepository;
 
     public boolean isExistedProjectName(String name) {
         return projectRepository.existsByName(name);
@@ -55,27 +57,28 @@ public class ProjectDAO {
     }
 
     public Project getProjectById(int id) {
-        return projectRepository.findById(id).get();
+        return projectRepository.getOne(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project save(ProjectParams projectParams) {
-        String imgUrl = fileBusiness.save(projectParams.file);
-        // Project
+
         Project project = new Project();
         project.setName(projectParams.name);
         project.setCode(projectParams.key);
         project.setDescription(projectParams.description);
-        project.setImgUrl(imgUrl);
+        project.setImgUrl(projectParams.imgUrl);
+        project.setCurrentWorkFlow(workflowRepository.findDefault().get(0));
         projectRepository.save(project);
         // Backlog
         BackLog backLog = new BackLog();
         backLog.setProject(project);
         backlogRepository.save(backLog);
+        project.setBacklog(backLog);
 
         if(projectParams.leader != projectParams.productOwner){
             // Leader
-            User teamLead = userRepository.findById(projectParams.leader).get();
+            User teamLead = userRepository.getOne(projectParams.leader);
             Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
             UserRole leader = new UserRole();
             leader.setUser(teamLead);
@@ -115,7 +118,7 @@ public class ProjectDAO {
         Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
         UserRole leader = userRoleRepository.findByRoleAndProject(leadRole, project);
         if (leader.getUser().getId() != projectParams.leader) {
-            User newTeamLead = userRepository.findById(projectParams.leader).get();
+            User newTeamLead = userRepository.getOne(projectParams.leader);
             leader.setUser(newTeamLead);
             userRoleRepository.save(leader);
         }
@@ -233,6 +236,15 @@ public class ProjectDAO {
         WorkFlow workFlow = workflowRepository.getOne(params.id);
         WorkFlowItem item = new WorkFlowItem();
         item.setName(params.itemName);
+        if (params.isStart)
+            item.setColor("lightgray");
+        else if (params.isEnd)
+            item.setColor("blue");
+        else
+            item.setColor("lightgreen");
+        item.setStart(params.isStart);
+        item.setEnd(params.isEnd);
+        item.setLocation("0 0");
         item.setWorkFlow(workFlow);
         return itemRepository.save(item);
     }
@@ -251,10 +263,38 @@ public class ProjectDAO {
         return itemRepository.save(item);
     }
 
-    public WorkFlow deleteWorkFlowItem(WorkFlowParams params) {
+    public WorkFlowItem deleteWorkFlowItem(WorkFlowParams params) {
         WorkFlowItem item = itemRepository.getOne(params.toItemId);
-        itemRepository.delete(item);
-        return workflowRepository.getOne(params.id);
+        item.setWorkFlow(null);
+        return itemRepository.save(item);
+    }
+
+    public WorkFlow updateWorkFlow(WorkFlow workFlow) {
+        return workflowRepository.save(workFlow);
+    }
+
+    public WorkFlow getWorkFlowById(int id) {
+        return workflowRepository.getOne(id);
+    }
+
+    public List<IssueType> getIssueTypes(Integer projectId){
+        List<IssueType> result = Collections.emptyList();
+        try{
+            result = issueTypeRepository.findAllByProjectId(projectId);
+            if(result.size() <= 0){
+                return issueTypeRepository.findDefaultIssueTypes();
+            }
+            return result;
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new InternalException(e.getMessage());
+        }
+    }
+
+    public List<WorkFlow> getWorkFlowByProjectId(int projectId) {
+        Project project = projectRepository.getOne(projectId);
+        return workflowRepository.findByProject(project);
     }
 
     public UserRole addMember(UserRoleParams params) {

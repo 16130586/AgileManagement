@@ -1,16 +1,9 @@
 import React, { useState, Fragment } from 'react';
-import People from './contextual-items/People';
-import DashBoard from './contextual-items/DashBoard';
-import Filter from './contextual-items/Filter';
-import FilterSelections from './contextual-items/FilterSelections';
-import Projects from './contextual-items/Project';
-import YourWork from './contextual-items/YourWork';
-let navItemsConfig = [YourWork, Projects, DashBoard, People, Filter]
-Filter.prototype.component = FilterSelections
 
 function ContextualNavigation(props) {
+    console.log(props)
     let [history, setHistory] = useState([])
-    let navItems = navItemsConfig
+    let navItems = props.navItems
     let ContextComponent = history.length > 0 ? history[history.length - 1] : null
 
     let changeContext = (next) => {
@@ -29,7 +22,7 @@ function ContextualNavigation(props) {
                 ContextComponent != null &&
                 <div>
                     <a href="#" onClick={goBack}>Back button</a>
-                    <ContextComponent changeContext={changeContext} />
+                    <ContextComponent {...props.data} changeContext={changeContext} />
                 </div>
             }
             <ul className="contextual-navigation__items">
@@ -38,13 +31,14 @@ function ContextualNavigation(props) {
                         {
                             navItems.map(e => {
                                 let E = e
-                                if (e.prototype.component) {
+                                if (e.prototype && e.prototype.component) {
                                     return <E className="contextual-navigation__item"
-                                        onClick={() => {
+                                    {...props.data}    
+                                    onClick={() => {
                                             changeContext(e.prototype.component)
                                         }} />
                                 }
-                                return <E className="contextual-navigation__item" />
+                                return <E {...props.data} className="contextual-navigation__item" />
                             })
                         }
                     </div>

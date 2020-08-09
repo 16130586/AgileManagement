@@ -4,10 +4,8 @@ import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
-import nlu.project.backend.model.Project;
-import nlu.project.backend.model.UserRole;
-import nlu.project.backend.model.WorkFlow;
-import nlu.project.backend.model.WorkFlowItem;
+import nlu.project.backend.model.*;
+import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -26,9 +24,14 @@ public interface ProjectBusiness {
     WorkFlowItem addWorkFlowItem(WorkFlowParams params);
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
-    WorkFlow deleteWorkFlowItem(WorkFlowParams params);
     UserRole addMember(UserRoleParams params);
     void removeMember(UserRoleParams params);
     UserRole addRoleToMember(UserRoleParams params);
     void removeRoleFromMember(UserRoleParams params);
+    WorkFlowItem deleteWorkFlowItem(WorkFlowParams params);
+    List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId);
+    List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails user);
+    List<WorkFlow> getWorkFlow(int projectId);
+    List<Issue> getBacklogItems(Integer projectId, CustomUserDetails user);
+    WorkFlow getCurrentWorkFlow(Integer projectId);
 }

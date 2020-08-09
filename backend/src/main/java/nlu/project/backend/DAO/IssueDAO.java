@@ -4,15 +4,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.entry.filter.IssueFilterParams;
 import nlu.project.backend.entry.issue.IssueParams;
-import nlu.project.backend.model.Issue;
-import nlu.project.backend.model.User;
-import nlu.project.backend.model.WorkFlow;
-import nlu.project.backend.model.WorkFlowItem;
+import nlu.project.backend.entry.issue.IssueTypeParams;
+import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Component
 @NoArgsConstructor
@@ -20,7 +20,7 @@ import java.util.List;
 public class IssueDAO {
 
     @Autowired
-    IssueRepository issueReposistory;
+    IssueRepository issueRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -51,38 +51,65 @@ public class IssueDAO {
 
     public Issue save(IssueParams issueParams) {
         Issue toSave = new Issue();
+        if(issueParams.id != null && issueParams.id > 0)
+            toSave.setId(issueParams.id);
 
-        toSave.setName(issueParams.name);
-        toSave.setDescription(issueParams.name);
+        toSave.setDescription(issueParams.description);
         toSave.setHours(issueParams.hours);
         toSave.setCode(issueParams.code);
-        toSave.setBackLog(backlogRepository.getOne(issueParams.backlogId));
-        toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
-        toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
-        toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
-        toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
-
-        return issueReposistory.save(toSave);
+        if(issueParams.storyPoint == null)
+            toSave.setStoryPoint(0);
+        else
+            toSave.setStoryPoint(issueParams.storyPoint);
+        Project project = projectRepository.getOne(issueParams.projectId);
+        toSave.setName(project.getCode().toUpperCase() + "-" + (project.getBacklog().getIssues().size() + 1));
+        if(issueParams.backlogId != null)
+            toSave.setBackLog(backlogRepository.getOne(issueParams.backlogId));
+        else
+            toSave.setBackLog(project.getBacklog());
+        if(issueParams.userAssignment != null)
+            toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
+        if(issueParams.priorityId != null)
+            toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
+        toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueTypeId));
+        if(issueParams.workflowItemId != null)
+            toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
+        else {
+            List<WorkFlowItem> workFlowItems = project.getCurrentWorkFlow().getItems();
+            WorkFlowItem started = workFlowItems.stream().filter(new Predicate<WorkFlowItem>() {
+                @Override
+                public boolean test(WorkFlowItem workFlowItem) {
+                    return workFlowItem.isStart();
+                }
+            }).findFirst().get();
+            toSave.setStatus(started);
+        }
+        if(issueParams.sprintId != null && issueParams.sprintId > 0){
+            toSave.setSprint(sprintRepository.getOne(issueParams.sprintId));
+        }
+        return issueRepository.save(toSave);
     }
 
-    public Issue update(IssueParams issueParams) {
-        Issue toSave = issueReposistory.getOne(issueParams.id);
+    public Issue patch(IssueParams issueParams) {
+        Issue toSave = issueRepository.getOne(issueParams.id);
 
         toSave.setName(issueParams.name);
-        toSave.setDescription(issueParams.name);
+        toSave.setDescription(issueParams.description);
         toSave.setHours(issueParams.hours);
         toSave.setCode(issueParams.code);
         toSave.setAssignment(userRepository.getOne(issueParams.userAssignment));
         toSave.setPriority(priorityRepository.getOne(issueParams.priorityId));
-        toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueType));
+        toSave.setIssueType(issueTypeRepository.getOne(issueParams.issueTypeId));
         toSave.setStatus(workFlowItemRepository.getOne(issueParams.workflowItemId));
 
-        return issueReposistory.save(toSave);
+        return issueRepository.save(toSave);
     }
-
+    public Issue update(Issue iss){
+        return issueRepository.saveAndFlush(iss);
+    }
     public boolean delete(int issueId) {
         try{
-            issueReposistory.deleteById(issueId);
+            issueRepository.deleteById(issueId);
         } catch (Exception e) {
             return false;
         }
@@ -98,14 +125,43 @@ public class IssueDAO {
             User assignment = userRepository.getOne(filter.assignment);
             if (filter.workflowItemId != null) {
                 WorkFlowItem workFlow = workFlowItemRepository.getOne(filter.workflowItemId);
-                return issueReposistory.findByNameLikeAndCodeLikeAndStatusAndAssignment(name, code, workFlow, assignment);
+                return issueRepository.findByNameLikeAndCodeLikeAndStatusAndAssignment(name, code, workFlow, assignment);
             }
-            return issueReposistory.findByNameLikeAndCodeLikeAndAssignment(name, code, assignment);
+            return issueRepository.findByNameLikeAndCodeLikeAndAssignment(name, code, assignment);
         }
         if (filter.workflowItemId != null) {
             WorkFlowItem workFlow = workFlowItemRepository.getOne(filter.workflowItemId);
-            return issueReposistory.findByNameLikeAndCodeLikeAndStatus(name, code, workFlow);
+            return issueRepository.findByNameLikeAndCodeLikeAndStatus(name, code, workFlow);
         }
-        return issueReposistory.findByNameLikeAndCodeLike(name, code);
+        return issueRepository.findByNameLikeAndCodeLike(name, code);
+    }
+
+    public IssueType createIssueType(IssueTypeParams entryParams){
+        IssueType result = null;
+        try {
+            Project project = projectRepository.getOne(entryParams.getProjectId());
+            result = new IssueType();
+            result.setName(entryParams.getName());
+            result.setIconUrl(entryParams.getIconUrl());
+            result.setProject(project);
+            issueTypeRepository.save(result);
+        }catch (Exception e){
+            result = null;
+            System.out.println(e.getMessage());
+        }
+            return result;
+    }
+    public List<Issue> findInBacklog(Integer backlogId){
+        try{
+            return issueRepository.findInBacklog(backlogId);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
+    public Issue getOne(int issueId) {
+        return issueRepository.getOne(issueId);
     }
 }

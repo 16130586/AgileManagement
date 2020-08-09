@@ -150,9 +150,8 @@ export const createProject = action$ =>
             formData.append('key' , action.payload.projectKey)
             formData.append('description' , action.payload.shortDescription)
             formData.append('file', action.payload.img)
-            console.log(formData)
-            console.log(action.payload)
             const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.CREATE_PROJECT)
+            // do not declare content-type, let the browser do that such thing or get a bug
             const requestSettings = {
                 url: fullyUrl,
                 method: 'POST',

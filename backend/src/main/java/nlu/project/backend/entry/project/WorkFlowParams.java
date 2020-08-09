@@ -5,6 +5,10 @@ public class WorkFlowParams {
     public String name;
     public Integer projectId;
     public String itemName;
+    public String color;
+    public String location;
     public Integer fromItemId;
     public Integer toItemId;
+    public boolean isStart = false;
+    public boolean isEnd = false;
 }

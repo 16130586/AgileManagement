@@ -1,6 +1,6 @@
 package nlu.project.backend.DAO;
 
-import lombok.Data;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
@@ -9,17 +9,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @NoArgsConstructor
-@Data
 public class UserDAO {
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
-    ProjectRepository projectRepository;
+    UserRoleRepository userRoleRepository;
 
     @Autowired
-    UserRoleRepository userRoleRepository;
+    ProjectRepository projectRepository;
+
 
     @Autowired
     RoleRepository roleRepository;
@@ -27,17 +27,19 @@ public class UserDAO {
     @Autowired
     BacklogRepository backlogRepository;
 
-    public boolean isProductOwner(int userId, int backlogId) {
-        User user = userRepository.getOne(userId);
-        BackLog backlog = backlogRepository.getOne(backlogId);
-        Project project = backlog.getProject();
+    public User getUser(Integer id) {
+        return userRepository.getOne(id);
+    }
 
+    public boolean isProductOwner(int userId, int projectId) {
+        User user = userRepository.getOne(userId);
+        //BackLog backlog = backlogRepository.getOne(backlogId);
+        //Project project = backlog.getProject();
+        Project project = projectRepository.getOne(projectId);
         UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
         if (userRole == null)
             return false;
-        if (userRole.getRole().getId() == 1)
-            return false;
-        return true;
+        return userRole.getRole().getId() == 1;
     }
 
     public boolean isProductOwnerWithProjectId(int userId, int projectId) {
@@ -46,8 +48,19 @@ public class UserDAO {
         UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
         if (userRole == null)
             return false;
-        if (userRole.getRole().getId() == 1)
+        return userRole.getRole().getId() == 1;
+    }
+
+    public boolean isInProject(Integer projectId, Integer userId) {
+        try {
+            UserRole userRole = userRoleRepository
+                    .findByUserAndProject(userRepository.getOne(userId) , projectRepository.getOne(projectId));
+            if (userRole != null)
+                return true;
             return false;
-        return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new InternalException(e.getMessage());
+        }
     }
 }

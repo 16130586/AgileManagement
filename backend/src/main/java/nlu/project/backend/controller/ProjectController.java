@@ -5,13 +5,19 @@ import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
+import nlu.project.backend.model.IssueType;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
+import java.util.Collections;
+import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -87,6 +93,18 @@ public class ProjectController extends BaseController{
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 
+    @GetMapping("/all-workflow/{projectId}")
+    public ApiResponse getWorkFlow(@PathVariable Integer projectId) {
+        Object result = projectBusiness.getWorkFlow(projectId);
+        return ApiResponse.OnSuccess(result, "Fetch WorkFlow Success!");
+    }
+
+    @GetMapping("/{projectId}/workflow")
+    public ApiResponse getCurrentWorkFlow(@PathVariable Integer projectId) {
+        Object result = projectBusiness.getCurrentWorkFlow(projectId);
+        return ApiResponse.OnSuccess(result, "Fetch WorkFlow Success!");
+    }
+
     @PostMapping("/workflow/create")
     public ApiResponse createWorkflow(@RequestBody WorkFlowParams params) {
         Object result = projectBusiness.createWorkFlow(params);
@@ -139,5 +157,26 @@ public class ProjectController extends BaseController{
     public ApiResponse removeRoleFromMember(@RequestBody UserRoleParams params) {
         projectBusiness.removeRoleFromMember(params);
         return ApiResponse.OnSuccess(null, "Remove role to member success!");
+    }
+
+    @GetMapping("/{projectId}/issuetypes")
+    public ApiResponse getIssueTypes(HttpServletRequest request, @PathVariable("projectId") Integer projectId){
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        List<IssueType> issueTypes = projectBusiness.getIssueTypes(projectId, user.getUser().getId());
+        return ApiResponse.OnSuccess(issueTypes , "Request success!");
+
+    }
+
+    @GetMapping("/{projectId}/backlog")
+    public ApiResponse backlog(HttpServletRequest request, @PathVariable("projectId") Integer projectId){
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.getBacklogItems(projectId, user);
+        return ApiResponse.OnSuccess(result , "Request backlog success!");
+    }
+    @GetMapping("/{projectId}/workingSprints")
+    public ApiResponse workingSprints(HttpServletRequest request, @PathVariable("projectId") Integer projectId){
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.getWorkingSprints(projectId, user);
+        return ApiResponse.OnSuccess(result , "Request sprints success!");
     }
 }
