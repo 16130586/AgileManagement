@@ -1,5 +1,11 @@
 import { ASYNC as AsyncEventTypes } from '../../constants/index'
-const init = { isLoadBacklogPage: false, backlogItems: [], workingSprints: [], issueTypes: [] }
+const init = {
+    isLoadBacklogPage: false,
+    backlogItems: [],
+    workingSprints: [],
+    issueTypes: [],
+    workflow: null
+}
 const Backlog = (state = init, action) => {
     let nextState = state
     let sprintId = -1
@@ -11,6 +17,7 @@ const Backlog = (state = init, action) => {
                 backlogItems: action.payload.backlogItems,
                 workingSprints: action.payload.workingSprints,
                 issueTypes: action.payload.issueTypes,
+                workflow : action.payload.workflow
             }
             break;
         case AsyncEventTypes.FULL_FILLED.CREATE_SPRINT:

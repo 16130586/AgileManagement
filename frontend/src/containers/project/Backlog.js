@@ -28,6 +28,7 @@ const Backlog = function (props) {
     return (
         <BacklogComponent
             projectId={projectId}
+            workflow={props.workflow}
             backlogItems={props.backlogItems}
             workingSprints={props.workingSprints}
             topOfBacklog={props.topOfBacklog}
@@ -51,6 +52,7 @@ const mapStateToProps = state => {
     return {
         backlogItems: state.Project_Backlog.backlogItems,
         workingSprints: state.Project_Backlog.workingSprints,
+        workflow: state.Project_Backlog.workflow,
         issueTypes : state.Project_Backlog.issueTypes,
         isLoadBacklogPage: state.Project_Backlog.isLoadBacklogPage,
     }

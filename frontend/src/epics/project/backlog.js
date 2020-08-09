@@ -57,10 +57,23 @@ export const fetchBacklogPage = action$ =>
                 }
             }
 
+            const getWorkflowUrl = BACKEND_API.BASE_URL
+                .concat(BACKEND_API.ACTIONS.GET_WORKFLOW)
+
+            const getWorkflowSettings = {
+                url: getWorkflowUrl.replace("{projectId}", projectId),
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            }
+
             return forkJoin({
                 backlogItemsRequest: ajax(getBacklogItemsSettings),
                 workingSprintsRequest: ajax(getWorkingSprintsSettings),
                 issueTypes: ajax(getIssueTypesSettings),
+                workflow: ajax(getWorkflowSettings),
             })
                 .pipe(
                     mergeMap(ajaxResponse =>
@@ -71,7 +84,8 @@ export const fetchBacklogPage = action$ =>
                                 data: {
                                     backlogItems: ajaxResponse.backlogItemsRequest.response.data,
                                     workingSprints: ajaxResponse.workingSprintsRequest.response.data,
-                                    issueTypes: ajaxResponse.issueTypes.response.data
+                                    issueTypes: ajaxResponse.issueTypes.response.data,
+                                    workflow: ajaxResponse.workflow.response.data
                                 }
                             }
                         })
@@ -504,10 +518,10 @@ export const createNewIssue = action$ =>
                     'Authorization': `Bearer ${getToken()}`
                 },
                 body: {
-                    sprintId : action.payload.sprintId,
-                    projectId : parseInt(action.payload.projectId),
-                    issueTypeId : action.payload.issueTypeId,
-                    description : action.payload.issueDescription,
+                    sprintId: action.payload.sprintId,
+                    projectId: parseInt(action.payload.projectId),
+                    issueTypeId: action.payload.issueTypeId,
+                    description: action.payload.issueDescription,
                 }
             }
 
@@ -530,7 +544,7 @@ export const createNewIssue = action$ =>
         })
     );
 
-    export const completeSprint = action$ =>
+export const completeSprint = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.COMPLETE_SPRINT),
         mergeMap(action => {
@@ -539,7 +553,7 @@ export const createNewIssue = action$ =>
                 .concat(BACKEND_API.ACTIONS.COMPLETE_SPRINT)
 
             const completeSprintSettings = {
-                url: completeSprintUrl.replace('{id}' , sprintId),
+                url: completeSprintUrl.replace('{id}', sprintId),
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
