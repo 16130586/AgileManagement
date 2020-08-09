@@ -28,4 +28,5 @@ public interface ProjectBusiness {
     List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails user);
     List<WorkFlow> getWorkFlow(int projectId);
     List<Issue> getBacklogItems(Integer projectId, CustomUserDetails user);
+    WorkFlow getCurrentWorkFlow(Integer projectId);
 }

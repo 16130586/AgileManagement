@@ -10,8 +10,8 @@ INSERT INTO jira.user_role(project_id, role_id, user_id) VALUES (1, 1, 1);
 INSERT INTO jira.workflow(id, name) VALUES (1, 'Default WorkFlow');
 INSERT INTO jira.workflow(id, name, project_id) VALUES (2, 'Testing WorkFlow', 1);
 
-INSERT INTO jira.workflow_item(id, name, `_order`, workflow_id , is_end, is_start) VALUES (1, 'Not started', 1, 1 , 0 , 1), (2, 'In progress', 2, 1, 0 ,0 ), (3, 'Done', 3, 1, 1 ,0 );
-INSERT INTO jira.workflow_item(id, name, `_order`, workflow_id, color, location) VALUES (4, 'Alpha', 1, 2, 'lightgreen', '0 0'), (5, 'Beta', 2, 2, 'lightgreen', '0 0'), (6, 'Gamma', 3, 2, 'lightgreen', '0 0'), (7, 'Delta', 4, 2, 'lightgreen', '0 0');
+INSERT INTO jira.workflow_item(id, name, `_order`, workflow_id) VALUES (1, 'Not started', 1, 1), (2, 'In progress', 2, 1), (3, 'Done', 3, 1);
+INSERT INTO jira.workflow_item(id, name, `_order`, workflow_id, color, location) VALUES (4, 'Alpha', 1, 2, 'lightgray', '0 0'), (5, 'Beta', 2, 2, 'lightgreen', '0 0'), (6, 'Gamma', 3, 2, 'lightgreen', '0 0'), (7, 'Delta', 4, 2, 'blue', '0 0');
 
 INSERT INTO jira.link_workflow(workflow_from, workflow_to) VALUES (1, 2), (2, 3), (4, 5), (5, 6), (6, 7), (7, 1);
 
