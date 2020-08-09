@@ -71,7 +71,6 @@ export const updateWorkFlows = action$ =>
             if (ajax.response == null)
                 return madeRequestFail('No response from server!')
             else if (ajax.status > 0 && ajax.response.status < 400) {
-                alert(ajax.response.message)
                 return madeRequestSuccess(ajax.response.message)
             }
             else
@@ -130,7 +129,9 @@ export const addWorkFlowItem = action$ =>
                 },
                 body: {
                     id: action.payload.workFlowId,
-                    itemName: action.payload.name
+                    itemName: action.payload.name,
+                    isStart: action.payload.isStart,
+                    isEnd: action.payload.isEnd
                 }
             }
             return ajax(requestSettings)
@@ -184,7 +185,6 @@ export const addWorkFlowLink = action$ =>
                 return fullFilledNewWorkFlowLink(ajax.response.data)
             }
             else {
-                alert(ajax.response.message)
                 return madeRequestFail(ajax.response.message)
             }
         })

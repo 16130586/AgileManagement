@@ -11,6 +11,9 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import Checkbox from '@material-ui/core/Checkbox';
 import WorkFlowChart from "./WorkFlowChart";
 
 const useStyles = makeStyles((theme) => ({
@@ -54,8 +57,41 @@ let AddWorkFlowItemForm = function (props) {
                 type="text"
                 fullWidth
             />
+            <FormControlLabel
+                disabled={props.isExistedStartPoint}
+                checked={props.addWorkFlowItemForm.isStart}
+                onChange={(e) => props.formAddWorkFlowItemChange(e)}
+                control={<Checkbox name="isStart" />}
+                label="Set as start point"
+            />
+            <br/>
+            <FormControlLabel
+                disabled={props.isExistedEndPoint}
+                checked={props.addWorkFlowItemForm.isEnd}
+                onChange={(e) => props.formAddWorkFlowItemChange(e)}
+                control={<Checkbox name="isEnd" />}
+                label="Set as end point"
+            />
         </Fragment>
     )
+}
+
+const isExistedStartPoint = (dataNodeArray) => {
+    let result = false;
+    dataNodeArray.forEach(node => {
+        if (node.color == 'lightgray')
+            result = true;
+    })
+    return result;
+}
+
+const isExistedEndPoint = (dataNodeArray) => {
+    let result = false;
+    dataNodeArray.forEach(node => {
+        if (node.color == 'blue')
+            result = true;
+    })
+    return result;
 }
 
 let AddLinkWorkFlowForm = function (props) {
@@ -159,17 +195,28 @@ let WorkFlow = function (props) {
     const [openAddWorkFlowItemDialog, setOpenAddWorkFlowItemDialog] = React.useState(false)
     const handleCloseAddWorkFlowItemDialog = () => {
         setOpenAddWorkFlowItemDialog(false)
+        setAddWorkFlowItemForm(initialAddWorkFlowItemForm)
     }
 
-    const [addWorkFlowItemForm, setAddWorkFlowItemForm] = React.useState({
+    const initialAddWorkFlowItemForm = {
         workFlowId: '',
-        name: ''
-    })
+        name: '',
+        isStart: false,
+        isEnd: false
+    }
+
+    const [addWorkFlowItemForm, setAddWorkFlowItemForm] = React.useState(initialAddWorkFlowItemForm)
 
     const formAddWorkFlowItemChange = function (event) {
-        let formData = { ...addWorkFlowItemForm }
-        formData[event.target.name] = event.target.value
-        formData.workFlowId = currentWorkFlow.id
+        let formData;
+        if (event.target.name == "isStart") {
+            let isEndNewValue = event.target.checked == addWorkFlowItemForm.isEnd == true ? false : addWorkFlowItemForm.isEnd;
+            formData = {...addWorkFlowItemForm, isStart: event.target.checked, isEnd: isEndNewValue, workFlowId: currentWorkFlow.id}
+        } else if (event.target.name == "isEnd") {
+            let isStartNewValue = event.target.checked == addWorkFlowItemForm.isStart == true ? false : addWorkFlowItemForm.isStart;
+            formData = {...addWorkFlowItemForm, isEnd: event.target.checked, isStart: isStartNewValue, workFlowId: currentWorkFlow.id}
+        } else
+            formData = {...addWorkFlowItemForm, [event.target.name] : event.target.value, workFlowId: currentWorkFlow.id}
         setAddWorkFlowItemForm(formData)
     }
 
@@ -290,7 +337,12 @@ let WorkFlow = function (props) {
                                 <DialogContent>
                                     <DialogContentText id="add-workflow-item-dialog-description">
                                     </DialogContentText>
-                                    <AddWorkFlowItemForm formAddWorkFlowItemChange={formAddWorkFlowItemChange} addWorkFlowItemForm={addWorkFlowItemForm} />
+                                    <AddWorkFlowItemForm
+                                        formAddWorkFlowItemChange={formAddWorkFlowItemChange}
+                                        addWorkFlowItemForm={addWorkFlowItemForm}
+                                        isExistedStartPoint={isExistedStartPoint(currentWorkFlow.nodeDataArray)}
+                                        isExistedEndPoint={isExistedEndPoint(currentWorkFlow.nodeDataArray)}
+                                    />
                                 </DialogContent>
                                 <DialogActions>
                                     <Button
@@ -329,17 +381,13 @@ let WorkFlow = function (props) {
                                     <Button onClick={handleCloseAddLinkWorkFlowDialog} color="primary" autoFocus>Quit</Button>
                                 </DialogActions>
                             </Dialog>
-                            <button onClick={() => props.updateWorkFlow(currentWorkFlow)} style={{border: "none", padding: "8px", backgroundColor: "#f6f6f6", marginLeft: "8px"}}>
-                                Save Diagram
-                            </button>
                         </div>
                         <WorkFlowChart
-                            workFlowId={currentWorkFlow.id}
                             updateWorkFlowItem={props.updateWorkFlowItem}
-                            nodeDataArray={currentWorkFlow.nodeDataArray}
-                            linkDataArray={currentWorkFlow.linkDataArray}
+                            workFlow={currentWorkFlow}
                             removeWorkFlowItem={props.removeWorkFlowItem}
                             removeWorkFlowLink={props.removeWorkFlowLink}
+                            updateDiagram={props.updateWorkFlow}
                         />
                     </div>
                         }
