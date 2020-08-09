@@ -12,6 +12,7 @@ export const BACKEND_API = {
         ADD_WORKFLOW_LINK : "/project/workflow/add-link",
         PROJECT_GET_BACKLOG_ITEMS : "/project/{projectId}/backlog",
         PROJECT_GET_WORKING_SPRINTS : "/project/{projectId}/workingSprints",
+        GET_WORKFLOW : "/project/workflow/{projectId}",
         DELETE_SPRINT : "/sprint/{id}",
         TOP_OF_BACKLOG : "/issue/{id}/topBacklog",
         BOTTOM_OF_BACKLOG : "/issue/{id}/bottomBacklog",

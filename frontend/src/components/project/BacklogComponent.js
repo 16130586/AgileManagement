@@ -9,8 +9,9 @@ import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select';
+import Select from '@material-ui/core/Select'
 import Icon from '@material-ui/core/Icon'
+import CloseIcon from '@material-ui/icons/Close'
 
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -127,8 +128,23 @@ let IssueItem = function (props) {
         handleCloseOptsMenu()
         props.deleteIssue(issueId, projectId)
     }
+
+    const handleOnClick = (event) => {
+        if (!props.onClick) {
+            return;
+        }
+        props.onClick(props.data)
+    }
     return (
-        <div className={props.className} style={{ width: "100%", display: "flex", alignItems: "center" }}>
+        <div
+            onClick={(event) => handleOnClick(event)}
+            className={props.className}
+            style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                cursor: props.onClick ? 'pointer' : 'default'
+            }}>
             <div>
                 <img
                     src={data.issueType.iconUrl}
@@ -158,7 +174,7 @@ let IssueItem = function (props) {
                     anchorEl={anchorEl}
                     keepMounted
                     open={Boolean(anchorEl)}
-                    onClose={handleCloseOptsMenu}
+                    onClose={(event) => { event.stopPropagation(); handleCloseOptsMenu() }}
                 >
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}
                         disabled
@@ -827,6 +843,7 @@ let SprintComponent = function (props) {
                         {(data.issues != null && data.issues.length > 0) &&
                             data.issues.map(iss =>
                                 <IssueItem
+                                    onClick={props.openIssueDetail}
                                     className="mt-1"
                                     data={iss}
                                     sprint={data}
@@ -950,6 +967,7 @@ let BacklogComponent = function (props) {
                         {(props.backlogItems != null && props.backlogItems.length > 0) &&
                             props.backlogItems.map(iss =>
                                 <IssueItem
+                                    onClick={props.openIssueDetail}
                                     className="mt-1"
                                     data={iss}
                                     sprints={props.sprints}
@@ -974,7 +992,10 @@ let BacklogComponent = function (props) {
 }
 
 let BacklogSpaceComponent = function (props) {
+    const projectId = parseInt(props.projectId)
     const anySprintStarted = []
+    const [isIssueDetailOpen, setIsIssueDetailOpen] = useState(false)
+    const [issueSelected, setIssueSelected] = useState(null)
     if (props.workingSprints != null)
         props.workingSprints.filter(sprint => sprint.status == 1)
 
@@ -986,43 +1007,118 @@ let BacklogSpaceComponent = function (props) {
         return idoSprint == 0 && props.workingSprints[idoSprint].issues != null
             && props.workingSprints[idoSprint].issues.length > 0
     }
+    const openIssueDetail = (data) => {
+        console.log(data)
+        console.log(props)
+        setIsIssueDetailOpen(true)
+        setIssueSelected(data)
+    }
+    const closeIssueDetail = () => {
+        setIsIssueDetailOpen(false)
+    }
     return (
         <Fragment>
             <MyBreadCrumbs />
-            {
-                props.workingSprints && props.workingSprints.map(sprint =>
-                    <SprintComponent
-                        projectId={props.projectId}
-                        data={sprint}
+            <button onClick={() => openIssueDetail()}>Open</button>
+            <div style={{ display: "flex", height: '100%' }}>
+                <div style={{ overflowY: isIssueDetailOpen ? "scroll" : '' }}>
+                    {
+                        props.workingSprints && props.workingSprints.map(sprint =>
+                            <SprintComponent
+                                projectId={projectId}
+                                data={sprint}
+                                sprints={props.workingSprints}
+                                issueTypes={props.issueTypes}
+                                canStart={isSprintCanStart(sprint.id)}
+                                deleteSprint={props.deleteSprint}
+                                moveUpSprint={props.moveUpSprint}
+                                moveDownSprint={props.moveDownSprint}
+                                editSprint={props.editSprint}
+                                startSprint={props.startSprint}
+                                deleteIssue={props.deleteIssue}
+                                moveSprintTo={props.moveSprintTo}
+                                moveIssueToSprint={props.moveIssueToSprint}
+                                topOfBacklog={props.topOfBacklog}
+                                bottomOfBacklog={props.bottomOfBacklog}
+                                createNewIssue={props.createNewIssue}
+                                completeSprint={props.completeSprint}
+                                openIssueDetail={openIssueDetail}
+                            />)
+                    }
+                    <BacklogComponent
+                        projectId={projectId}
                         sprints={props.workingSprints}
                         issueTypes={props.issueTypes}
-                        canStart={isSprintCanStart(sprint.id)}
-                        deleteSprint={props.deleteSprint}
-                        moveUpSprint={props.moveUpSprint}
-                        moveDownSprint={props.moveDownSprint}
-                        editSprint={props.editSprint}
-                        startSprint={props.startSprint}
+                        backlogItems={props.backlogItems}
+                        createSprint={() => props.createSprint(props.projectId)}
                         deleteIssue={props.deleteIssue}
                         moveSprintTo={props.moveSprintTo}
                         moveIssueToSprint={props.moveIssueToSprint}
-                        topOfBacklog={props.topOfBacklog}
-                        bottomOfBacklog={props.bottomOfBacklog}
                         createNewIssue={props.createNewIssue}
-                        completeSprint={props.completeSprint}
+                        openIssueDetail={openIssueDetail}
+                    />
+                </div>
+                {isIssueDetailOpen &&
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        overflowY: "scroll",
+                        width: "35%"
+                    }}>
+                        <div style={{
+                            display: "flex",
+                            alignItems: "center",
+                            borderBottom: "1px solid #bdbdbd"
+                        }}>
+                            <Breadcrumbs aria-label="breadcrumb" className="mt-1">
+                                <Link color="inherit" href={'/projects/'.concat(projectId).concat('/issues/').concat(issueSelected.id)}>
+                                    {issueSelected.code && issueSelected.code.toUpperCase().concat('-')}  {issueSelected.name.toUpperCase()}
+                                </Link>
+                            </Breadcrumbs>
+                            <div style={{ marginLeft: "auto" }}>
+                                <Button onClick={() => closeIssueDetail()}>
+                                    <CloseIcon />
+                                </Button>
+                            </div>
+                        </div>
+                        <div>
+                            <form>
+                                <div>
+                                    List of function here
+                                </div>
+                                <TextField
+                                    label="Description"
+                                    value={issueSelected.description}
+                                    variant="outlined"
+                                    multiline={true}
+                                    required={true}
+                                    rowsMax={20}
+                                    size={'small'}
+                                    type={'string'}
+                                    className="mt-1"
+                                />
+                                <Select
+                                    className="mt-1"
+                                    onClick={(e) => e.stopPropagation()}
+                                    value={null}
+                                    onChange={(event) => console.log(event)}
+                                >
+                                    {[].map(dr =>
+                                        <MenuItem
+                                            className="ml-1"
+                                            value={dr.id}>
+                                            {dr.text}
+                                        </MenuItem>)
+                                    }
+                                </Select>
+                            </form>
+                        </div>
+                        {issueSelected.name}
 
-                    />)
-            }
-            <BacklogComponent
-                projectId={props.projectId}
-                sprints={props.workingSprints}
-                issueTypes={props.issueTypes}
-                backlogItems={props.backlogItems}
-                createSprint={() => props.createSprint(props.projectId)}
-                deleteIssue={props.deleteIssue}
-                moveSprintTo={props.moveSprintTo}
-                moveIssueToSprint={props.moveIssueToSprint}
-                createNewIssue={props.createNewIssue}
-            />
+                    </div>
+                }
+
+            </div>
         </Fragment>
     )
 }
