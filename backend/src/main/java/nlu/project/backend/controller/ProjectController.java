@@ -92,9 +92,15 @@ public class ProjectController extends BaseController{
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 
-    @GetMapping("/workflow/{projectId}")
+    @GetMapping("/all-workflow/{projectId}")
     public ApiResponse getWorkFlow(@PathVariable Integer projectId) {
         Object result = projectBusiness.getWorkFlow(projectId);
+        return ApiResponse.OnSuccess(result, "Fetch WorkFlow Success!");
+    }
+
+    @GetMapping("/{projectId}/workflow")
+    public ApiResponse getCurrentWorkFlow(@PathVariable Integer projectId) {
+        Object result = projectBusiness.getCurrentWorkFlow(projectId);
         return ApiResponse.OnSuccess(result, "Fetch WorkFlow Success!");
     }
 

@@ -235,7 +235,14 @@ public class ProjectDAO {
         WorkFlow workFlow = workflowRepository.getOne(params.id);
         WorkFlowItem item = new WorkFlowItem();
         item.setName(params.itemName);
-        item.setColor("lightgreen");
+        if (params.isStart)
+            item.setColor("lightgray");
+        else if (params.isEnd)
+            item.setColor("blue");
+        else
+            item.setColor("lightgreen");
+        item.setStart(params.isStart);
+        item.setEnd(params.isEnd);
         item.setLocation("0 0");
         item.setWorkFlow(workFlow);
         return itemRepository.save(item);

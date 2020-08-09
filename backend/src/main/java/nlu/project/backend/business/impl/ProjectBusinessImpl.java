@@ -161,6 +161,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return issueBusiness.findInBacklog(backlogId);
     }
 
+    @Override
+    public WorkFlow getCurrentWorkFlow(Integer projectId) {
+        return projectDAO.getProjectById(projectId).getCurrentWorkFlow();
+    }
+
     public boolean isInProject(Integer projectId , Integer userId){
         return userDAO.isInProject(projectId, userId);
     }
