@@ -14,7 +14,6 @@ const Backlog = (state = init, action) => {
     let issueId = -1
     switch (action.type) {
         case AsyncEventTypes.FULL_FILLED.BACKLOG_PAGE:
-            console.log(action.payload)
             nextState = {
                 isLoadBacklogPage: true,
                 project: action.payload.project,

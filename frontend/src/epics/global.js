@@ -105,7 +105,6 @@ action$.pipe(
         catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
   }),
   map(ajax => {
-    console.log(ajax)
     // xhr failed on cros, 404 , 500 - xhr not by our server
     if (ajax.status == 0)
       return madeRequestFail(ajax.response)

@@ -59,7 +59,6 @@ const Common = (state = initState, action) => {
             nextState = { ...state, forceRedirectTo: `/project/${action.payload.id}/roadmap`, isAppLoad: true }
             break;
         case RouterTypes.REDIRECT:
-            console.log(action)
             nextState = { ...state, forceRedirectTo: action.payload }
             break;
         case RouterTypes.CLEAR_REDIRECT_URL:

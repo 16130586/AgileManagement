@@ -27,7 +27,6 @@ export const fetchGroup = action$ =>
     action$.pipe(
         ofType(AsyncTypes.LOAD_MORE.ALL_GROUP),
         mergeMap(action => {
-            console.log("called epic")
             return rxjsOf({data: fakeListGroup})
         }),
         map(response => fullFilledAllGroup(response.data))

@@ -1,7 +1,6 @@
 import React, { useState, Fragment } from 'react';
 
 function ContextualNavigation(props) {
-    console.log(props)
     let [history, setHistory] = useState([])
     let navItems = props.navItems
     let ContextComponent = history.length > 0 ? history[history.length - 1] : null

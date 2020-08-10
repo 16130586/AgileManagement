@@ -587,8 +587,8 @@ let SprintComponent = function (props) {
                                 </Button>
                             }
                             {
-                                storyPoints.map(e =>
-                                    <StoryPointItem onClick={(event) => event.stopPropagation()} className="mr-1" {...e} />
+                                storyPoints.map((e, index) =>
+                                    <StoryPointItem key={index} onClick={(event) => event.stopPropagation()} className="mr-1" {...e} />
                                 )
                             }
                             <Dialog
@@ -838,14 +838,15 @@ let SprintComponent = function (props) {
                             <div className="pd-1" style={{ paddingTop: "0px", border: "2px solid rgb(223, 225, 230)", borderStyle: "dashed" }}>
                                 <Typography>
                                     Plan your sprint
-                                    Choose issues from the <bold>Backlog</bold> section, or create new issues, to plan
-                                    the work for this sprint. Select <bold>Start</bold> sprint when your're ready
+                                    Choose issues from the <span style={{fontWeight: "600"}}>Backlog</span> section, or create new issues, to plan
+                                    the work for this sprint. Select <span style={{fontWeight: "600"}}>Start</span> sprint when your're ready
                                 </Typography>
                             </div>
                         }
                         {(data.issues != null && data.issues.length > 0) &&
                             data.issues.map(iss =>
                                 <IssueItem
+                                    key={iss.id}
                                     onClick={props.openIssueDetail}
                                     className="mt-1"
                                     data={iss}
@@ -1123,6 +1124,7 @@ let BacklogComponent = function (props) {
                         {(props.backlogItems != null && props.backlogItems.length > 0) &&
                             props.backlogItems.map(iss =>
                                 <IssueItem
+                                    key={iss.id}
                                     onClick={props.openIssueDetail}
                                     className="mt-1"
                                     data={iss}
@@ -1192,9 +1194,10 @@ let BacklogSpaceComponent = function (props) {
                     {
                         props.workingSprints && props.workingSprints.map(sprint =>
                             <SprintComponent
-                                projectId={projectId}
+                                key={sprint.id}
                                 data={sprint}
                                 sprints={props.workingSprints}
+                                projectId={projectId}
                                 issueTypes={props.issueTypes}
                                 canStart={isSprintCanStart(sprint.id)}
                                 deleteSprint={props.deleteSprint}
