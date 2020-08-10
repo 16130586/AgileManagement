@@ -13,6 +13,8 @@ const Login = function (state = init, action) {
         case AuthEventTypes.LOGIN_FAILED:
             nextState = {...state , errorMessage : "Your credentials are in-correct!"}
             break;
+        default: 
+            break;
     }
     return nextState
 }

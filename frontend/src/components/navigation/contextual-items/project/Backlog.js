@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Link } from "react-router-dom"
 import ClassIcon from '@material-ui/icons/Class';
 function Backlog(props) {
-    console.log(props)
     let {projectId} = props.data 
     return (
         <Link to={`/project/${projectId}/backlog`} className={props.className} style={{ display: "block", textDecoration: "none" }}>

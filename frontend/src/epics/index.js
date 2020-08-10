@@ -26,6 +26,7 @@ import {fetchBacklogPage as Project_Backlog_Page,
         moveIssueToSprint as Project_Move_Issue,
         createNewIssue as Project_Create_New_Issue,
         completeSprint as Project_Complete_Sprint,
+        updateDetailIssue as Project_Update_Issue_Detail,
 } from "./project/backlog" 
 export default combineEpics(
     login,
@@ -58,4 +59,5 @@ export default combineEpics(
     Project_Move_Issue,
     Project_Create_New_Issue,
     Project_Complete_Sprint,
+    Project_Update_Issue_Detail
 );

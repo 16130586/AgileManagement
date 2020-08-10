@@ -7,6 +7,7 @@ export const BACKEND_API = {
         CREATE_PROJECT: "/project/create",
         PROJECT_GET_ONE : "/project/{projectId}",
         PROJECT_GET_ALL: "/project/jointIn",
+        DELETE_PROJECT : "/project/delete",
         SEARCH_PROJECT: "/project/searchByFilter",
         WORKFLOW_CHART: "/chart/workflow",
         CREATE_WORKFLOW: "/project/workflow/create",

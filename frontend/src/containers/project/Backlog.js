@@ -45,6 +45,7 @@ const Backlog = function (props) {
             issueTypes={props.issueTypes}
             createNewIssue={props.createNewIssue}
             completeSprint={props.completeSprint}
+            updateDetailIssue={props.updateDetailIssue}
         >
         </BacklogComponent>
     )

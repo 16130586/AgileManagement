@@ -614,11 +614,12 @@ export const updateDetailIssue = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.ISSUE_UPDATE_DETAIL),
         mergeMap(action => {
+            console.log(action)
             const updateDetailIssueUrl = BACKEND_API.BASE_URL
                 .concat(BACKEND_API.ACTIONS.ISSUE_UPDATE_DETAIL)
 
             const updateDetailIssueSettings = {
-                url: updateDetailIssueSettings,
+                url: updateDetailIssueUrl,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -627,9 +628,10 @@ export const updateDetailIssue = action$ =>
                 body: {
                     issueId: action.payload.issueId,
                     description: action.payload.description,
-                    issueTypeId: action.payload.issueType,
+                    issueTypeId: action.payload.issueTypeId,
                     storyPoint: action.payload.storyPoint,
-                    assigneeEmail: action.payload.assignee
+                    assigneeEmail: action.payload.assigneeEmail == 'None' ? null : action.payload.assigneeEmail,
+                    workflowStatus: action.payload.workflowStatus,
                 }
             }
 
