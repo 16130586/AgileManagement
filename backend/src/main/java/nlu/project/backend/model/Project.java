@@ -17,6 +17,8 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
@@ -48,4 +50,7 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "workflow_id")
     private WorkFlow currentWorkFlow;
+
+    @Column(name = "deleted" , columnDefinition = "boolean default false")
+    private boolean deleted;
 }
