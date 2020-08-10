@@ -13,7 +13,7 @@ function initDiagram() {
             {
                 'undoManager.isEnabled': true,  // must be set to allow for model change listening
                 // 'undoManager.maxHistoryLength': 0,  // uncomment disable undo/redo functionality
-                'clickCreatingTool.archetypeNodeData': { text: 'new node', color: 'lightblue' },
+                // 'clickCreatingTool.archetypeNodeData': { text: 'new node', color: 'lightblue' },
                 model: $(go.GraphLinksModel,
                     {
                         linkKeyProperty: 'key',  // IMPORTANT! must be defined for merges and data sync when using GraphLinksModel
@@ -45,18 +45,18 @@ function initDiagram() {
             $(go.TextBlock,
                 { margin: 8, editable: true },  // some room around the text
                 new go.Binding('text').makeTwoWay()
-            )
+            ),
         );
 
     return diagram;
 }
 
 function WorkFlowChart(props) {
-    const nodeDataArray = props.nodeDataArray;
-    const linkDataArray = props.linkDataArray;
+    const nodeDataArray = props.workFlow.nodeDataArray;
+    const linkDataArray = props.workFlow.linkDataArray;
 
     const updateWorkFlowItem = {
-        workFlowId: props.workFlowId,
+        workFlowId: props.workFlow.id,
         data: null
     }
 
@@ -64,14 +64,16 @@ function WorkFlowChart(props) {
         console.log(changes)
         if ( changes.removedNodeKeys != undefined && changes.removedNodeKeys.length == 1 && changes.modifiedNodeData == undefined) {
             if (changes.removedLinkKeys != undefined) {
-                props.removeWorkFlowLink(props.workFlowId, changes.removedLinkKeys)
+                props.removeWorkFlowLink(props.workFlow.id, changes.removedLinkKeys)
             }
-            return props.removeWorkFlowItem(props.workFlowId, changes.removedNodeKeys[0])
-        }
-        if ( changes.modifiedNodeData != undefined && changes.modifiedNodeData.length == 1) {
+            props.removeWorkFlowItem(props.workFlow.id, changes.removedNodeKeys[0])
+        } else if (changes.removedLinkKeys != undefined && changes.removedLinkKeys.length == 1 && changes.modifiedNodeData == undefined) {
+            props.removeWorkFlowLink(props.workFlow.id, changes.removedLinkKeys)
+        } else if ( changes.modifiedNodeData != undefined && changes.modifiedNodeData.length == 1) {
             updateWorkFlowItem.data = changes.modifiedNodeData[0]
-            return props.updateWorkFlowItem(updateWorkFlowItem);
+            props.updateWorkFlowItem(updateWorkFlowItem);
         }
+        props.updateDiagram(props.workFlow);
     }
 
     return (

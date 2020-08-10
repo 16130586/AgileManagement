@@ -10,9 +10,6 @@ export const fullFilledDeleteProject = (id) => ({ type: AsyncEventTypes.FULL_FIL
 export const fetchAllWorkFlow = (projectId) => ({ type: AsyncEventTypes.LOAD_MORE.ALL_WORKFLOW, payload: projectId })
 export const fullFilledAllWorkFlow = (data) => ({ type: AsyncEventTypes.FULL_FILLED.ALL_WORKFLOW, payload: data })
 
-export const updateWorkFlowLocation = (data) => ({ type: AsyncEventTypes.REQUEST.UPDATE_WORKFLOW_LOC, payload: data })
-export const fullFilledUpdateWorkFlowLocation = (data) => ({ type: AsyncEventTypes.FULL_FILLED.UPDATE_WORKFLOW_LOC, payload: data })
-
 export const updateWorkFlowItem = (data) => ({ type: AsyncEventTypes.REQUEST.UPDATE_WORKFLOW_LOC, payload: data })
 export const fullFilledUpdateWorkFlowItem = (data) => ({ type: AsyncEventTypes.FULL_FILLED.UPDATE_WORKFLOW_LOC, payload: data })
 
@@ -60,7 +57,8 @@ export const fullFilledRequestStartSprint = (sprint) => ({ type: AsyncEventTypes
 export const requestDeleteIssue = (issueId, projectId) => ({ type: AsyncEventTypes.REQUEST.DELETE_ISSUE, payload: {issueId, projectId} })
 export const fullFilledRequestDeleteIssue = (issue) => ({ type: AsyncEventTypes.FULL_FILLED.DELETE_ISSUE, payload: issue })
 
-
+export const searchProject = (data) => ({type: AsyncEventTypes.REQUEST.SEARCH_PROJECT, payload: data})
+export const fullFilledSearchProject = (data) => ({type: AsyncEventTypes.FULL_FILLED.SEARCH_PROJECT, payload: data});
 
 
 export const requestMoveIssueToSprint = (fromSprintId, toSprintId, issueId) => ({ type: AsyncEventTypes.REQUEST.MOVE_ISSUE, payload: {fromSprintId, toSprintId , issueId} })
@@ -72,8 +70,6 @@ export const fullFilledRequestCreateNewIssue = (data) => ({ type: AsyncEventType
 
 export const requestCompleteSprint = (sprintId) => ({ type: AsyncEventTypes.REQUEST.COMPLETE_SPRINT, payload: sprintId })
 export const fullFilledRequestCompleteSprint = (sprint) => ({ type: AsyncEventTypes.FULL_FILLED.COMPLETE_SPRINT, payload: sprint })
-
-
 
 export const requestUpdateDetailIssue = (data) => ({ type: AsyncEventTypes.REQUEST.ISSUE_UPDATE_DETAIL, payload: data })
 export const fullFilledRequestUpdateDetailIssue = (issue) => ({ type: AsyncEventTypes.FULL_FILLED.ISSUE_UPDATE_DETAIL, payload: issue })

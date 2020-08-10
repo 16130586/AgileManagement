@@ -14,11 +14,11 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     List<Project> findByCode(String key);
 
-    List<Project> findByCodeLike(String code);
+    List<Project> findByCodeContaining(String code);
 
-    List<Project> findByNameLike(String name);
+    List<Project> findByNameContaining(String name);
 
-    List<Project> findByNameLikeAndCodeLike(String name, String code);
+    List<Project> findByNameContainingAndCodeContaining(String name, String code);
 
     @Query(value = "SELECT * FROM project p WHERE p.id IN (SELECT user_role.project_id FROM user_role WHERE user_role.user_id = :owner_id)", nativeQuery = true)
     List<Project> findJointIn(@Param("owner_id") Integer userId);

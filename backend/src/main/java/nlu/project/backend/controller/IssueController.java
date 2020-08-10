@@ -2,13 +2,15 @@ package nlu.project.backend.controller;
 
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.entry.filter.IssueFilterParams;
-import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.issue.*;
-import nlu.project.backend.model.IssueType;
+import nlu.project.backend.entry.issue.IssueParams;
+import nlu.project.backend.entry.issue.SubTaskParams;
+import nlu.project.backend.entry.issue.IssueTypeParams;
+import nlu.project.backend.entry.issue.MoveToBacklog;
+import nlu.project.backend.entry.issue.MoveToParams;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +66,30 @@ public class IssueController extends BaseController{
     public ApiResponse searchIssueByFilter(@RequestBody IssueFilterParams filterParams) {
         Object result = issueBusiness.findByFilter(filterParams);
         return ApiResponse.OnSuccess(result, "Find Project Success!");
+    }
+
+    @PostMapping("/subTask/create")
+    public ApiResponse createSubTask(@RequestBody SubTaskParams params) {
+        Object result = issueBusiness.createSubTask(params);
+        return ApiResponse.OnSuccess(result, "Create SubTask Success!");
+    }
+
+    @PostMapping("/subTask/update")
+    public ApiResponse updateSubTask(@RequestBody SubTaskParams params) {
+        Object result = issueBusiness.updateSubTask(params);
+        return ApiResponse.OnSuccess(result, "Update SubTask Success!");
+    }
+
+    @PostMapping("/subTask/delete")
+    public ApiResponse deleteSubTask(@RequestBody SubTaskParams params) {
+        issueBusiness.deleteSubTask(params);
+        return ApiResponse.OnSuccess(null, "Delete SubTask Success!");
+    }
+
+    @PostMapping("/subTask/getByIssue")
+    public ApiResponse getSubTaskByIssueID(@RequestBody SubTaskParams params) {
+        Object result = issueBusiness.getSubTaskByIssueID(params);
+        return ApiResponse.OnSuccess(result, "Get SubTask Success!");
     }
 
     @PostMapping("/types")

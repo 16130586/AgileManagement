@@ -1,12 +1,21 @@
 package nlu.project.backend.business.impl;
 
 import nlu.project.backend.DAO.IssueDAO;
+import nlu.project.backend.DAO.SubTaskDAO;
 import nlu.project.backend.DAO.SprintDAO;
 import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.entry.filter.IssueFilterParams;
 import nlu.project.backend.entry.issue.*;
+import nlu.project.backend.entry.issue.IssueParams;
+import nlu.project.backend.entry.issue.SubTaskParams;
+import nlu.project.backend.model.Issue;
+import nlu.project.backend.model.SubTask;
+import nlu.project.backend.model.User;
+import nlu.project.backend.entry.issue.IssueTypeParams;
+import nlu.project.backend.entry.issue.MoveToBacklog;
+import nlu.project.backend.entry.issue.MoveToParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
 import nlu.project.backend.repository.IssueTypeRepository;
@@ -15,7 +24,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +35,9 @@ public class IssueBusinessImp implements IssueBusiness {
 
     @Autowired
     UserDAO userDAO;
+
+    @Autowired
+    SubTaskDAO subTaskDAO;
 
     @Autowired
     FileBusiness fileBusiness;
@@ -67,6 +78,26 @@ public class IssueBusinessImp implements IssueBusiness {
     @Override
     public List<Issue> findByFilter(IssueFilterParams filter) {
         return issueDAO.findByFilter(filter);
+    }
+
+    @Override
+    public SubTask createSubTask(SubTaskParams params) {
+        return subTaskDAO.create(params);
+    }
+
+    @Override
+    public SubTask updateSubTask(SubTaskParams params) {
+        return subTaskDAO.update(params);
+    }
+
+    @Override
+    public void deleteSubTask(SubTaskParams params) {
+        subTaskDAO.delete(params);
+    }
+
+    @Override
+    public List<SubTask> getSubTaskByIssueID(SubTaskParams params) {
+        return subTaskDAO.getSubTaskByIssueID(params);
     }
 
     @Override

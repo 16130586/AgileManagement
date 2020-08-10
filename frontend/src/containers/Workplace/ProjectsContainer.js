@@ -1,9 +1,9 @@
 import React , {useState, useEffect} from 'react'
 import ProjectComponent from '../../components/workplace/Project'
 import { connect } from 'react-redux'
+import {deleteProject, createProject, fetchProjectGrid, searchProject} from '../../actions/project'
 import {navigateTo, pageContextualNavigation} from '../../actions/global'
-import {deleteProject, createProject, fetchProjectGrid} from '../../actions/project'
- 
+
 let sort = [
     { field: 'name', dir: 'asc' }
 ]
@@ -14,8 +14,8 @@ let ProjectContaner = function(props){
     }, [])
     useState(() => {
         props.fetchMoreProjectGrid()
-    })
-    
+    }, [])
+
     return (
         <ProjectComponent
         data={props.data} 
@@ -26,6 +26,7 @@ let ProjectContaner = function(props){
         deleteProject={props.deleteProject}
         navigateTo = {props.navigateTo}
         createProject={props.createProject}
+        searchProject={props.searchProject}
         />
     )
 }
@@ -42,6 +43,7 @@ const mapStateToProps = state => {
         navigateTo: (url) => dispatch(navigateTo(url)),
         deleteProject : (id) => dispatch(deleteProject(id)),
         createProject : (payload) => dispatch(createProject(payload)),
+        searchProject : (payload) => dispatch(searchProject(payload)),
         fetchMoreProjectGrid : () => dispatch(fetchProjectGrid()),
         getNavigation : (pageName, data) => dispatch(pageContextualNavigation(pageName,data))
     }

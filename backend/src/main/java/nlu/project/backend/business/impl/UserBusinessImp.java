@@ -4,10 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import lombok.NoArgsConstructor;
+import nlu.project.backend.DAO.GroupDAO;
 import nlu.project.backend.business.UserBusiness;
+import nlu.project.backend.entry.project.GroupParams;
 import nlu.project.backend.entry.user.LoginParams;
 import nlu.project.backend.entry.user.RegistryParams;
 import nlu.project.backend.jwt.JwtProvider;
+import nlu.project.backend.model.Group;
 import nlu.project.backend.model.User;
 import nlu.project.backend.model.security.CustomUserDetails;
 import nlu.project.backend.repository.UserRepository;
@@ -24,6 +27,8 @@ import org.springframework.stereotype.Service;
 @Service
 @NoArgsConstructor
 public class UserBusinessImp implements UserBusiness {
+    @Autowired
+    GroupDAO groupDAO;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -93,6 +98,7 @@ public class UserBusinessImp implements UserBusiness {
     public void saveUser(User user) {
 
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

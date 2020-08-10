@@ -9,6 +9,6 @@ public class WorkFlowParams {
     public String location;
     public Integer fromItemId;
     public Integer toItemId;
-    public boolean isStart;
-    public boolean isEnd;
+    public boolean isStart = false;
+    public boolean isEnd = false;
 }

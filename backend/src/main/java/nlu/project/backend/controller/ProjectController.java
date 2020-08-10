@@ -3,6 +3,7 @@ package nlu.project.backend.controller;
 import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.model.IssueType;
 import nlu.project.backend.model.response.ApiResponse;
@@ -132,6 +133,30 @@ public class ProjectController extends BaseController{
     public ApiResponse deleteLinkWorkFlow(@RequestBody WorkFlowParams params) {
         Object result = projectBusiness.deleteLinkWorkFlow(params);
         return ApiResponse.OnSuccess(result, "Delete Link WorkFlow Item Success!");
+    }
+
+    @PostMapping("/member/add")
+    public ApiResponse addMember(@RequestBody UserRoleParams params) {
+        Object result = projectBusiness.addMember(params);
+        return ApiResponse.OnSuccess(result, "Add member success!");
+    }
+
+    @PostMapping("/member/remove")
+    public ApiResponse removeMember(@RequestBody UserRoleParams params) {
+        projectBusiness.removeMember(params);
+        return ApiResponse.OnSuccess(null, "Remove member success!");
+    }
+
+    @PostMapping("/member/addRole")
+    public ApiResponse addRoleToMember(@RequestBody UserRoleParams params) {
+        Object result = projectBusiness.addRoleToMember(params);
+        return ApiResponse.OnSuccess(result, "Add role to member success!");
+    }
+
+    @PostMapping("/member/removeRole")
+    public ApiResponse removeRoleFromMember(@RequestBody UserRoleParams params) {
+        projectBusiness.removeRoleFromMember(params);
+        return ApiResponse.OnSuccess(null, "Remove role to member success!");
     }
 
     @GetMapping("/{projectId}/issuetypes")

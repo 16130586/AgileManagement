@@ -2,6 +2,7 @@ package nlu.project.backend.business;
 
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
@@ -23,6 +24,10 @@ public interface ProjectBusiness {
     WorkFlowItem addWorkFlowItem(WorkFlowParams params);
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
+    UserRole addMember(UserRoleParams params);
+    void removeMember(UserRoleParams params);
+    UserRole addRoleToMember(UserRoleParams params);
+    void removeRoleFromMember(UserRoleParams params);
     WorkFlowItem deleteWorkFlowItem(WorkFlowParams params);
     List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId);
     List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails user);

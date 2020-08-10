@@ -4,9 +4,6 @@ INSERT INTO jira.priority (name, `_order`) VALUES ('Low', 1), ('Medium', 2), ('H
 
 INSERT INTO jira.user(id, email,password,user_name) VALUES(1, 'admin' , '$2a$10$Xs4.NukKenO7qIYuM58vAel9Y9eRWyU.BFZKcctydiH5IQR7qXyxK' , 'admin');
 
-INSERT INTO jira.project(id, code, description, name, owner_id, leader_id) VALUES (1, 'TEST', 'This project for testing', 'Testing Project', 1, 1);
-INSERT INTO jira.user_role(project_id, role_id, user_id) VALUES (1, 1, 1);
-
 INSERT INTO jira.workflow(id, name) VALUES (1, 'Default WorkFlow');
 INSERT INTO jira.workflow(id, name, project_id) VALUES (2, 'Testing WorkFlow', 1);
 
@@ -17,8 +14,6 @@ INSERT INTO jira.link_workflow(workflow_from, workflow_to) VALUES (1, 2), (2, 3)
 
 INSERT INTO jira.issue_type(icon_url , `name`, project_id) VALUES(null , 'Task' , NULL);
 INSERT INTO jira.issue_type(icon_url , `name`, project_id) VALUES(null , 'Bug' , NULL);
-
-UPDATE jira.project SET workflow_id = 2;
 
 UPDATE jira.workflow_item SET is_start = 1 WHERE id = 1 OR id = 4;
 UPDATE jira.workflow_item SET is_end = 1 WHERE id = 3 OR id = 7;

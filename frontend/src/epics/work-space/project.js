@@ -9,10 +9,58 @@ import {
     fullFilledDeleteProject,
     fullFilledProjectGrid,
     createProjectSuccess,
-    createProjectFailed
+    createProjectFailed,
+    fullFilledSearchProject
 } from '../../actions/project'
 import { getToken } from '../../common/localStorage'
 
+let remoteData = [{
+    "id": 1,
+    "name": "name 1",
+    "key": "ABCDF",
+    "lead": "That dep chai",
+    "projectIconUrl": "https://realng.atlassian.net/secure/projectavatar?pid=10009&avatarId=10404",
+    "ProductID": 1,
+    "ProductName": "Chai",
+    "SupplierID": 1,
+    "CategoryID": 1,
+    "QuantityPerUnit": "10 boxes x 20 bags",
+    "UnitPrice": 18.0000,
+    "UnitsInStock": 39,
+    "UnitsOnOrder": 0,
+    "ReorderLevel": 10,
+    "Discontinued": false,
+    "Category": {
+        "CategoryID": 1,
+        "CategoryName": "Beverages",
+        "Description": "Soft drinks, coffees, teas, beers, and ales"
+    }
+}, {
+    "id": 2,
+    "name": "name 2",
+    "key": "DASDX",
+    "lead": "OMG HEas",
+    "projectIconUrl": "https://realng.atlassian.net/secure/projectavatar?pid=10015&avatarId=10415",
+    "ProductID": 2,
+    "ProductName": "Chang",
+    "SupplierID": 1,
+    "CategoryID": 1,
+    "QuantityPerUnit": "24 - 12 oz bottles",
+    "UnitPrice": 19.0000,
+    "UnitsInStock": 17,
+    "UnitsOnOrder": 40,
+    "ReorderLevel": 25,
+    "Discontinued": false,
+    "Category": {
+        "CategoryID": 1,
+        "CategoryName": "Beverages",
+        "Description": "Soft drinks, coffees, teas, beers, and ales"
+    }
+}]
+const projectGridFakeAjax = () =>
+    rxjsOf({
+        data: remoteData
+    }).pipe(delay(1000))
 
 const delelteProjectFakeAjax = (id) =>
     rxjsOf({
@@ -57,6 +105,40 @@ export const deleteProject = action$ =>
         map(response => fullFilledDeleteProject(response.data))
     );
 
+export const searchProject = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.SEARCH_PROJECT),
+        mergeMap(action => {
+            const searchURL = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.SEARCH_PROJECT);
+            const requestSettings = {
+                url: searchURL,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body : {
+                    name: action.payload.name,
+                    key: action.payload.key
+                }
+            }
+            return ajax(requestSettings)
+                    .pipe(
+                        mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                        catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
+        }),
+        map(ajax => {
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return fullFilledProjectGrid(ajax.response.data)
+            }
+            else
+                return madeRequestFail(ajax.response.data)
+        })
+    )
 
 export const createProject = action$ =>
     action$.pipe(

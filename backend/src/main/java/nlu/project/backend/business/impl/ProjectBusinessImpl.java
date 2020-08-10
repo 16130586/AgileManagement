@@ -10,6 +10,7 @@ import nlu.project.backend.business.SprintBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.filter.SprintFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.exception.custom.InvalidInputException;
@@ -136,6 +137,25 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
+    public UserRole addMember(UserRoleParams params) {
+        return projectDAO.addMember(params);
+    }
+
+    @Override
+    public void removeMember(UserRoleParams params) {
+        projectDAO.removeMember(params);
+    }
+
+    @Override
+    public UserRole addRoleToMember(UserRoleParams params) {
+        return projectDAO.addRoleToMember(params);
+    }
+
+    @Override
+    public void removeRoleFromMember(UserRoleParams params) {
+        projectDAO.removeRoleFromMember(params);
+    }
+
     public List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId) {
         boolean isHasReadPermission = userDAO.isInProject(projectId , requestedUserId);
         if(isHasReadPermission){

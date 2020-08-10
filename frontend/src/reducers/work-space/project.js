@@ -11,6 +11,12 @@ const Project = (state = { isLoadGrid: false, gridData: [] }, action) => {
                 gridData: state.gridData.filter(s => s.id !== action.payload)
             }
             break;
+        case AsyncEventTypes.FULL_FILLED.SEARCH_PROJECT:
+            nextState = {
+                isLoadGrid: state.isLoadGrid,
+                gridData: state.gridData.filter(s => s.id !== action.payload)
+            }
+            break;
         default:
             break;
     }

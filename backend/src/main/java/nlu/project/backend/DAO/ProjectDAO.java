@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
+import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.model.*;
@@ -147,14 +148,14 @@ public class ProjectDAO {
     }
 
     public List<Project> findByNameLike(String name) {
-        return projectRepository.findByNameLike(name);
+        return projectRepository.findByNameContaining(name);
     }
 
     public List<Project> findByCode(String key) {
         return projectRepository.findByCode(key);
     }
     public List<Project> findByKeyLike(String key) {
-        return projectRepository.findByCodeLike(key);
+        return projectRepository.findByCodeContaining(key);
     }
 
     public List<Project> findByUser(int userId) {
@@ -183,7 +184,7 @@ public class ProjectDAO {
         String name = (filter.name == null) ? "" : filter.name;
         String key = (filter.key == null) ? "" : filter.key;
         if ( (filter.name != null) || (filter.key != null) ) {
-            result = projectRepository.findByNameLikeAndCodeLike(name, key);
+            result = projectRepository.findByNameContainingAndCodeContaining(name, key);
             result = filterByUserId(result, filter);
             result = filterByOwnerId(result, filter);
             return  result;
@@ -302,5 +303,42 @@ public class ProjectDAO {
     public List<WorkFlow> getWorkFlowByProjectId(int projectId) {
         Project project = projectRepository.getOne(projectId);
         return workflowRepository.findByProject(project);
+    }
+
+    public UserRole addMember(UserRoleParams params) {
+        User user = userRepository.getOne(params.userID);
+        Role defaultRole = roleRepository.getOne(3);
+        Project project = projectRepository.getOne(params.projectID);
+
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(defaultRole);
+        userRole.setProject(project);
+        return userRoleRepository.save(userRole);
+    }
+
+    public void removeMember(UserRoleParams params) {
+        User user = userRepository.getOne(params.userID);
+        Project project = projectRepository.getOne(params.projectID);
+        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        userRoleRepository.delete(userRole);
+    }
+
+    public UserRole addRoleToMember(UserRoleParams params) {
+        User user = userRepository.getOne(params.userID);
+        Role role = roleRepository.getOne(params.roleID);
+        Project project = projectRepository.getOne(params.projectID);
+        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        userRole.setRole(role);
+        return userRoleRepository.save(userRole);
+    }
+
+    public UserRole removeRoleFromMember(UserRoleParams params) {
+        User user = userRepository.getOne(params.userID);
+        Role role = roleRepository.getOne(params.roleID);
+        Project project = projectRepository.getOne(params.projectID);
+        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        userRole.setRole(null);
+        return userRoleRepository.save(userRole);
     }
 }
