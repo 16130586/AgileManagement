@@ -1187,7 +1187,6 @@ let BacklogSpaceComponent = function (props) {
     return (
         <Fragment>
             <MyBreadCrumbs project={props.project} />
-            <button onClick={() => openIssueDetail()}>Open</button>
             <div style={{ display: "flex", height: '100%' }}>
                 <div style={{ overflowY: isIssueDetailOpen ? "scroll" : '', width: "100%" }}>
                     {
