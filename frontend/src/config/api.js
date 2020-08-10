@@ -5,6 +5,7 @@ export const BACKEND_API = {
         SIGN_UP: "/user/registry",
         VALIDATE_TOKEN: "/user/validateToken",
         CREATE_PROJECT: "/project/create",
+        PROJECT_GET_ONE : "/project/{projectId}",
         PROJECT_GET_ALL: "/project/jointIn",
         WORKFLOW_CHART: "/chart/workflow",
         CREATE_WORKFLOW: "/project/workflow/create",
@@ -12,7 +13,7 @@ export const BACKEND_API = {
         ADD_WORKFLOW_LINK : "/project/workflow/add-link",
         PROJECT_GET_BACKLOG_ITEMS : "/project/{projectId}/backlog",
         PROJECT_GET_WORKING_SPRINTS : "/project/{projectId}/workingSprints",
-        GET_WORKFLOW : "/project/workflow/{projectId}",
+        GET_WORKFLOW : "/project/{projectId}/workflow",
         DELETE_SPRINT : "/sprint/{id}",
         TOP_OF_BACKLOG : "/issue/{id}/topBacklog",
         BOTTOM_OF_BACKLOG : "/issue/{id}/bottomBacklog",
@@ -26,5 +27,7 @@ export const BACKEND_API = {
         PROJECT_GET_ISSUE_TYPES: '/project/{projectId}/issuetypes',
         CREATE_NEW_ISSUE : '/issue/create',
         COMPLETE_SPRINT: '/sprint/{id}/end',
+        ISSUE_UPDATE_DETAIL : '/issue/updateDetail',
+        DEV_TEAM : '/project/{projectId}/devteam',
     }
 }

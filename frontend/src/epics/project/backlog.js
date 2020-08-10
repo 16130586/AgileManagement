@@ -13,7 +13,7 @@ import {
     fullFilledRequestCreateSprint, fullFilledRequestEditSprint,
     fullFilledRequestStartSprint, fullFilledRequestDeleteIssue,
     fullFilledRequestMoveIssueToSprint, fullFilledRequestCreateNewIssue,
-    fullFilledRequestCompleteSprint,
+    fullFilledRequestCompleteSprint, fullFilledRequestUpdateDetailIssue,
 } from '../../actions/project'
 
 export const fetchBacklogPage = action$ =>
@@ -21,6 +21,19 @@ export const fetchBacklogPage = action$ =>
         ofType(AsyncTypes.LOAD_MORE.BACKLOG_PAGE),
         mergeMap(action => {
             const projectId = action.payload
+
+            const getProjectUrl = BACKEND_API.BASE_URL
+                .concat(BACKEND_API.ACTIONS.PROJECT_GET_ONE)
+
+            const getProjectSettings = {
+                url: getProjectUrl.replace("{projectId}", projectId),
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            }
+
             const getBacklogItemsUrl = BACKEND_API.BASE_URL
                 .concat(BACKEND_API.ACTIONS.PROJECT_GET_BACKLOG_ITEMS)
 
@@ -69,11 +82,25 @@ export const fetchBacklogPage = action$ =>
                 }
             }
 
+            const devTeamUrl = BACKEND_API.BASE_URL
+                .concat(BACKEND_API.ACTIONS.DEV_TEAM)
+
+            const devTeamUrlSettings = {
+                url: devTeamUrl.replace('{projectId}', projectId),
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            }
+
             return forkJoin({
+                project: ajax(getProjectSettings),
                 backlogItemsRequest: ajax(getBacklogItemsSettings),
                 workingSprintsRequest: ajax(getWorkingSprintsSettings),
                 issueTypes: ajax(getIssueTypesSettings),
                 workflow: ajax(getWorkflowSettings),
+                devTeam : ajax(devTeamUrlSettings)
             })
                 .pipe(
                     mergeMap(ajaxResponse =>
@@ -82,10 +109,12 @@ export const fetchBacklogPage = action$ =>
                             response: {
                                 status: 200,
                                 data: {
+                                    project: ajaxResponse.project.response.data,
                                     backlogItems: ajaxResponse.backlogItemsRequest.response.data,
                                     workingSprints: ajaxResponse.workingSprintsRequest.response.data,
                                     issueTypes: ajaxResponse.issueTypes.response.data,
-                                    workflow: ajaxResponse.workflow.response.data
+                                    workflow: ajaxResponse.workflow.response.data,
+                                    devTeam : ajaxResponse.devTeam.response.data,
                                 }
                             }
                         })
@@ -574,6 +603,49 @@ export const completeSprint = action$ =>
                 return madeRequestFail('No response from server!')
             else if (ajax.status > 0 && ajax.response.status < 400) {
                 return fullFilledRequestCompleteSprint(ajax.response.data)
+            }
+            else
+                return madeRequestFail(ajax.response.data)
+        })
+    );
+
+
+export const updateDetailIssue = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.ISSUE_UPDATE_DETAIL),
+        mergeMap(action => {
+            const updateDetailIssueUrl = BACKEND_API.BASE_URL
+                .concat(BACKEND_API.ACTIONS.ISSUE_UPDATE_DETAIL)
+
+            const updateDetailIssueSettings = {
+                url: updateDetailIssueSettings,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: {
+                    issueId: action.payload.issueId,
+                    description: action.payload.description,
+                    issueTypeId: action.payload.issueType,
+                    storyPoint: action.payload.storyPoint,
+                    assigneeEmail: action.payload.assignee
+                }
+            }
+
+            return ajax(updateDetailIssueSettings)
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message }))
+                )
+        }),
+        map(ajax => {
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return fullFilledRequestUpdateDetailIssue(ajax.response.data)
             }
             else
                 return madeRequestFail(ajax.response.data)
