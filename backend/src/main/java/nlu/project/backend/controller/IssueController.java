@@ -3,10 +3,7 @@ package nlu.project.backend.controller;
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.entry.filter.IssueFilterParams;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
-import nlu.project.backend.entry.issue.IssueParams;
-import nlu.project.backend.entry.issue.IssueTypeParams;
-import nlu.project.backend.entry.issue.MoveToBacklog;
-import nlu.project.backend.entry.issue.MoveToParams;
+import nlu.project.backend.entry.issue.*;
 import nlu.project.backend.model.IssueType;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
@@ -45,7 +42,15 @@ public class IssueController extends BaseController{
         return ApiResponse.OnCreatedSuccess(result, "Update Issue Success!");
     }
 
+    @PostMapping("/updateDetail")
+    public ApiResponse updateDetailIssue(@RequestBody UpdateDetailParams issueParams, HttpServletRequest request) {
+        Object result = issueBusiness.updateDetail(issueParams, getUser(request));
+        if (result == null) {
+            return ApiResponse.OnBadRequest("Update Issue Failed");
+        }
+        return ApiResponse.OnCreatedSuccess(result, "Update Issue Success!");
 
+    }
     @PostMapping("/delete")
     public ApiResponse deleteIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
         Object result = issueBusiness.delete(issueParams, getUser(request));

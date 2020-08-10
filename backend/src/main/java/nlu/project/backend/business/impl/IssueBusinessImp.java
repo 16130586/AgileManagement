@@ -6,12 +6,10 @@ import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.entry.filter.IssueFilterParams;
-import nlu.project.backend.entry.issue.IssueParams;
-import nlu.project.backend.entry.issue.IssueTypeParams;
-import nlu.project.backend.entry.issue.MoveToBacklog;
-import nlu.project.backend.entry.issue.MoveToParams;
+import nlu.project.backend.entry.issue.*;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
+import nlu.project.backend.repository.IssueTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -36,6 +34,8 @@ public class IssueBusinessImp implements IssueBusiness {
     @Autowired
     SprintDAO sprintDAO;
 
+    @Autowired
+    IssueTypeRepository issueTypeRepository;
 
     @Override
     public Issue create(IssueParams issueParams, UserDetails userDetails) {
@@ -155,6 +155,20 @@ public class IssueBusinessImp implements IssueBusiness {
                 iss.setOrderInBacklog(issues.get(issues.size() - 1).getOrderInBacklog() + 1);
         }
         iss.setSprint(null);
+        return issueDAO.update(iss);
+    }
+
+    @Override
+    public Issue updateDetail(UpdateDetailParams issueParams, UserDetails user) {
+        Issue iss = issueDAO.getOne(issueParams.issueId);
+        if(iss == null) return null;
+        iss.setDescription(issueParams.description);
+        iss.setStoryPoint(issueParams.storyPoint);
+
+        IssueType issueType = issueTypeRepository.getOne(issueParams.issueTypeId);
+        iss.setIssueType(issueType);
+        User assignee = userDAO.getUser(issueParams.assigneeEmail);
+        iss.setAssignment(assignee);
         return issueDAO.update(iss);
     }
 }

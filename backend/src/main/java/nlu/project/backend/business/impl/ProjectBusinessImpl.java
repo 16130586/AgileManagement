@@ -20,7 +20,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 @Service
 public class ProjectBusinessImpl implements ProjectBusiness {
@@ -164,6 +168,43 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     @Override
     public WorkFlow getCurrentWorkFlow(Integer projectId) {
         return projectDAO.getProjectById(projectId).getCurrentWorkFlow();
+    }
+
+    @Override
+    public List<User> getDevTeam(Integer projectId, CustomUserDetails user) {
+        // can kiem tra la ng trong project laf dc
+        Project project = projectDAO.getProjectById(projectId);
+        Collection<User> devTeam = project.getDevTeam();
+        devTeam.stream().forEach(new Consumer<User>() {
+            @Override
+            public void accept(User user) {
+                user.setPassword(null);
+                user.setGroups(null);
+                user.setJointProjects(null);
+                user.setLeadingProjects(null);
+                user.setOwnProjects(null);
+                List<UserRole> roles = new LinkedList<>();
+                user.getRoles().stream().filter(new Predicate<UserRole>() {
+                    @Override
+                    public boolean test(UserRole userRole) {
+                        return userRole.getProject().getId() == project.getId();
+                    }
+                }).forEach(new Consumer<UserRole>() {
+                    @Override
+                    public void accept(UserRole userRole) {
+                        roles.add(userRole);
+                    }
+                });
+                user.setRoles(roles);
+            }
+        });
+        return new LinkedList<>(devTeam);
+    }
+
+    @Override
+    public Project getProject(Integer projectId, CustomUserDetails user) {
+        // must check is In project
+        return projectDAO.getProjectById(projectId);
     }
 
     public boolean isInProject(Integer projectId , Integer userId){

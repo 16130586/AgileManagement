@@ -92,11 +92,15 @@ public class ProjectDAO {
             productOwner.setRole(poRole);
             productOwner.setProject(project);
             userRoleRepository.save(productOwner);
-            projectRepository.save(project);
+
 
             project.setOwner(creator);
             project.setLeader(teamLead);
-            projectRepository.save(project);
+
+            teamLead.getJointProjects().add(project);
+            projectRepository.saveAndFlush(project);
+
+
         }else {
             User creator = userRepository.findById(projectParams.productOwner).get();
             Role poRole = roleRepository.findByName(ConstraintRole.PRODUCT_OWNER);
@@ -107,7 +111,11 @@ public class ProjectDAO {
             userRoleRepository.save(productOwner);
             project.setOwner(creator);
             project.setLeader(creator);
-            projectRepository.save(project);
+
+
+            creator.getJointProjects().add(project);
+            projectRepository.saveAndFlush(project);
+
         }
         // End
         return project;
