@@ -32,7 +32,6 @@ let ProjectContaner = function(props){
 }
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         GlobalRouter: state.GlobalRouter,
         data : state.WorkSpace_Project.gridData
