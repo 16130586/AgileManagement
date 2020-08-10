@@ -16,6 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import SearchIcon from '@material-ui/icons/Search';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
+import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles((theme) => ({
     searchIcon: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 0,
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(1),
+            marginLeft: theme.spacing(0),
             width: 'auto',
         },
     },
@@ -49,28 +50,21 @@ const useStyles = makeStyles((theme) => ({
     },
     inputInput: {
         padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-        //transition: theme.transitions.create('width'),
         width: '100%',
         border: '#cad8de solid 1px',
         borderRadius: "5px",
-        // [theme.breakpoints.up('sm')]: {
-        //     width: '12ch',
-        //     '&:focus': {
-        //         width: '20ch',
-        //     },
-        // },
+
     },
     button: {
-        marginLeft: "10px",
-        marginBottom: "5px"
+        marginLeft: "1.4rem",
+        marginBottom: ".4rem"
     }
 }));
 
 let ProjectNameComponent = function (props) {
     return (
-        <td style={{ display: "flex" , cursor : "pointer"}}>
+        <td style={{ display: "flex", cursor: "pointer" }}>
             <img
                 style={{ width: "24px", height: "24px", borderRadius: "3px" }}
                 src={props.dataItem.imgUrl} alt="Missing url " />
@@ -202,59 +196,73 @@ let CreateProjectForm = function (props) {
 }
 let CreateSearchForm = function (props) {
     const classes = useStyles()
-
     let searchValueInput = React.createRef()
+    const searchType = ['Name', 'Key']
+    const [formState, setFormState] = useState({
+        input : '',
+        searchType: searchType[0]
+    })
 
-    // hooks
-    const [name, setName] = useState('')
-    const [key, setKey] = useState('')
-
-    let handleKeyPress = (event) =>{
-        // only triggered by enter key
+    let handleKeyPress = (event) => {
         let ENTER_KEY = 13
-        console.log('name', name);
-        console.log('key', key)
-        if(event.charCode == ENTER_KEY){
+        if (event.charCode == ENTER_KEY) {
             handleSearch()
         }
     }
     let handleSearch = () => {
-        props.searchProject({
-            name: name,
-            key: key
-        });
+        const data = {
+            name: formState.searchType == searchType[0] ? formState.input : '' ,
+            key: formState.searchType == searchType[1] ? formState.input : ''
+        }
+        props.searchProject(data);
+        console.log(data)
+    }
+    const handleChange = (event) => {
+        const name = event.target.name
+        const value = event.target.value
+        const nextState = {
+            ...formState
+        }
+        nextState[name] = value
+        setFormState(nextState)
     }
     return (
         <div className={classes.search}>
-            <div>
+            <div style={{ display: "flex", alignItems: "center" }}>
                 <div className={classes.searchIcon}>
                     <SearchIcon />
                 </div>
                 <InputBase
                     inputRef={searchValueInput}
+                    name='input'
+                    value={formState.input}
                     onKeyPress={handleKeyPress}
-                    onChange={event => setName(event.target.value)}
-                    name="byName"
-                    placeholder="name..."
+                    onChange={event => handleChange(event)}
+                    placeholder="......."
                     classes={{
                         root: classes.inputRoot,
                         input: classes.inputInput,
                     }}
                     inputProps={{ 'aria-label': 'search' }}
                 />
-                <InputBase
-                    inputRef={searchValueInput}
-                    onKeyPress={handleKeyPress}
-                    onChange={event => setKey(event.target.value)}
-                    name="byName"
-                    placeholder="key...."
-                    classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                />
-                <Button className={classes.button} variant="contained" color="primary" onClick={handleSearch}>
+                <Select
+                    name="searchType"
+                    className="ml-2"
+                    value={formState.searchType}
+                    onChange={(event) => handleChange(event)}
+                >
+                    {searchType.map(item =>
+                        <MenuItem
+                            value={item}>
+                            {item}
+                        </MenuItem>)
+                    }
+                </Select>
+                <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSearch}>
                     Search
                 </Button>
             </div>
@@ -266,7 +274,7 @@ let ProjectComponent = function (props) {
     const handleCloseCreateProjectDialog = () => {
         setOpenDeleteDialog(false)
     }
-   
+
     const handleDeleteProject = (projectId) => {
         props.deleteProject(projectId)
         handleCloseCreateProjectDialog(false)
@@ -306,14 +314,7 @@ let ProjectComponent = function (props) {
                 <div className="header__title">
                     Project
                 </div>
-
-                <CreateSearchForm
-                    searchProject={props.searchProject}
-                ></CreateSearchForm>
-
                 <div className="header__list-btns">
-
-
                     <button onClick={() => setOpenDeleteDialog(true)} className="btn btn--blue">
                         Create project
                     </button>
@@ -351,7 +352,9 @@ let ProjectComponent = function (props) {
                 </div>
             </div>
             <div className="content">
+                <CreateSearchForm searchProject={props.searchProject} />
                 <Grid
+                    className="mt-2"
                     style={{ minHeight: '300px' }}
                     data={orderBy(props.data, props.sort)}
                     sortable
@@ -360,7 +363,7 @@ let ProjectComponent = function (props) {
                         props.setSort(e.sort)
                     }}
                 >
-                    <Column field="name" title="Name" cell={(nestedProps) => <ProjectNameComponent {...nestedProps} navigateTo={props.navigateTo}/>} />
+                    <Column field="name" title="Name" cell={(nestedProps) => <ProjectNameComponent {...nestedProps} navigateTo={props.navigateTo} />} />
                     <Column field="code" title="Code" />
                     <Column field="lead" title="Lead"
                         cell={(nestedProps) =>

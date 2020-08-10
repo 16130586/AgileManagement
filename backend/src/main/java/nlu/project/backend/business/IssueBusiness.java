@@ -1,9 +1,10 @@
 package nlu.project.backend.business;
 
 import nlu.project.backend.entry.filter.IssueFilterParams;
+import nlu.project.backend.entry.issue.*;
+import nlu.project.backend.model.Issue;
 import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.entry.issue.SubTaskParams;
-import nlu.project.backend.model.Issue;
 import nlu.project.backend.model.SubTask;
 import nlu.project.backend.entry.issue.IssueTypeParams;
 import nlu.project.backend.entry.issue.MoveToBacklog;
@@ -33,4 +34,6 @@ public interface IssueBusiness {
     Issue moveIssueToSprint(MoveToParams params, CustomUserDetails cusUser) throws InvalidParameterException;
 
     Issue moveToBacklog(MoveToBacklog params , CustomUserDetails cusUser) throws InvalidParameterException;
+
+    Issue updateDetail(UpdateDetailParams issueParams, UserDetails user);
 }

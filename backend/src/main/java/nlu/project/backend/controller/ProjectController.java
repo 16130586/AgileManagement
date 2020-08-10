@@ -179,4 +179,18 @@ public class ProjectController extends BaseController{
         Object result = projectBusiness.getWorkingSprints(projectId, user);
         return ApiResponse.OnSuccess(result , "Request sprints success!");
     }
+
+    @GetMapping("/{projectId}/devteam")
+    public ApiResponse getDevTeam(HttpServletRequest request, @PathVariable("projectId") Integer projectId){
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.getDevTeam(projectId, user);
+        return ApiResponse.OnSuccess(result , "Get dev team success!");
+    }
+
+    @GetMapping("/{projectId}")
+    public ApiResponse getProject(HttpServletRequest request, @PathVariable("projectId") Integer projectId){
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.getProject(projectId, user);
+        return ApiResponse.OnSuccess(result , "Get project success!");
+    }
 }

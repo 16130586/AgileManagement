@@ -10,7 +10,7 @@ import {
     requestCreateSprint, requestEditSprint,
     requestStartSprint, requestDeleteIssue,
     requestMoveIssueToSprint, requestCreateNewIssue,
-    requestCompleteSprint,
+    requestCompleteSprint, requestUpdateDetailIssue,
 }
     from '../../actions/project'
 const Backlog = function (props) {
@@ -28,6 +28,7 @@ const Backlog = function (props) {
     return (
         <BacklogComponent
             projectId={projectId}
+            project={props.project}
             workflow={props.workflow}
             backlogItems={props.backlogItems}
             workingSprints={props.workingSprints}
@@ -50,6 +51,7 @@ const Backlog = function (props) {
 }
 const mapStateToProps = state => {
     return {
+        project : state.Project_Backlog.project,
         backlogItems: state.Project_Backlog.backlogItems,
         workingSprints: state.Project_Backlog.workingSprints,
         workflow: state.Project_Backlog.workflow,
@@ -73,6 +75,7 @@ const mapDispatchToProps = dispatch => {
         moveIssueToSprint: (fromSprintId, toSprintId, issueId) => dispatch(requestMoveIssueToSprint(fromSprintId, toSprintId, issueId)),
         createNewIssue: (data) => dispatch(requestCreateNewIssue(data)),
         completeSprint: (sprintId) => dispatch(requestCompleteSprint(sprintId)),
+        updateDetailIssue : (data) => dispatch(requestUpdateDetailIssue(data),)
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Backlog)

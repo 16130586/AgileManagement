@@ -31,6 +31,9 @@ public class UserDAO {
         return userRepository.getOne(id);
     }
 
+    public User getUser(String usermail){
+        return userRepository.findByEmail(usermail);
+    }
     public boolean isProductOwner(int userId, int projectId) {
         User user = userRepository.getOne(userId);
         //BackLog backlog = backlogRepository.getOne(backlogId);

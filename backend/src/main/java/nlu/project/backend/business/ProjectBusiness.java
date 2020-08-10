@@ -34,4 +34,8 @@ public interface ProjectBusiness {
     List<WorkFlow> getWorkFlow(int projectId);
     List<Issue> getBacklogItems(Integer projectId, CustomUserDetails user);
     WorkFlow getCurrentWorkFlow(Integer projectId);
+
+    List<User> getDevTeam(Integer projectId, CustomUserDetails user);
+
+    Project getProject(Integer projectId, CustomUserDetails user);
 }

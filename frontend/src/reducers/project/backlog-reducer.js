@@ -1,10 +1,12 @@
 import { ASYNC as AsyncEventTypes } from '../../constants/index'
 const init = {
+    project : null,
     isLoadBacklogPage: false,
     backlogItems: [],
     workingSprints: [],
     issueTypes: [],
-    workflow: null
+    workflow: null,
+    devTeam: []
 }
 const Backlog = (state = init, action) => {
     let nextState = state
@@ -12,12 +14,15 @@ const Backlog = (state = init, action) => {
     let issueId = -1
     switch (action.type) {
         case AsyncEventTypes.FULL_FILLED.BACKLOG_PAGE:
+            console.log(action.payload)
             nextState = {
                 isLoadBacklogPage: true,
+                project: action.payload.project,
                 backlogItems: action.payload.backlogItems,
                 workingSprints: action.payload.workingSprints,
                 issueTypes: action.payload.issueTypes,
-                workflow : action.payload.workflow
+                workflow : action.payload.workflow,
+                devTeam : action.payload.devTeam
             }
             break;
         case AsyncEventTypes.FULL_FILLED.CREATE_SPRINT:
@@ -254,6 +259,9 @@ const Backlog = (state = init, action) => {
                 }
             })()
             break;
+            case AsyncEventTypes.FULL_FILLED.ISSUE_UPDATE_DETAIL:
+                console.log(action.payload)
+                break;
         default:
             break;
     }

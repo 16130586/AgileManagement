@@ -12,7 +12,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Icon from '@material-ui/core/Icon'
 import CloseIcon from '@material-ui/icons/Close'
-
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -27,15 +28,17 @@ import { DropDownList } from '@progress/kendo-react-dropdowns';
 import Tooltip from '@material-ui/core/Tooltip';
 import * as moment from 'moment'
 let MyBreadCrumbs = function (props) {
-    let projectId = 0;
+    let projectId = props.project ? props.project.id : 0
+    let projectCode = props.project ? props.project.code : ''
+    let projectName = props.project ? props.project.name : ''
     return (
         <Breadcrumbs aria-label="breadcrumb" style={{ marginTop: "1.5rem" }}>
             <Link color="inherit" href="/projects">
                 Projects
         </Link>
             <Link color="inherit" href={`/project/${projectId}/settings/details`}>
-                Projects Key
-        </Link>
+                {projectCode == null ? projectName : projectCode}
+            </Link>
             <Typography color="textPrimary">Backlog</Typography>
         </Breadcrumbs>
     )
@@ -869,6 +872,159 @@ let SprintComponent = function (props) {
     )
 }
 
+let DetailIssueEdit = function (props) {
+    const projectId = props.projectId
+    const closeIssueDetail = props.closeIssueDetail
+    const [updateDetailState, setUpdateDetailState] = useState(null)
+    console.log(props)
+    let devTeam = [...props.devTeam.map(sl => sl.email)]
+    devTeam.unshift('None')
+
+    useEffect(() => {
+        setUpdateDetailState({
+            description: props.data.description,
+            issueTypeId: props.data.issueType.id,
+            storyPoint: props.data.storyPoint,
+            assigneeEmail: props.data.assignee == null ? 'None' : props.data.assignee,
+        })
+    }, [props.data])
+
+    const editDetailIssueChange = (event, value) => {
+        console.log(event)
+        console.log(value)
+        let changedIssue = { ...updateDetailState }
+        changedIssue[event.target.name] = event.target.value
+        setUpdateDetailState(changedIssue)
+        console.log(changedIssue)
+    }
+    const submit = () => {
+        if (props.updateDetailIssue) props.updateDetailIssue(updateDetailState)
+    }
+    if (updateDetailState == null) return <div></div>
+    return (
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            overflowY: "scroll",
+            width: "50%"
+        }}>
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                paddingBottom: "1rem",
+                borderBottom: "1px solid #bdbdbd"
+            }}>
+                <Breadcrumbs aria-label="breadcrumb" className="mt-1 ml-1">
+                    <Link color="inherit" href={'/projects/'.concat(projectId).concat('/issues/').concat(props.data.id)}>
+                        {props.data.code && props.data.code.toUpperCase().concat('-')}  {props.data.name && props.data.name.toUpperCase()}
+                    </Link>
+                </Breadcrumbs>
+                <div style={{ marginLeft: "auto" }}>
+                    <Button onClick={() => closeIssueDetail()}>
+                        <CloseIcon />
+                    </Button>
+                </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <form style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    maxWidth: "80%",
+                    padding: "1rem"
+                }}>
+                    <div>
+                        List of function here
+                    </div>
+                    <FormControl className="mt-3">
+                        <InputLabel shrink id="label-description">
+                            Description
+                        </InputLabel>
+                        <TextField
+                            labelId="label-description"
+                            name="description"
+                            value={updateDetailState.description == null ? '' : updateDetailState.description}
+                            variant="outlined"
+                            size={'small'}
+                            type={'string'}
+                            className="mt-3"
+                            onChange={(event) => editDetailIssueChange(event)}
+                        />
+                    </FormControl>
+                    <FormControl className="mt-3">
+                        <InputLabel shrink id="label-issueType-id">
+                            Issue type
+                        </InputLabel>
+                        <Select
+                            labelId="label-issueType-id"
+                            name="issueTypeId"
+                            value={updateDetailState.issueTypeId}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(event) => editDetailIssueChange(event)}
+                        >
+                            {props.issueTypes.map(item =>
+                                <MenuItem
+                                    className="ml-1"
+                                    value={item.id}>
+                                    {item.name}
+                                </MenuItem>)
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl className="mt-3">
+                        <InputLabel shrink id="label-assignee-email">
+                            Age
+                        </InputLabel>
+                        <Select
+                            labelId="label-assignee-email"
+                            name="assigneeEmail"
+                            required={true}
+                            size={'small'}
+                            value={updateDetailState.assigneeEmail}
+                            onChange={(event) => editDetailIssueChange(event)}
+                        >
+                            {devTeam.map(item =>
+                                <MenuItem
+                                    className="ml-1"
+                                    value={item}>
+                                    {item}
+                                </MenuItem>)
+                            }
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        name="storyPoint"
+                        className="mt-4"
+                        label="Story point"
+                        value={updateDetailState.storyPoint == null ? 0 : updateDetailState.storyPoint}
+                        variant="outlined"
+                        required={true}
+                        size={'small'}
+                        type={'number'}
+                        onChange={(event) => editDetailIssueChange(event)}
+                    />
+                    <div
+                        className="mt-4"
+                        style={{
+                            display: "flex",
+                            width: "100%",
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={submit}>Update
+                        </Button>
+                        <Button
+                            className="ml-1"
+                            onClick={closeIssueDetail}>Cancle</Button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}
 let BacklogComponent = function (props) {
     let [isExpanding, setExpanding] = React.useState(false)
     let genratedId = "backlog-component".concat("_").concat(Date.now()).concat(Math.random() * 10)
@@ -1007,21 +1163,33 @@ let BacklogSpaceComponent = function (props) {
         return idoSprint == 0 && props.workingSprints[idoSprint].issues != null
             && props.workingSprints[idoSprint].issues.length > 0
     }
+
     const openIssueDetail = (data) => {
-        console.log(data)
-        console.log(props)
         setIsIssueDetailOpen(true)
-        setIssueSelected(data)
+        setIssueSelected({
+            issueId: data.id,
+            projectId: projectId,
+            sprintId: data.sprint && data.sprint.id,
+            description: data.description,
+            issueType: data.issueType,
+            storyPoint: data.storyPoint,
+            assignee: data.assignment && data.assignment.email,
+            name: data.name,
+            code: data.code,
+        })
     }
     const closeIssueDetail = () => {
         setIsIssueDetailOpen(false)
     }
+
+
+
     return (
         <Fragment>
-            <MyBreadCrumbs />
+            <MyBreadCrumbs project={props.project} />
             <button onClick={() => openIssueDetail()}>Open</button>
             <div style={{ display: "flex", height: '100%' }}>
-                <div style={{ overflowY: isIssueDetailOpen ? "scroll" : '' }}>
+                <div style={{ overflowY: isIssueDetailOpen ? "scroll" : '', width: "100%" }}>
                     {
                         props.workingSprints && props.workingSprints.map(sprint =>
                             <SprintComponent
@@ -1059,63 +1227,14 @@ let BacklogSpaceComponent = function (props) {
                     />
                 </div>
                 {isIssueDetailOpen &&
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        overflowY: "scroll",
-                        width: "35%"
-                    }}>
-                        <div style={{
-                            display: "flex",
-                            alignItems: "center",
-                            borderBottom: "1px solid #bdbdbd"
-                        }}>
-                            <Breadcrumbs aria-label="breadcrumb" className="mt-1">
-                                <Link color="inherit" href={'/projects/'.concat(projectId).concat('/issues/').concat(issueSelected.id)}>
-                                    {issueSelected.code && issueSelected.code.toUpperCase().concat('-')}  {issueSelected.name.toUpperCase()}
-                                </Link>
-                            </Breadcrumbs>
-                            <div style={{ marginLeft: "auto" }}>
-                                <Button onClick={() => closeIssueDetail()}>
-                                    <CloseIcon />
-                                </Button>
-                            </div>
-                        </div>
-                        <div>
-                            <form>
-                                <div>
-                                    List of function here
-                                </div>
-                                <TextField
-                                    label="Description"
-                                    value={issueSelected.description}
-                                    variant="outlined"
-                                    multiline={true}
-                                    required={true}
-                                    rowsMax={20}
-                                    size={'small'}
-                                    type={'string'}
-                                    className="mt-1"
-                                />
-                                <Select
-                                    className="mt-1"
-                                    onClick={(e) => e.stopPropagation()}
-                                    value={null}
-                                    onChange={(event) => console.log(event)}
-                                >
-                                    {[].map(dr =>
-                                        <MenuItem
-                                            className="ml-1"
-                                            value={dr.id}>
-                                            {dr.text}
-                                        </MenuItem>)
-                                    }
-                                </Select>
-                            </form>
-                        </div>
-                        {issueSelected.name}
-
-                    </div>
+                    <DetailIssueEdit
+                        closeIssueDetail={closeIssueDetail}
+                        devTeam={props.project.devTeam}
+                        data={issueSelected}
+                        projectId
+                        updateDetailIssue={props.updateDetailIssue}
+                        issueTypes={props.issueTypes}
+                    />
                 }
 
             </div>

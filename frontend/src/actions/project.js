@@ -70,3 +70,6 @@ export const fullFilledRequestCreateNewIssue = (data) => ({ type: AsyncEventType
 
 export const requestCompleteSprint = (sprintId) => ({ type: AsyncEventTypes.REQUEST.COMPLETE_SPRINT, payload: sprintId })
 export const fullFilledRequestCompleteSprint = (sprint) => ({ type: AsyncEventTypes.FULL_FILLED.COMPLETE_SPRINT, payload: sprint })
+
+export const requestUpdateDetailIssue = (data) => ({ type: AsyncEventTypes.REQUEST.ISSUE_UPDATE_DETAIL, payload: data })
+export const fullFilledRequestUpdateDetailIssue = (issue) => ({ type: AsyncEventTypes.FULL_FILLED.ISSUE_UPDATE_DETAIL, payload: issue })
