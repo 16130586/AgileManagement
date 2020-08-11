@@ -79,7 +79,7 @@ let AddWorkFlowItemForm = function (props) {
 const isExistedStartPoint = (dataNodeArray) => {
     let result = false;
     dataNodeArray.forEach(node => {
-        if (node.color == 'lightgray')
+        if (node.color == 'green')
             result = true;
     })
     return result;
@@ -260,6 +260,18 @@ let WorkFlow = function (props) {
         handleCloseAddLinkWorkFlowDialog()
     }
 
+    // delete workflow
+    const [openDeleteWorkFlowDialog, setOpenDeleteWorkFlowDialog] = React.useState(false)
+    const handleCloseDeleteWorkFlowDialog = () => {
+        setOpenDeleteWorkFlowDialog(false)
+    }
+
+    const handleDeleteWorkFlowSubmit = function(){
+        props.deleteWorkFlow(currentWorkFlow.id)
+        handleCloseDeleteWorkFlowDialog()
+        setCurrentWorkFlow(null)
+    }
+
     return(
         <div className="body" style={{height: "82%"}}>
             <div className="header">
@@ -321,9 +333,11 @@ let WorkFlow = function (props) {
                             <span style={{padding: "0 16px", color: "rgba(0, 0, 0, 0.54)", fontWeight: "500", lineHeight: "48px", fontSize: "15px"}}>
                                 {currentWorkFlow.name}
                             </span>
+                            {currentWorkFlow.projectId != null &&
                             <button onClick={() => setOpenAddWorkFlowItemDialog(true)} style={{border: "none", padding: "8px", backgroundColor: "#f6f6f6"}}>
                                 +Item
                             </button>
+                            }
                             <Dialog
                                 open={openAddWorkFlowItemDialog}
                                 onClose={handleCloseAddWorkFlowItemDialog}
@@ -353,9 +367,16 @@ let WorkFlow = function (props) {
                                     <Button onClick={handleCloseAddWorkFlowItemDialog} color="primary" autoFocus>Quit</Button>
                                 </DialogActions>
                             </Dialog>
-                            <button onClick={() => setOpenAddLinkWorkFlowDialog(true)} style={{border: "none", padding: "8px", backgroundColor: "#f6f6f6", marginLeft: "8px"}}>
+                            {currentWorkFlow.projectId != null &&
+                            <button onClick={() => setOpenAddLinkWorkFlowDialog(true)} style={{
+                                border: "none",
+                                padding: "8px",
+                                backgroundColor: "#f6f6f6",
+                                marginLeft: "8px"
+                            }}>
                                 +Link
                             </button>
+                            }
                             <Dialog
                                 open={openAddLinkWorkFlowDialog}
                                 onClose={handleCloseAddLinkWorkFlowDialog}
@@ -376,6 +397,34 @@ let WorkFlow = function (props) {
                                         onClick={handleAddLinkWorkFlowSubmit}
                                         color="primary">
                                         Add
+                                    </Button>
+                                    <Button onClick={handleCloseAddLinkWorkFlowDialog} color="primary" autoFocus>Quit</Button>
+                                </DialogActions>
+                            </Dialog>
+                            {currentWorkFlow.projectId != null &&
+                            <button onClick={() => setOpenDeleteWorkFlowDialog(true)} style={{float: "right", border: "none", padding: "8px", margin: "8px", backgroundColor: "rgb(255 53 53)"}}>
+                                Delete WorkFlow
+                            </button>
+                            }
+                            <Dialog
+                                open={openDeleteWorkFlowDialog}
+                                onClose={handleCloseDeleteWorkFlowDialog}
+                                aria-labelledby="delete-workflow-dialog-title"
+                                aria-describedby="delete-workflow-dialog-description">
+                                <DialogTitle
+                                    id="delete-workflow-dialog-title">
+                                    Delete WorkFlow
+                                </DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText id="delete-workflow-dialog-description">
+                                        Are you sure to delete this "{currentWorkFlow.name}" WorkFlow
+                                    </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button
+                                        onClick={handleDeleteWorkFlowSubmit}
+                                        color="danger">
+                                        Delete
                                     </Button>
                                     <Button onClick={handleCloseAddLinkWorkFlowDialog} color="primary" autoFocus>Quit</Button>
                                 </DialogActions>

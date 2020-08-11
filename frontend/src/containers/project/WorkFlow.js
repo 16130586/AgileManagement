@@ -8,7 +8,7 @@ import {
     fullFilledUpdateWorkFlowItem,
     updateWorkFlowItem,
     createWorkFlow,
-    addWorkFlowItem, addWorkFlowLink, fullFilledRemovedWorkFlowItem, fullFilledRemovedWorkFlowLink
+    addWorkFlowItem, addWorkFlowLink, fullFilledRemovedWorkFlowItem, fullFilledRemovedWorkFlowLink, deleteWorkFlow
 } from "../../actions/project";
 
 const fakeWorkFlowList = [
@@ -68,6 +68,7 @@ const WorkFlow = function(props){
             projectId={projectId}
             removeWorkFlowItem={props.fullFilledRemovedWorkFlowItem}
             removeWorkFlowLink={props.fullFilledRemovedWorkFlowLink}
+            deleteWorkFlow={props.deleteWorkFlow}
         />
     )
 }
@@ -86,7 +87,8 @@ const mapDispatchToProps = dispatch => {
         addWorkFlowItem: (data) => dispatch(addWorkFlowItem(data)),
         addWorkFlowLink: (data) => dispatch(addWorkFlowLink(data)),
         fullFilledRemovedWorkFlowItem: (workFlowId, data) => dispatch(fullFilledRemovedWorkFlowItem(workFlowId, data)),
-        fullFilledRemovedWorkFlowLink: (workFlowId, data) => dispatch(fullFilledRemovedWorkFlowLink(workFlowId, data))
+        fullFilledRemovedWorkFlowLink: (workFlowId, data) => dispatch(fullFilledRemovedWorkFlowLink(workFlowId, data)),
+        deleteWorkFlow: (workFlowId) => dispatch(deleteWorkFlow(workFlowId)),
 
     }
 }

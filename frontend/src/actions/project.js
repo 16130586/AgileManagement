@@ -73,3 +73,6 @@ export const fullFilledRequestCompleteSprint = (sprint) => ({ type: AsyncEventTy
 
 export const requestUpdateDetailIssue = (data) => ({ type: AsyncEventTypes.REQUEST.ISSUE_UPDATE_DETAIL, payload: data })
 export const fullFilledRequestUpdateDetailIssue = (issue) => ({ type: AsyncEventTypes.FULL_FILLED.ISSUE_UPDATE_DETAIL, payload: issue })
+
+export const deleteWorkFlow = (workFlowId) => ({type: AsyncEventTypes.REQUEST.DELETE_WORKFLOW, payload: workFlowId})
+export const fullFilledDeleteWorkFlow = (workFlowId) => ({type: AsyncEventTypes.FULL_FILLED.DELETE_WORKFLOW, payload: workFlowId})

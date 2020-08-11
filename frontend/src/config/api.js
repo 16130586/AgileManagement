@@ -31,5 +31,6 @@ export const BACKEND_API = {
         COMPLETE_SPRINT: '/sprint/{id}/end',
         ISSUE_UPDATE_DETAIL : '/issue/updateDetail',
         DEV_TEAM : '/project/{projectId}/devteam',
+        DELETE_WORKFLOW: '/project/workflow/delete',
     }
 }

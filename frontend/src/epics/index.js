@@ -10,7 +10,7 @@ import {
     updateWorkFlows,
     createWorkFlow,
     addWorkFlowItem,
-    addWorkFlowLink
+    addWorkFlowLink, deleteWorkFlow
 } from "./work-space/project/workflow-epic";
 
 import {fetchBacklogPage as Project_Backlog_Page,
@@ -59,5 +59,6 @@ export default combineEpics(
     Project_Move_Issue,
     Project_Create_New_Issue,
     Project_Complete_Sprint,
-    Project_Update_Issue_Detail
+    Project_Update_Issue_Detail,
+    deleteWorkFlow
 );

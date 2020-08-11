@@ -6,7 +6,11 @@ import { ASYNC as AsyncTypes } from '../../../constants/index'
 import { BACKEND_API } from '../../../config/api'
 import { madeRequestFail, madeRequestSuccess } from '../../../actions/global'
 import {
-    fullFilledAllWorkFlow, fullFilledNewWorkFlow, fullFilledNewWorkFlowItem, fullFilledNewWorkFlowLink
+    fullFilledAllWorkFlow,
+    fullFilledDeleteWorkFlow,
+    fullFilledNewWorkFlow,
+    fullFilledNewWorkFlowItem,
+    fullFilledNewWorkFlowLink
 } from '../../../actions/project'
 import { getToken } from '../../../common/localStorage'
 
@@ -183,6 +187,41 @@ export const addWorkFlowLink = action$ =>
                 return madeRequestFail('No response from server!')
             else if (ajax.status > 0 && ajax.response.status < 400) {
                 return fullFilledNewWorkFlowLink(ajax.response.data)
+            }
+            else {
+                return madeRequestFail(ajax.response.message)
+            }
+        })
+    )
+
+export const deleteWorkFlow = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.DELETE_WORKFLOW),
+        mergeMap(action => {
+            const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.DELETE_WORKFLOW)
+            const requestSettings = {
+                url: fullyUrl,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: {
+                    id: action.payload
+                }
+            }
+            return ajax(requestSettings)
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
+        }),
+        map(ajax => {
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return fullFilledDeleteWorkFlow(ajax.response.data)
             }
             else {
                 return madeRequestFail(ajax.response.message)

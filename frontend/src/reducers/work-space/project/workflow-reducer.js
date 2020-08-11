@@ -22,6 +22,7 @@ const workFlowReducer = (state = All_WorkFlow, action) => {
             let newWorkflow = {
                 id: action.payload.id,
                 name: action.payload.name,
+                projectId: action.payload.project.id,
                 nodeDataArray: [],
                 linkDataArray: []
             }
@@ -84,6 +85,12 @@ const workFlowReducer = (state = All_WorkFlow, action) => {
                     }
                 }
                 return workFlow;
+            })
+            break;
+        case AsynTypes.FULL_FILLED.DELETE_WORKFLOW:
+            nextState.forEach((workFlow, index) => {
+                if (workFlow.id == action.payload)
+                    nextState = [...nextState.slice(0, index), ...nextState.slice(index+1)]
             })
             break;
         default:
