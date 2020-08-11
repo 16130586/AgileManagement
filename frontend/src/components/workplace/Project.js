@@ -215,7 +215,6 @@ let CreateSearchForm = function (props) {
             key: formState.searchType == searchType[1] ? formState.input : ''
         }
         props.searchProject(data);
-        console.log(data)
     }
     const handleChange = (event) => {
         const name = event.target.name

@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Component
 @NoArgsConstructor
@@ -60,7 +63,7 @@ public class ProjectDAO {
         return projectRepository.getOne(id);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = IllegalArgumentException.class)
     public Project save(ProjectParams projectParams) {
 
         Project project = new Project();
@@ -76,7 +79,7 @@ public class ProjectDAO {
         backlogRepository.save(backLog);
         project.setBacklog(backLog);
 
-        if(projectParams.leader != projectParams.productOwner){
+        if (projectParams.leader != projectParams.productOwner) {
             // Leader
             User teamLead = userRepository.getOne(projectParams.leader);
             Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
@@ -102,7 +105,7 @@ public class ProjectDAO {
             projectRepository.saveAndFlush(project);
 
 
-        }else {
+        } else {
             User creator = userRepository.findById(projectParams.productOwner).get();
             Role poRole = roleRepository.findByName(ConstraintRole.PRODUCT_OWNER);
             UserRole productOwner = new UserRole();
@@ -121,7 +124,8 @@ public class ProjectDAO {
         // End
         return project;
     }
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = IllegalArgumentException.class)
     public Project update(Project project, ProjectParams projectParams) {
         Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
         UserRole leader = userRoleRepository.findByRoleAndProject(leadRole, project);
@@ -136,36 +140,49 @@ public class ProjectDAO {
         projectRepository.save(project);
         return project;
     }
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = IllegalArgumentException.class)
     public boolean delete(int projectId) {
         try {
-            projectRepository.deleteById(projectId);
-        }
-        catch (Exception e) {
+            Project project = projectRepository.getOne(projectId);
+            project.setDeleted(true);
+            projectRepository.saveAndFlush(project);
+        } catch (Exception e) {
             return false;
         }
         return true;
     }
 
     public List<Project> findByNameLike(String name) {
-        return projectRepository.findByNameContaining(name);
+        List<Project> result = projectRepository
+                .findByNameContaining(name)
+                .stream().filter(p -> !p.isDeleted())
+                .collect(Collectors.toList());
+        return result;
     }
 
     public List<Project> findByCode(String key) {
-        return projectRepository.findByCode(key);
+        List<Project> result = projectRepository
+                .findByCode(key)
+                .stream().filter(p -> !p.isDeleted())
+                .collect(Collectors.toList());
+        return result;
     }
+
     public List<Project> findByKeyLike(String key) {
-        return projectRepository.findByCodeContaining(key);
+        List<Project> result = projectRepository
+                .findByCodeContaining(key)
+                .stream().filter(p -> !p.isDeleted())
+                .collect(Collectors.toList());
+        return result;
     }
 
     public List<Project> findByUser(int userId) {
         User user = userRepository.getOne(userId);
-        List<Project> result = new ArrayList<>();
+        final List<Project> result = new ArrayList<>();
         List<UserRole> userRoles = userRoleRepository.findByUser(user);
-        for (UserRole i : userRoles) {
-            result.add(i.getProject());
-        }
-        return result;
+        userRoles.forEach(userRole -> result.add(userRole.getProject()));
+        return result.stream().filter(p -> !p.isDeleted()).collect(Collectors.toList());
     }
 
     public List<Project> findByOwner(int ownerId) {
@@ -176,18 +193,18 @@ public class ProjectDAO {
             if (i.getRole().getId() == 1)
                 result.add(i.getProject());
         }
-        return result;
+        return result.stream().filter(p -> !p.isDeleted()).collect(Collectors.toList());
     }
 
     public List<Project> findByFilter(ProjectFilterParams filter) {
         List<Project> result;
         String name = (filter.name == null) ? "" : filter.name;
         String key = (filter.key == null) ? "" : filter.key;
-        if ( (filter.name != null) || (filter.key != null) ) {
+        if ((filter.name != null) || (filter.key != null)) {
             result = projectRepository.findByNameContainingAndCodeContaining(name, key);
             result = filterByUserId(result, filter);
             result = filterByOwnerId(result, filter);
-            return  result;
+            return result;
         }
         if (filter.userId != null) {
             result = findByUser(filter.userId);
@@ -206,12 +223,12 @@ public class ProjectDAO {
         List<Project> result = new ArrayList<>();
         User owner = userRepository.getOne(filter.ownerId);
         UserRole userRole;
-        for(Project project : projectList) {
+        for (Project project : projectList) {
             userRole = userRoleRepository.findByUserAndProject(owner, project);
             if (userRole != null && userRole.getRole().getId() == 1)
                 result.add(project);
         }
-        return result;
+        return result.stream().filter(pro -> !pro.isDeleted()).collect(Collectors.toList());
     }
 
     public List<Project> filterByUserId(List<Project> projectList, ProjectFilterParams filter) {
@@ -221,14 +238,15 @@ public class ProjectDAO {
         List<Project> result = new ArrayList<>();
         User owner = userRepository.getOne(filter.ownerId);
         UserRole userRole;
-        for(Project project : projectList) {
+        for (Project project : projectList) {
             userRole = userRoleRepository.findByUserAndProject(owner, project);
-            if (userRole != null )
+            if (userRole != null)
                 result.add(project);
         }
         return result;
     }
-    public List<Project> findJointIn(int userId){
+
+    public List<Project> findJointIn(int userId) {
         return projectRepository.findJointIn(userId);
     }
 
@@ -285,16 +303,15 @@ public class ProjectDAO {
         return workflowRepository.getOne(id);
     }
 
-    public List<IssueType> getIssueTypes(Integer projectId){
-        List<IssueType> result = Collections.emptyList();
-        try{
-            result = issueTypeRepository.findAllByProjectId(projectId);
-            if(result.size() <= 0){
+    public List<IssueType> getIssueTypes(Integer projectId) {
+        try {
+            List<IssueType> result = issueTypeRepository.findAllByProjectId(projectId);
+            if (result.size() <= 0) {
                 return issueTypeRepository.findDefaultIssueTypes();
             }
-            return result;
+            return Collections.emptyList();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new InternalException(e.getMessage());
         }

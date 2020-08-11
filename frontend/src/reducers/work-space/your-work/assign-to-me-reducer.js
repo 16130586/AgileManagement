@@ -4,7 +4,6 @@ const assignToMeReducer = (state = WorkSpace_YourWork_AssignToMe_Init , action) 
     let nextState = state
     switch(action.type){
         case AsynTypes.FULL_FILLED.TOTAL_ASSIGN_TO_ME:
-            console.log(action.payload.data)
             nextState = {...state , totalAssignToMe : action.payload.data}
             break;
         case AsynTypes.FULL_FILLED.ASSIGNED_TO_ME: 

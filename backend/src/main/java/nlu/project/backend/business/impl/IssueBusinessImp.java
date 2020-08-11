@@ -19,6 +19,8 @@ import nlu.project.backend.entry.issue.MoveToParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
 import nlu.project.backend.repository.IssueTypeRepository;
+import nlu.project.backend.repository.WorkFlowItemRepository;
+import org.jcp.xml.dsig.internal.dom.DOMUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,9 @@ public class IssueBusinessImp implements IssueBusiness {
 
     @Autowired
     IssueTypeRepository issueTypeRepository;
+
+    @Autowired
+    WorkFlowItemRepository workFlowItemRepository;
 
     @Override
     public Issue create(IssueParams issueParams, UserDetails userDetails) {
@@ -198,7 +203,15 @@ public class IssueBusinessImp implements IssueBusiness {
 
         IssueType issueType = issueTypeRepository.getOne(issueParams.issueTypeId);
         iss.setIssueType(issueType);
-        User assignee = userDAO.getUser(issueParams.assigneeEmail);
+
+        User assignee= null;
+        if(issueParams.assigneeEmail != null){
+            assignee = userDAO.getUser(issueParams.assigneeEmail);
+        }
+        if(issueParams.workflowStatus != null && issueParams.workflowStatus > 0){
+            WorkFlowItem status = workFlowItemRepository.getOne(issueParams.workflowStatus);
+            iss.setStatus(status);
+        }
         iss.setAssignment(assignee);
         return issueDAO.update(iss);
     }

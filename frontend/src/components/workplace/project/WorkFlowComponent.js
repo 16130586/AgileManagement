@@ -244,7 +244,6 @@ let WorkFlow = function (props) {
         let formData = { ...addLinkWorkFlowForm }
         formData[event.target.name] = event.target.value
         setAddLinkWorkFlowForm(formData)
-        console.log(formData)
     }
 
     const isFormAddWorkFlowLinkValid = () => {

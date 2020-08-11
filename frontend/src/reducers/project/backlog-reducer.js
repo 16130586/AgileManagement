@@ -1,6 +1,6 @@
 import { ASYNC as AsyncEventTypes } from '../../constants/index'
 const init = {
-    project : null,
+    project: null,
     isLoadBacklogPage: false,
     backlogItems: [],
     workingSprints: [],
@@ -10,19 +10,16 @@ const init = {
 }
 const Backlog = (state = init, action) => {
     let nextState = state
-    let sprintId = -1
-    let issueId = -1
     switch (action.type) {
         case AsyncEventTypes.FULL_FILLED.BACKLOG_PAGE:
-            console.log(action.payload)
             nextState = {
                 isLoadBacklogPage: true,
                 project: action.payload.project,
                 backlogItems: action.payload.backlogItems,
                 workingSprints: action.payload.workingSprints,
                 issueTypes: action.payload.issueTypes,
-                workflow : action.payload.workflow,
-                devTeam : action.payload.devTeam
+                workflow: action.payload.workflow,
+                devTeam: action.payload.devTeam
             }
             break;
         case AsyncEventTypes.FULL_FILLED.CREATE_SPRINT:
@@ -60,8 +57,8 @@ const Backlog = (state = init, action) => {
             break;
         case AsyncEventTypes.FULL_FILLED.TOP_OF_BACKLOG:
             (function () {
-                issueId = action.payload.issueId
-                sprintId = action.payload.sprintId
+                let issueId = action.payload.issueId
+                let sprintId = action.payload.sprintId
                 let spIdo = nextState.workingSprints.findIndex(sp => sp.id == sprintId)
                 let issIdo = nextState.workingSprints[spIdo].issues.findIndex(is => is.id == issueId)
                 let targetIss = nextState.workingSprints[spIdo].issues[issIdo]
@@ -80,8 +77,8 @@ const Backlog = (state = init, action) => {
             break;
         case AsyncEventTypes.FULL_FILLED.BOTTOM_OF_BACKLOG:
             (function () {
-                issueId = action.payload.issueId
-                sprintId = action.payload.sprintId
+                let issueId = action.payload.issueId
+                let sprintId = action.payload.sprintId
                 let spIdo = nextState.workingSprints.findIndex(sp => sp.id == sprintId)
                 let issIdo = nextState.workingSprints[spIdo].issues.findIndex(is => is.id == issueId)
                 let targetIss = nextState.workingSprints[spIdo].issues[issIdo]
@@ -167,7 +164,7 @@ const Backlog = (state = init, action) => {
             (function () {
                 let fromSprintId = action.payload.fromSprintId
                 let toSprintId = action.payload.toSprintId
-                issueId = action.payload.issueId
+                let issueId = action.payload.issueId
 
                 let newWorkingSprints = []
                 let targetIssue = null
@@ -212,6 +209,7 @@ const Backlog = (state = init, action) => {
             break;
         case AsyncEventTypes.FULL_FILLED.CREATE_NEW_ISSUE:
             (function () {
+                let sprintId = -1
                 if (action.payload.sprint != null) {
                     sprintId = action.payload.sprint.id
                 }
@@ -259,9 +257,51 @@ const Backlog = (state = init, action) => {
                 }
             })()
             break;
-            case AsyncEventTypes.FULL_FILLED.ISSUE_UPDATE_DETAIL:
-                console.log(action.payload)
-                break;
+        case AsyncEventTypes.FULL_FILLED.ISSUE_UPDATE_DETAIL:
+            // (function () {
+            //     let spr
+            // })()
+            let data = action.payload
+            let sprintId = data.sprint != null ? data.sprint.id : -1
+            let issueId = data.id
+            //edit from click on sprint
+            if (sprintId > 0) {
+                let idoSprint = nextState.workingSprints.findIndex(sprint => sprint.id == sprintId)
+                let oldSprt = nextState.workingSprints[idoSprint]
+                let idoIss = oldSprt.issues.findIndex(iss => iss.id == issueId)
+                let newIssues = [
+                    ...oldSprt.issues.slice(0, idoIss),
+                    data,
+                    ...oldSprt.issues.slice(idoIss + 1)
+                ]
+                let newSprint = {
+                    ...oldSprt,
+                    issues : newIssues
+                }
+                let newWorkingSprints = [
+                    ...nextState.workingSprints.slice(0 , idoSprint),
+                    newSprint,
+                    ...nextState.workingSprints.slice(idoSprint + 1)
+                ]
+                nextState = {
+                    ...nextState,
+                    workingSprints : newWorkingSprints
+                }
+            }
+            // edit from click from backlog
+            else {
+                let idoIss = nextState.backlogItems.findIndex(iss => iss.id == issueId)
+                let newBacklogItems = [
+                    ...nextState.backlogItems.slice(0, idoIss)
+                    , data,
+                    ...nextState.backlogItems.slice(idoIss + 1)
+                ]
+                nextState = {
+                    ...nextState,
+                    backlogItems: newBacklogItems
+                }
+            }
+            break;
         default:
             break;
     }

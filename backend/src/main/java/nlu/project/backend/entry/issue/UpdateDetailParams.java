@@ -6,4 +6,5 @@ public class UpdateDetailParams {
     public Integer issueTypeId;
     public Integer storyPoint;
     public String assigneeEmail;
+    public Integer workflowStatus;
 }

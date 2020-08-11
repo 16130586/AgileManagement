@@ -2,7 +2,6 @@ import React , {useEffect} from 'react'
 import { connect } from 'react-redux'
 import {pageContextualNavigation} from '../../actions/global'
 const Board = function(props){
-    console.log(props)
     useEffect(() => {
         props.getNavigation('BOARDS', props.match.params)
     }, [])

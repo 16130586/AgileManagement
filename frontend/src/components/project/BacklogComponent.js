@@ -12,6 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Icon from '@material-ui/core/Icon'
 import CloseIcon from '@material-ui/icons/Close'
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Dialog from '@material-ui/core/Dialog'
@@ -234,11 +235,18 @@ let IssueItem = function (props) {
 }
 
 let CreateNewBacklogItem = function (props) {
+    console.log(props)
     const self = createRef()
     const [isOpenCreateInput, setIsOpenCreateInput] = useState(false)
 
-    let [cbIssueValue, setCbIssueValue] = useState(props.issueTypes == null ? null : props.issueTypes[0])
+    let [cbIssueValue, setCbIssueValue] = useState(null)
+
     let [issueDescription, setIssueDescription] = useState('')
+
+    useEffect(() => {
+        if (props.issueTypes != null && props.issueTypes.length > 0)
+            setCbIssueValue(props.issueTypes[0])
+    }, [props.issueTypes])
 
     let handleClickDismiss = (event) => {
         const { target } = event
@@ -268,8 +276,6 @@ let CreateNewBacklogItem = function (props) {
 
 
     const itemRender = (li, itemProps) => {
-        const iconSrc = itemProps.dataItem.iconUrl
-        const name = itemProps.dataItem.name
         const itemChildren =
             <div
                 style={{
@@ -277,8 +283,8 @@ let CreateNewBacklogItem = function (props) {
                     alignItems: "center",
                     justifyContent: "space-around"
                 }}>
-                <img src={iconSrc} style={{ width: "24px", height: "24px" }} />
-                <span className="ml-1" style={{ size: "1rem", textTransform: "capitalize" }}>{name}</span>
+                <img src={itemProps.dataItem.iconUrl} style={{ width: "24px", height: "24px" }} />
+                <span className="ml-1" style={{ size: "1rem", textTransform: "capitalize" }}>{itemProps.dataItem.name}</span>
             </div>
         return React.cloneElement(li, li.props, itemChildren);
     }
@@ -316,7 +322,17 @@ let CreateNewBacklogItem = function (props) {
                         dataItemKey="id"
                         value={cbIssueValue}
                         onChange={(event) => { setCbIssueValue(event.target.value) }}
-                        footer={<span className="mt-1">footer</span>}
+                        footer={
+                            <Link
+                                style={{
+                                    marginLeft: ".5rem",
+                                    marginTop: "2rem"
+                                }}
+                                color="inherit"
+                                href={'/projects/'.concat(props.projectId).concat('/settings/issueTypes')}>
+                                Manage types
+                            </Link>
+                        }
                     />
                     <TextField className="ml-1"
                         onChange={(event) => { setIssueDescription(event.target.value) }}
@@ -587,8 +603,8 @@ let SprintComponent = function (props) {
                                 </Button>
                             }
                             {
-                                storyPoints.map(e =>
-                                    <StoryPointItem onClick={(event) => event.stopPropagation()} className="mr-1" {...e} />
+                                storyPoints.map((e, index) =>
+                                    <StoryPointItem key={index} onClick={(event) => event.stopPropagation()} className="mr-1" {...e} />
                                 )
                             }
                             <Dialog
@@ -838,14 +854,15 @@ let SprintComponent = function (props) {
                             <div className="pd-1" style={{ paddingTop: "0px", border: "2px solid rgb(223, 225, 230)", borderStyle: "dashed" }}>
                                 <Typography>
                                     Plan your sprint
-                                    Choose issues from the <bold>Backlog</bold> section, or create new issues, to plan
-                                    the work for this sprint. Select <bold>Start</bold> sprint when your're ready
+                                    Choose issues from the <span style={{ fontWeight: "600" }}>Backlog</span> section, or create new issues, to plan
+                                    the work for this sprint. Select <span style={{ fontWeight: "600" }}>Start</span> sprint when your're ready
                                 </Typography>
                             </div>
                         }
                         {(data.issues != null && data.issues.length > 0) &&
                             data.issues.map(iss =>
                                 <IssueItem
+                                    key={iss.id}
                                     onClick={props.openIssueDetail}
                                     className="mt-1"
                                     data={iss}
@@ -873,32 +890,30 @@ let SprintComponent = function (props) {
 }
 
 let DetailIssueEdit = function (props) {
+    console.log(props)
     const projectId = props.projectId
     const closeIssueDetail = props.closeIssueDetail
     const [updateDetailState, setUpdateDetailState] = useState(null)
-    console.log(props)
     let devTeam = [...props.devTeam.map(sl => sl.email)]
     devTeam.unshift('None')
-
     useEffect(() => {
         setUpdateDetailState({
+            issueId: props.data.issueId,
             description: props.data.description,
             issueTypeId: props.data.issueType.id,
             storyPoint: props.data.storyPoint,
             assigneeEmail: props.data.assignee == null ? 'None' : props.data.assignee,
+            workflowStatus: props.data.workflowStatus.id
         })
     }, [props.data])
 
     const editDetailIssueChange = (event, value) => {
-        console.log(event)
-        console.log(value)
         let changedIssue = { ...updateDetailState }
         changedIssue[event.target.name] = event.target.value
         setUpdateDetailState(changedIssue)
-        console.log(changedIssue)
     }
     const submit = () => {
-        if (props.updateDetailIssue) props.updateDetailIssue(updateDetailState)
+        if (props.updateDetailIssue != null) props.updateDetailIssue(updateDetailState)
     }
     if (updateDetailState == null) return <div></div>
     return (
@@ -933,7 +948,9 @@ let DetailIssueEdit = function (props) {
                     padding: "1rem"
                 }}>
                     <div>
-                        List of function here
+                        <Button variant="contained" color="default" size={'small'}>
+                            <AccountTreeIcon fontSize="small" color='inherit' ></AccountTreeIcon>
+                        </Button> 
                     </div>
                     <FormControl className="mt-3">
                         <InputLabel shrink id="label-description">
@@ -949,6 +966,26 @@ let DetailIssueEdit = function (props) {
                             className="mt-3"
                             onChange={(event) => editDetailIssueChange(event)}
                         />
+                    </FormControl>
+                    <FormControl className="mt-3">
+                        <InputLabel shrink id="label-workflow-status">
+                            Workflow status
+                        </InputLabel>
+                        <Select
+                            labelId="label-workflow-status"
+                            name="workflowStatus"
+                            value={updateDetailState.workflowStatus}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(event) => editDetailIssueChange(event)}
+                        >
+                            {props.workflow.items.map(item =>
+                                <MenuItem
+                                    className="ml-1"
+                                    value={item.id}>
+                                    {item.name}
+                                </MenuItem>)
+                            }
+                        </Select>
                     </FormControl>
                     <FormControl className="mt-3">
                         <InputLabel shrink id="label-issueType-id">
@@ -972,7 +1009,7 @@ let DetailIssueEdit = function (props) {
                     </FormControl>
                     <FormControl className="mt-3">
                         <InputLabel shrink id="label-assignee-email">
-                            Age
+                            Assignee
                         </InputLabel>
                         <Select
                             labelId="label-assignee-email"
@@ -1123,6 +1160,7 @@ let BacklogComponent = function (props) {
                         {(props.backlogItems != null && props.backlogItems.length > 0) &&
                             props.backlogItems.map(iss =>
                                 <IssueItem
+                                    key={iss.id}
                                     onClick={props.openIssueDetail}
                                     className="mt-1"
                                     data={iss}
@@ -1148,6 +1186,7 @@ let BacklogComponent = function (props) {
 }
 
 let BacklogSpaceComponent = function (props) {
+    console.log(props)
     const projectId = parseInt(props.projectId)
     const anySprintStarted = []
     const [isIssueDetailOpen, setIsIssueDetailOpen] = useState(false)
@@ -1165,6 +1204,7 @@ let BacklogSpaceComponent = function (props) {
     }
 
     const openIssueDetail = (data) => {
+        console.log(data)
         setIsIssueDetailOpen(true)
         setIssueSelected({
             issueId: data.id,
@@ -1176,6 +1216,7 @@ let BacklogSpaceComponent = function (props) {
             assignee: data.assignment && data.assignment.email,
             name: data.name,
             code: data.code,
+            workflowStatus: data.status
         })
     }
     const closeIssueDetail = () => {
@@ -1187,15 +1228,15 @@ let BacklogSpaceComponent = function (props) {
     return (
         <Fragment>
             <MyBreadCrumbs project={props.project} />
-            <button onClick={() => openIssueDetail()}>Open</button>
             <div style={{ display: "flex", height: '100%' }}>
                 <div style={{ overflowY: isIssueDetailOpen ? "scroll" : '', width: "100%" }}>
                     {
                         props.workingSprints && props.workingSprints.map(sprint =>
                             <SprintComponent
-                                projectId={projectId}
+                                key={sprint.id}
                                 data={sprint}
                                 sprints={props.workingSprints}
+                                projectId={projectId}
                                 issueTypes={props.issueTypes}
                                 canStart={isSprintCanStart(sprint.id)}
                                 deleteSprint={props.deleteSprint}
@@ -1232,8 +1273,10 @@ let BacklogSpaceComponent = function (props) {
                         devTeam={props.project.devTeam}
                         data={issueSelected}
                         projectId
+                        workflow={props.workflow}
                         updateDetailIssue={props.updateDetailIssue}
                         issueTypes={props.issueTypes}
+                        updateDetailIssue={props.updateDetailIssue}
                     />
                 }
 

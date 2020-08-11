@@ -47,7 +47,7 @@ public class ProjectController extends BaseController{
         return ApiResponse.OnSuccess(result, "Update Project Success!");
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ApiResponse deleteProject(@RequestBody ProjectParams projectParams, HttpServletRequest request) {
         Object result = projectBusiness.delete(projectParams, getUser(request));
         if (result.equals(Boolean.FALSE)) {

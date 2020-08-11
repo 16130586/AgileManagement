@@ -5,7 +5,6 @@ const groupReducer = (state = All_Group_Init, action) => {
     switch(action.type){
         case AsynTypes.FULL_FILLED.ALL_GROUP:
             nextState = {...state , data : action.payload.data}
-            console.log("called reducer")
             break;
         default:
             break;

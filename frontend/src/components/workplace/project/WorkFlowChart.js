@@ -61,7 +61,6 @@ function WorkFlowChart(props) {
     }
 
     function handleModelChange(changes) {
-        console.log(changes)
         if ( changes.removedNodeKeys != undefined && changes.removedNodeKeys.length == 1 && changes.modifiedNodeData == undefined) {
             if (changes.removedLinkKeys != undefined) {
                 props.removeWorkFlowLink(props.workFlow.id, changes.removedLinkKeys)
