@@ -263,7 +263,7 @@ public class ProjectDAO {
         WorkFlowItem item = new WorkFlowItem();
         item.setName(params.itemName);
         if (params.isStart)
-            item.setColor("lightgray");
+            item.setColor("green");
         else if (params.isEnd)
             item.setColor("blue");
         else
@@ -319,7 +319,7 @@ public class ProjectDAO {
 
     public List<WorkFlow> getWorkFlowByProjectId(int projectId) {
         Project project = projectRepository.getOne(projectId);
-        return workflowRepository.findByProject(project);
+        return workflowRepository.findByProjectOrProjectIsNullOrderByProjectAsc(project);
     }
 
     public UserRole addMember(UserRoleParams params) {
@@ -357,5 +357,10 @@ public class ProjectDAO {
         UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
         userRole.setRole(null);
         return userRoleRepository.save(userRole);
+    }
+
+    public Integer deleteWorkFlow(WorkFlowParams params) {
+        workflowRepository.deleteById(params.id);
+        return params.id;
     }
 }

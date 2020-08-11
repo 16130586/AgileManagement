@@ -227,6 +227,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
         return projectDAO.getProjectById(projectId);
     }
 
+    @Override
+    public Integer deleteWorkFlow(WorkFlowParams params) {
+        return projectDAO.deleteWorkFlow(params);
+    }
+
     public boolean isInProject(Integer projectId , Integer userId){
         return userDAO.isInProject(projectId, userId);
     }

@@ -1,6 +1,7 @@
 package nlu.project.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class WorkFlow {
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"currentWorkFlow"})
     private Project project;
     @OneToMany(mappedBy = "workFlow")
     private List<WorkFlowItem> items;

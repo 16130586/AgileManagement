@@ -38,4 +38,6 @@ public interface ProjectBusiness {
     List<User> getDevTeam(Integer projectId, CustomUserDetails user);
 
     Project getProject(Integer projectId, CustomUserDetails user);
+
+    Integer deleteWorkFlow(WorkFlowParams params);
 }

@@ -34,6 +34,7 @@ public class CharBusinessImpl implements ChartBusiness {
             workFlowChart = new WorkFlowChart();
             workFlowChart.setId(workflow.getId());
             workFlowChart.setName(workflow.getName());
+            workFlowChart.setProjectId(workflow.getProject() != null ? workflow.getProject().getId() : null);
             nodeDataArray = parseWorkFlowItemToNodeData(workflow.getItems());
             linkDataArray = parseWorkFlowItemToLinkData(workflow.getItems());
             workFlowChart.setNodeDataArray(nodeDataArray);

@@ -20,7 +20,6 @@ import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
 import nlu.project.backend.repository.IssueTypeRepository;
 import nlu.project.backend.repository.WorkFlowItemRepository;
-import org.jcp.xml.dsig.internal.dom.DOMUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;

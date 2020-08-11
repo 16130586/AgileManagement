@@ -111,6 +111,12 @@ public class ProjectController extends BaseController{
         return ApiResponse.OnSuccess(result, "Create WorkFlow Success!");
     }
 
+    @PostMapping("/workflow/delete")
+    public ApiResponse deleteWorkFlow(@RequestBody WorkFlowParams params) {
+        Object result = projectBusiness.deleteWorkFlow(params);
+        return ApiResponse.OnSuccess(result, "Delete WorkFlow Success!");
+    }
+
     @PostMapping("/workflow/add-item")
     public ApiResponse addWorkFlowItem(@RequestBody WorkFlowParams params) {
         Object result = projectBusiness.addWorkFlowItem(params);

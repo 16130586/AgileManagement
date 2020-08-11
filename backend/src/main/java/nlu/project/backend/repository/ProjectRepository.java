@@ -22,4 +22,5 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     @Query(value = "SELECT * FROM project p WHERE p.id IN (SELECT user_role.project_id FROM user_role WHERE user_role.user_id = :owner_id)", nativeQuery = true)
     List<Project> findJointIn(@Param("owner_id") Integer userId);
+
 }
