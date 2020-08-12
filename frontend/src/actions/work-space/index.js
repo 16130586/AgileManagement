@@ -26,3 +26,6 @@ export const fullFilledRemoveMemberFromGroup = (data) => ({type: AsyncEventTypes
 
 export const createGroup = (data) => ({type: AsyncEventTypes.REQUEST.CREATE_GROUP, payload: data})
 export const fullFilledCreateGroup = (data) => ({type: AsyncEventTypes.FULL_FILLED.CREATE_GROUP, payload: data})
+
+export const deleteGroup = (data) => ({type: AsyncEventTypes.REQUEST.DELETE_GROUP, payload: data})
+export const fullFilledDeleteGroup = (data) => ({type: AsyncEventTypes.FULL_FILLED.DELETE_GROUP, payload: data})

@@ -28,6 +28,13 @@ const groupReducer = (state = All_Group_Init, action) => {
         case AsynTypes.FULL_FILLED.CREATE_GROUP:
             nextState = [...nextState, action.payload]
             break;
+
+        case AsynTypes.FULL_FILLED.DELETE_GROUP:
+            nextState.forEach((group, index) => {
+                if (group.id == action.payload.groupId)
+                    nextState = [...nextState.slice(0, index), ...nextState.slice(index+1)]
+            })
+            break;
         default:
             break;
     }

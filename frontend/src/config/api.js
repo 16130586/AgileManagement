@@ -36,6 +36,7 @@ export const BACKEND_API = {
         ABOUT_ME: '/user/me',
         GROUP_ADD_MEMBER: '/group/add',
         GROUP_REMOVE_MEMBER: '/group/remove',
-        CREATE_GROUP : '/group/create'
+        CREATE_GROUP : '/group/create',
+        DELETE_GROUP : '/group/delete'
     }
 }

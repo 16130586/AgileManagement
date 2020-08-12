@@ -23,7 +23,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog/Dialog";
-import {addMemberToGroup, fetchAllGroup, removeMemberFromGroup} from "../../../actions/work-space";
+import {addMemberToGroup, deleteGroup, fetchAllGroup, removeMemberFromGroup} from "../../../actions/work-space";
 import TextField from "@material-ui/core/TextField/TextField";
 
 const useRowStyles = makeStyles({
@@ -74,6 +74,17 @@ function GroupItem(props) {
     const handleRemoveMember = (groupId, userId) => {
         props.removeMember(groupId, userId)
         handleCloseDialog(false)
+    }
+
+    // Dialog Delete Group
+    const [openDeleteGroupDialog, setOpenDeleteGroupDialog] = React.useState(false)
+    const handleCloseDeleteGroupDialog = () => {
+        setOpenDeleteGroupDialog(false)
+    }
+
+    const handleDeleteGroup = (groupId) => {
+        props.deleteGroup(groupId)
+        handleCloseDeleteGroupDialog(false)
     }
 
     // Menu Group
@@ -136,32 +147,61 @@ function GroupItem(props) {
                         onClose={handleCloseMenuGroup}
                     >
                         <MenuItem onClick={() => {
+                            setOpenDeleteGroupDialog(true);
+                            handleCloseMenuGroup()
+                        }}>Delete</MenuItem>
+                        <MenuItem onClick={() => {
                             setOpenAddMemberDialog(true);
                             handleCloseMenuGroup()
                         }}>Add Member</MenuItem>
                     </Menu>
                     <Dialog
-                        open={openAddMemberDialog}
-                        onClose={handleCloseAddMemberDialog}
-                        aria-labelledby={"alert-dialog-title".concat("group"+group.id)}
-                        aria-describedby={"alert-dialog-description".concat("group"+group.id)}>
+                    open={openAddMemberDialog}
+                    onClose={handleCloseAddMemberDialog}
+                    aria-labelledby={"alert-dialog-title".concat("group"+group.id)}
+                    aria-describedby={"alert-dialog-description".concat("group"+group.id)}>
+                    <DialogTitle
+                        id={"alert-dialog-title".concat("group"+group.id)}>
+                        Add Member
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id={"alert-dialog-description".concat("group"+group.id)}>
+                            Enter Email or NickName to add them to group!
+                        </DialogContentText>
+                        <AddMemberForm formChange={formChange} addMemberForm={addMemberForm}/>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={() => handleAddMember(group.id)}
+                            color="primary">
+                            Add
+                        </Button>
+                        <Button onClick={handleCloseAddMemberDialog} color="primary" autoFocus>
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                    <Dialog
+                        open={openDeleteGroupDialog}
+                        onClose={handleCloseDeleteGroupDialog}
+                        aria-labelledby={"alert-dialog-title".concat("delete-group"+group.id)}
+                        aria-describedby={"alert-dialog-description".concat("delete-group"+group.id)}>
                         <DialogTitle
-                            id={"alert-dialog-title".concat("group"+group.id)}>
-                            Add Member
+                            id={"alert-dialog-title".concat("delete-group"+group.id)}>
+                            Delete
                         </DialogTitle>
                         <DialogContent>
                             <DialogContentText id={"alert-dialog-description".concat("group"+group.id)}>
-                                Enter Email or NickName to add them to group!
+                                Are you sure to delete this group?
                             </DialogContentText>
-                            <AddMemberForm formChange={formChange} addMemberForm={addMemberForm}/>
                         </DialogContent>
                         <DialogActions>
                             <Button
-                                onClick={() => handleAddMember(group.id)}
+                                onClick={() => handleDeleteGroup(group.id)}
                                 color="primary">
-                                Add
+                                Delete
                             </Button>
-                            <Button onClick={handleCloseAddMemberDialog} color="primary" autoFocus>
+                            <Button onClick={handleCloseDeleteGroupDialog} color="primary" autoFocus>
                                 Cancel
                             </Button>
                         </DialogActions>
@@ -277,6 +317,7 @@ let MyGroupList = function (props) {
                             me={props.me}
                             addMember={props.addMember}
                             removeMember={props.removeMember}
+                            deleteGroup={props.deleteGroup}
                         />
                     ))}
                 </TableBody>
@@ -297,6 +338,7 @@ const mapDispatchToProps = dispatch => {
         fetchGroup: () => dispatch(fetchAllGroup()),
         addMember: (data) => dispatch(addMemberToGroup(data)),
         removeMember: (groupId, userId) => dispatch(removeMemberFromGroup(groupId, userId)),
+        deleteGroup: (groupId) => dispatch(deleteGroup(groupId))
     }
 }
 

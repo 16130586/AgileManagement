@@ -45,7 +45,8 @@ export const ASYNC = {
         ABOUT_ME: 'full-filled.about-me',
         GROUP_ADD_MEMBER: 'full-filled.group-add-member',
         GROUP_REMOVE_MEMBER: 'full-filled.group-remove-member',
-        CREATE_GROUP: 'full-filled.create-group'
+        CREATE_GROUP: 'full-filled.create-group',
+        DELETE_GROUP: 'full-filled.delete-group'
 
     },
     REQUEST: {
@@ -77,7 +78,8 @@ export const ASYNC = {
         ABOUT_ME : 'request.about-me',
         GROUP_ADD_MEMBER : 'request.group-add-member',
         GROUP_REMOVE_MEMBER : 'request.group-remove-member',
-        CREATE_GROUP : 'request.create-group'
+        CREATE_GROUP : 'request.create-group',
+        DELETE_GROUP : 'request.delete-group'
        
     }
    
