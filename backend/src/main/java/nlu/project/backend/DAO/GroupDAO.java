@@ -73,4 +73,9 @@ public class GroupDAO {
     public List<Group> getGroupsByUser(User user) {
         return groupRepository.findByOwnerOrMemberContains(user, user);
     }
+
+    public GroupParams delete(GroupParams params) {
+        groupRepository.deleteById(params.groupId);
+        return params;
+    }
 }

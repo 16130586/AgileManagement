@@ -35,6 +35,12 @@ public class GroupController extends BaseController {
         return ApiResponse.OnSuccess(group, "Create group success!");
     }
 
+    @PostMapping("/delete")
+    public ApiResponse delete(@RequestBody GroupParams params) {
+        Object result = groupBusiness.delete(params);
+        return ApiResponse.OnSuccess(result, "Delete group success!");
+    }
+
     @PostMapping("/add")
     public ApiResponse addUser(@RequestBody GroupParams groupParams) {
         UserGroup userGroup = groupBusiness.addUser(groupParams);

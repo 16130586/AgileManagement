@@ -12,4 +12,5 @@ public interface GroupBusiness {
     UserGroup addUser(GroupParams groupParams);
     GroupParams removeUser(GroupParams groupParams);
     List<Group> getGroupsByUser(User user);
+    Object delete(GroupParams params);
 }

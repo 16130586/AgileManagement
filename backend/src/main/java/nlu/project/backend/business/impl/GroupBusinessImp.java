@@ -37,4 +37,9 @@ public class GroupBusinessImp implements GroupBusiness {
     public List<Group> getGroupsByUser(User user) {
         return groupDAO.getGroupsByUser(user);
     }
+
+    @Override
+    public GroupParams delete(GroupParams params) {
+        return groupDAO.delete(params);
+    }
 }
