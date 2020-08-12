@@ -53,7 +53,9 @@ let IndexPeople = function (props) {
     }
 
     const handleCreateGroupSubmit = function(){
-        props.createProject(createGroupForm)
+        console.log(createGroupForm)
+        props.createGroup(createGroupForm)
+        handleCloseCreateGroupDialog()
     }
 
     return(

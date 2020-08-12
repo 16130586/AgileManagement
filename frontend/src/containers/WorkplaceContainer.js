@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Route, Switch } from 'react-router-dom';
 import YourWork from './Workplace/YourWorkContainer'
 import Project from './Workplace/ProjectsContainer'
@@ -8,7 +8,12 @@ import Backlog from './project/Backlog'
 import Board from './project/Board'
 import WorkFlow from "./project/WorkFlow";
 import Settings from './project/Settings'
+import {connect} from "react-redux";
+import {fetchAboutMe} from "../actions/global";
 let WorkplaceContainer = function (props) {
+    useEffect(() => {
+        props.fetchAboutMe()
+    }, [])
 
     return (
         <div className={props.className}>
@@ -39,4 +44,10 @@ let WorkplaceContainer = function (props) {
     )
 }
 
-export default WorkplaceContainer
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchAboutMe: () => dispatch(fetchAboutMe())
+    }
+}
+
+export default connect(null, mapDispatchToProps)(WorkplaceContainer);

@@ -32,5 +32,10 @@ export const BACKEND_API = {
         ISSUE_UPDATE_DETAIL : '/issue/updateDetail',
         DEV_TEAM : '/project/{projectId}/devteam',
         DELETE_WORKFLOW: '/project/workflow/delete',
+        MY_GROUP : '/group',
+        ABOUT_ME: '/user/me',
+        GROUP_ADD_MEMBER: '/group/add',
+        GROUP_REMOVE_MEMBER: '/group/remove',
+        CREATE_GROUP : '/group/create'
     }
 }

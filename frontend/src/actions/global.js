@@ -13,3 +13,5 @@ export const signUp = (userName,password,confirmPassword) => ({type : AuthEventT
 export const signUpSuccess = () => ({type : AuthEventTypes.SIGN_UP_SUCCESS})
 export const signUpFailed = (message) => ({type : AuthEventTypes.SIGN_UP_FAILED, payload: message == null ? 'Sign-up error!' : message})
 export const pageContextualNavigation = (pageName, data) => ({type : UIEventTypes.CHANGE_CONTEXTUAL_NAVIGATION_BAR , payload : {pageName,data}})
+export const fetchAboutMe = () => ({type: AsyncEventTypes.REQUEST.ABOUT_ME})
+export const fullFilledAboutMe = (user) => ({type: AsyncEventTypes.FULL_FILLED.ABOUT_ME, payload: user})

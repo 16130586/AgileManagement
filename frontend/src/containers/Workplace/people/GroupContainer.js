@@ -23,7 +23,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog/Dialog";
-import {fetchAllGroup} from "../../../actions/work-space";
+import {addMemberToGroup, fetchAllGroup, removeMemberFromGroup} from "../../../actions/work-space";
 import TextField from "@material-ui/core/TextField/TextField";
 
 const useRowStyles = makeStyles({
@@ -38,12 +38,12 @@ let AddMemberForm = function (props) {
     return (
         <Fragment>
             <TextField
-                name="userName"
-                value={props.addMemberForm.userName}
+                name="dataUser"
+                value={props.addMemberForm.dataUser}
                 onChange={(e) => props.formChange(e)}
                 autoFocus
                 margin="dense"
-                label="Name"
+                label="Enter..."
                 type="text"
                 fullWidth
             />
@@ -52,7 +52,7 @@ let AddMemberForm = function (props) {
 }
 
 function GroupItem(props) {
-    const row = props.row;
+    const group = props.group;
     const classes = useRowStyles();
 
     const [openMember, setOpenMember] = React.useState(false);
@@ -65,14 +65,14 @@ function GroupItem(props) {
         setAnchorEl(null);
     };
 
-    // Dialog delete
+    // Dialog remove member
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
     const handleCloseDialog = () => {
         setOpenDeleteDialog(false)
     }
 
-    const handleDeleteMember = (userId) => {
-        // TBD - Call method delete
+    const handleRemoveMember = (groupId, userId) => {
+        props.removeMember(groupId, userId)
         handleCloseDialog(false)
     }
 
@@ -87,8 +87,14 @@ function GroupItem(props) {
 
     // Add member group
     const [addMemberForm, setAddMemberForm] = React.useState({
-        userName: ''
+        groupId: '',
+        dataUser: ''
     })
+
+    const handleAddMember = (groupId) => {
+        props.addMember({...addMemberForm, groupId: groupId})
+        handleCloseAddMemberDialog(false)
+    }
 
     const formChange = function (event) {
         let formData = { ...addMemberForm }
@@ -101,10 +107,7 @@ function GroupItem(props) {
         setOpenAddMemberDialog(false)
     }
 
-    const handleAddMember = () => {
-        // TODO map dispatch to props & call action
-        handleCloseAddMemberDialog(false)
-    }
+
     return (
         <Fragment>
             <TableRow className={classes.root}>
@@ -114,18 +117,19 @@ function GroupItem(props) {
                     </IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {row.name}
+                    {group.name}
                 </TableCell>
+                {props.me.id == group.owner.id &&
                 <TableCell align="right">
                     <Icon
                     className="cursor--pointer"
-                    aria-controls={"lead_mor_hoz_menu".concat("group"+row.id)}
+                    aria-controls={"lead_mor_hoz_menu".concat("group"+group.id)}
                     aria-haspopup="true"
                     onClick={handleOpenMenuGroup}>
                     more_horiz
                 </Icon>
                     <Menu
-                        id={"lead_mor_hoz_menu".concat("group"+row.id)}
+                        id={"lead_mor_hoz_menu".concat("group"+group.id)}
                         anchorEl={openMenuGroup}
                         keepMounted
                         open={Boolean(openMenuGroup)}
@@ -139,21 +143,21 @@ function GroupItem(props) {
                     <Dialog
                         open={openAddMemberDialog}
                         onClose={handleCloseAddMemberDialog}
-                        aria-labelledby={"alert-dialog-title".concat("group"+row.id)}
-                        aria-describedby={"alert-dialog-description".concat("group"+row.id)}>
+                        aria-labelledby={"alert-dialog-title".concat("group"+group.id)}
+                        aria-describedby={"alert-dialog-description".concat("group"+group.id)}>
                         <DialogTitle
-                            id={"alert-dialog-title".concat("group"+row.id)}>
+                            id={"alert-dialog-title".concat("group"+group.id)}>
                             Add Member
                         </DialogTitle>
                         <DialogContent>
-                            <DialogContentText id={"alert-dialog-description".concat("group"+row.id)}>
-                                Enter UserName to add them to group!
+                            <DialogContentText id={"alert-dialog-description".concat("group"+group.id)}>
+                                Enter Email or NickName to add them to group!
                             </DialogContentText>
                             <AddMemberForm formChange={formChange} addMemberForm={addMemberForm}/>
                         </DialogContent>
                         <DialogActions>
                             <Button
-                                onClick={handleAddMember}
+                                onClick={() => handleAddMember(group.id)}
                                 color="primary">
                                 Add
                             </Button>
@@ -163,9 +167,10 @@ function GroupItem(props) {
                         </DialogActions>
                     </Dialog>
                 </TableCell>
+                }
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: "rgb(223 223 223)" }} colSpan={3}>
                     <Collapse in={openMember} timeout="auto" unmountOnExit>
                         <Box margin={1}>
                             <Typography variant="h6" gutterBottom component="div">
@@ -180,22 +185,23 @@ function GroupItem(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.member.map((row) => (
-                                        <TableRow key={row.id}>
+                                    {group.member.map((user) => (
+                                        <TableRow key={user.id}>
                                             <TableCell component="th" scope="row">
-                                                {row.nickName}
+                                                {user.nickName}
                                             </TableCell>
-                                            <TableCell>{row.email}</TableCell>
+                                            <TableCell>{user.email}</TableCell>
+                                            {props.me.id == group.owner.id &&
                                             <TableCell align="right">
                                                 <Icon
                                                     className="cursor--pointer"
-                                                    aria-controls={"lead_mor_hoz_menu".concat(row.id)}
+                                                    aria-controls={"lead_mor_hoz_menu".concat(user.id)}
                                                     aria-haspopup="true"
                                                     onClick={handleOpenMenu}>
                                                     more_horiz
                                                 </Icon>
                                                 <Menu
-                                                    id={"lead_mor_hoz_menu".concat(row.id)}
+                                                    id={"lead_mor_hoz_menu".concat(user.id)}
                                                     anchorEl={anchorEl}
                                                     keepMounted
                                                     open={Boolean(anchorEl)}
@@ -209,29 +215,31 @@ function GroupItem(props) {
                                                 <Dialog
                                                     open={openDeleteDialog}
                                                     onClose={handleCloseDialog}
-                                                    aria-labelledby={"alert-dialog-title".concat(row.id)}
-                                                    aria-describedby={"alert-dialog-description".concat(row.id)}>
+                                                    aria-labelledby={"alert-dialog-title".concat(user.id)}
+                                                    aria-describedby={"alert-dialog-description".concat(user.id)}>
                                                     <DialogTitle
-                                                        id={"alert-dialog-title".concat(row.id)}>
+                                                        id={"alert-dialog-title".concat(user.id)}>
                                                         Delete Member?
                                                     </DialogTitle>
                                                     <DialogContent>
-                                                        <DialogContentText id={"alert-dialog-description".concat(row.id)}>
+                                                        <DialogContentText
+                                                            id={"alert-dialog-description".concat(user.id)}>
                                                             Are you sure to remove this user from your Group?
                                                         </DialogContentText>
                                                     </DialogContent>
                                                     <DialogActions>
                                                         <Button
-                                                            onClick={() => handleDeleteMember(row.id)}
+                                                            onClick={() => handleRemoveMember(group.id, user.id)}
                                                             color="primary">
-                                                            Delete
+                                                            Remove
                                                         </Button>
                                                         <Button onClick={handleCloseDialog} color="primary" autoFocus>
-                                                            Cancle
+                                                            Cancel
                                                         </Button>
                                                     </DialogActions>
                                                 </Dialog>
                                             </TableCell>
+                                            }
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -249,7 +257,7 @@ let MyGroupList = function (props) {
     const fetchGroup = props.fetchGroup;
     useEffect(() => {
         fetchGroup()
-    }, [data, fetchGroup])
+    }, [])
     return (
         <TableContainer component={Paper}>
             <Table aria-label="collapsible table">
@@ -261,8 +269,15 @@ let MyGroupList = function (props) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map((row) => (
-                        <GroupItem key={row.name} row={row} />
+                    {data.map((group) => (
+                        <GroupItem
+                            key={group.id}
+                            group={group}
+                            ownerId={group.owner.id}
+                            me={props.me}
+                            addMember={props.addMember}
+                            removeMember={props.removeMember}
+                        />
                     ))}
                 </TableBody>
             </Table>
@@ -272,13 +287,16 @@ let MyGroupList = function (props) {
 
 const mapStateToProps = state => {
     return {
-        data : state.People_Group.data
+        data : state.People_Group,
+        me : state.Common.user
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchGroup: () => dispatch(fetchAllGroup())
+        fetchGroup: () => dispatch(fetchAllGroup()),
+        addMember: (data) => dispatch(addMemberToGroup(data)),
+        removeMember: (groupId, userId) => dispatch(removeMemberFromGroup(groupId, userId)),
     }
 }
 

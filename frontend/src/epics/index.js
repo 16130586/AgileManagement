@@ -3,8 +3,8 @@ import WorkSpace_WorkOn from './work-space/your-work/work-on/index'
 import WorkSpace_Viewed from './work-space/your-work/viewed/index'
 import {fetchTotalAssignToMeEpic , fetchWorkOnEpic} from './work-space/your-work/assign-to-me/index'
 import {deleteProject , fetchProjects , createProject, searchProject} from './work-space/project'
-import {validateToken, login, signUp} from './global'
-import {fetchGroup}  from "./work-space/people/group/index";
+import {validateToken, login, signUp, fetchAboutMe} from './global'
+import {addMemberToGroup, createGroup, fetchGroup, removeMemberToGroup} from "./work-space/people/group/index";
 import {
     fetchWorkFlows,
     updateWorkFlows,
@@ -60,5 +60,9 @@ export default combineEpics(
     Project_Create_New_Issue,
     Project_Complete_Sprint,
     Project_Update_Issue_Detail,
-    deleteWorkFlow
+    deleteWorkFlow,
+    fetchAboutMe,
+    addMemberToGroup,
+    removeMemberToGroup,
+    createGroup
 );

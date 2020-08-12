@@ -42,6 +42,10 @@ export const ASYNC = {
         CREATE_NEW_ISSUE : 'full-filled.project.create-new-issue',
         ISSUE_UPDATE_DETAIL : 'full-filled.project.issue-update-detail',
         DELETE_WORKFLOW : 'full-filled.delete-workflow',
+        ABOUT_ME: 'full-filled.about-me',
+        GROUP_ADD_MEMBER: 'full-filled.group-add-member',
+        GROUP_REMOVE_MEMBER: 'full-filled.group-remove-member',
+        CREATE_GROUP: 'full-filled.create-group'
 
     },
     REQUEST: {
@@ -70,6 +74,10 @@ export const ASYNC = {
         CREATE_NEW_ISSUE : 'request.project.create-new-issue',
         ISSUE_UPDATE_DETAIL : 'request.project.issue-update-detail',
         DELETE_WORKFLOW : 'request.delete-workflow',
+        ABOUT_ME : 'request.about-me',
+        GROUP_ADD_MEMBER : 'request.group-add-member',
+        GROUP_REMOVE_MEMBER : 'request.group-remove-member',
+        CREATE_GROUP : 'request.create-group'
        
     }
    
