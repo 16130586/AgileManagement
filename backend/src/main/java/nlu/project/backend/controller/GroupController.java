@@ -5,25 +5,33 @@ import nlu.project.backend.entry.project.GroupParams;
 import nlu.project.backend.model.Group;
 import nlu.project.backend.model.UserGroup;
 import nlu.project.backend.model.response.ApiResponse;
+import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/group")
 @Secured("ROLE_USER")
-public class GroupController {
+public class GroupController extends BaseController {
 
     @Autowired
     GroupBusiness groupBusiness;
 
+    @GetMapping
+    public ApiResponse getAllGroup(HttpServletRequest request) {
+        CustomUserDetails user = (CustomUserDetails) getUser(request);
+        Object result = groupBusiness.getGroupsByUser(user.getUser());
+        return ApiResponse.OnSuccess(result, "Fetch groups success!");
+    }
+
     @PostMapping("/create")
-    public ApiResponse create(@RequestBody GroupParams groupParams) {
-        Group group = groupBusiness.createGroup(groupParams);
+    public ApiResponse create(HttpServletRequest request, @RequestBody GroupParams groupParams) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Group group = groupBusiness.createGroup(groupParams, userDetails.getUser());
         return ApiResponse.OnSuccess(group, "Create group success!");
     }
 
@@ -35,7 +43,7 @@ public class GroupController {
 
     @PostMapping("/remove")
     public ApiResponse removeUser(@RequestBody GroupParams groupParams) {
-        groupBusiness.removeUser(groupParams);
-        return ApiResponse.OnSuccess(null, "Remove user from group success!");
+        Object result = groupBusiness.removeUser(groupParams);
+        return ApiResponse.OnSuccess(result, "Remove user from group success!");
     }
 }

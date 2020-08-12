@@ -8,10 +8,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class GroupParams {
-    public int groupID;
-    public int ownerID;
-    public int removeID;
-    public int addID;
+    public int groupId;
+    public int ownerId;
+    public int removeId;
+    public int addId;
     public String name;
     public List<Integer> listUserID;
+    public String dataUser;
 }
