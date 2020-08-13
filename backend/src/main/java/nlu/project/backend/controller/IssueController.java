@@ -25,6 +25,12 @@ public class IssueController extends BaseController{
     @Autowired
     IssueBusiness issueBusiness;
 
+    @GetMapping("/{issueId}")
+    public ApiResponse fetchIssue(@PathVariable Integer issueId) {
+        Object result = issueBusiness.fetchIssue(issueId);
+        return ApiResponse.OnSuccess(result, "Fetch Issue Success!");
+    }
+
     @PostMapping("/create")
     public ApiResponse createIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
         Object result = issueBusiness.create(issueParams, getUser(request));
@@ -69,8 +75,8 @@ public class IssueController extends BaseController{
     }
 
     @PostMapping("/subTask/create")
-    public ApiResponse createSubTask(@RequestBody SubTaskParams params) {
-        Object result = issueBusiness.createSubTask(params);
+    public ApiResponse createSubTask(@RequestBody SubTaskParams params, HttpServletRequest request) {
+        Object result = issueBusiness.createSubTask(params, ((CustomUserDetails) getUser(request)).getUser());
         return ApiResponse.OnSuccess(result, "Create SubTask Success!");
     }
 
@@ -132,5 +138,11 @@ public class IssueController extends BaseController{
         if(result == null)
             return ApiResponse.OnBadRequest("Cannot move");
         return ApiResponse.OnSuccess(params , "move!");
+    }
+
+    @GetMapping("/priority")
+    public ApiResponse getPriority() {
+        Object result = issueBusiness.fetchPriorityList();
+        return ApiResponse.OnSuccess(result, "Fetch list priority success!");
     }
 }

@@ -1,6 +1,7 @@
 package nlu.project.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class BackLog {
     private Integer id;
     @OneToOne
     @JoinColumn(name = "project_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"owner","devTeam","currentWorkflow.items"})
     private Project project;
     @OneToMany(mappedBy = "backLog")
     private List<Issue> issues;

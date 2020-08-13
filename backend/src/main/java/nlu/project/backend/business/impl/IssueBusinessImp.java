@@ -19,6 +19,7 @@ import nlu.project.backend.entry.issue.MoveToParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
 import nlu.project.backend.repository.IssueTypeRepository;
+import nlu.project.backend.repository.PriorityRepository;
 import nlu.project.backend.repository.WorkFlowItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,6 +52,9 @@ public class IssueBusinessImp implements IssueBusiness {
 
     @Autowired
     WorkFlowItemRepository workFlowItemRepository;
+
+    @Autowired
+    PriorityRepository priorityRepository;
 
     @Override
     public Issue create(IssueParams issueParams, UserDetails userDetails) {
@@ -85,8 +89,8 @@ public class IssueBusinessImp implements IssueBusiness {
     }
 
     @Override
-    public SubTask createSubTask(SubTaskParams params) {
-        return subTaskDAO.create(params);
+    public SubTask createSubTask(SubTaskParams params, User user) {
+        return subTaskDAO.create(params, user);
     }
 
     @Override
@@ -197,11 +201,20 @@ public class IssueBusinessImp implements IssueBusiness {
     public Issue updateDetail(UpdateDetailParams issueParams, UserDetails user) {
         Issue iss = issueDAO.getOne(issueParams.issueId);
         if(iss == null) return null;
-        iss.setDescription(issueParams.description);
-        iss.setStoryPoint(issueParams.storyPoint);
+        if (issueParams.description != null)
+            iss.setDescription(issueParams.description);
+        if (issueParams.storyPoint != null)
+            iss.setStoryPoint(issueParams.storyPoint);
 
-        IssueType issueType = issueTypeRepository.getOne(issueParams.issueTypeId);
-        iss.setIssueType(issueType);
+        if (issueParams.issueTypeId != null) {
+            IssueType issueType = issueTypeRepository.getOne(issueParams.issueTypeId);
+            iss.setIssueType(issueType);
+        }
+
+        if (issueParams.priority != null) {
+            Priority priority = priorityRepository.getOne(issueParams.priority);
+            iss.setPriority(priority);
+        }
 
         User assignee= null;
         if(issueParams.assigneeEmail != null){
@@ -213,5 +226,15 @@ public class IssueBusinessImp implements IssueBusiness {
         }
         iss.setAssignment(assignee);
         return issueDAO.update(iss);
+    }
+
+    @Override
+    public Issue fetchIssue(Integer issueId) {
+        return issueDAO.getOne(issueId);
+    }
+
+    @Override
+    public List<Priority> fetchPriorityList() {
+        return priorityRepository.findAll();
     }
 }
