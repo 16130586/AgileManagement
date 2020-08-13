@@ -46,7 +46,11 @@ export const ASYNC = {
         GROUP_ADD_MEMBER: 'full-filled.group-add-member',
         GROUP_REMOVE_MEMBER: 'full-filled.group-remove-member',
         CREATE_GROUP: 'full-filled.create-group',
-        DELETE_GROUP: 'full-filled.delete-group'
+        DELETE_GROUP: 'full-filled.delete-group',
+        FETCH_ISSUE: 'full-filled.fetch-issue',
+        CREATE_SUBTASK: 'full-filled.create-subtask',
+        UPDATE_ISSUE_DESCRIPTION: 'full-filled.update-issue-description',
+        UPDATE_ISSUE_DETAILS: 'full-filled.update-issue-details'
 
     },
     REQUEST: {
@@ -79,8 +83,12 @@ export const ASYNC = {
         GROUP_ADD_MEMBER : 'request.group-add-member',
         GROUP_REMOVE_MEMBER : 'request.group-remove-member',
         CREATE_GROUP : 'request.create-group',
-        DELETE_GROUP : 'request.delete-group'
-       
+        DELETE_GROUP : 'request.delete-group',
+        FETCH_ISSUE : 'request.fetch-issue',
+        CREATE_SUBTASK: 'request.create-subtask',
+        UPDATE_ISSUE_DESCRIPTION: 'request.update-issue-description',
+        UPDATE_ISSUE_DETAILS : 'request.update-issue-details',
+
     }
    
 }

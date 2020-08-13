@@ -37,6 +37,10 @@ export const BACKEND_API = {
         GROUP_ADD_MEMBER: '/group/add',
         GROUP_REMOVE_MEMBER: '/group/remove',
         CREATE_GROUP : '/group/create',
-        DELETE_GROUP : '/group/delete'
+        DELETE_GROUP : '/group/delete',
+        FETCH_ISSUE: '/issue/{issueId}',
+        FETCH_PRIORITY : '/issue/priority',
+        CREATE_SUBTASK: '/issue/subTask/create',
+        FETCH_SUBTASK: '/issue/subTask/getByIssue'
     }
 }

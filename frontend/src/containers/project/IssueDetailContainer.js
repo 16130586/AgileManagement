@@ -1,0 +1,48 @@
+import React , {useEffect} from 'react'
+import { connect } from 'react-redux'
+import {createSubTask, fetchIssue, updateIssueDescription, updateIssueDetails} from "../../actions/project";
+import IssueDetailComponent from "../../components/project/issue/IssueDetailComponent";
+
+const IssueDetailContainer = function(props){
+    const fetchIssue = props.fetchIssueById
+    const projectId = 1;
+    const issueId = 3;
+    useEffect(() => {
+        fetchIssue(projectId,issueId)
+    }, [])
+
+    return(
+        <IssueDetailComponent
+            issue={props.issue}
+            issueTypes={props.issueTypes}
+            devTeam={props.devTeam}
+            priority={props.priority}
+            project={props.project}
+            workFlow={props.workFlow}
+            createSubTask={props.createSubTask}
+            subTasks={props.subTasks}
+            updateIssueDescription={props.updateIssueDescription}
+            updateIssue={props.updateIssue}
+        />
+    )
+}
+const mapStateToProps = state => {
+    return {
+        issue: state.IssueReducer.issue,
+        issueTypes: state.IssueReducer.issueTypes,
+        devTeam: state.IssueReducer.devTeam,
+        priority: state.IssueReducer.priority,
+        project: state.IssueReducer.project,
+        workFlow: state.IssueReducer.workFlow,
+        subTasks: state.IssueReducer.subTasks
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchIssueById: (projectId, issueId) => dispatch(fetchIssue(projectId, issueId)),
+        createSubTask: (data) => dispatch(createSubTask(data)),
+        updateIssueDescription: (data) => dispatch(updateIssueDescription(data)),
+        updateIssue: (data) => dispatch(updateIssueDetails(data))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(IssueDetailContainer)

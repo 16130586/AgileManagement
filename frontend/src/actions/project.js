@@ -76,3 +76,16 @@ export const fullFilledRequestUpdateDetailIssue = (issue) => ({ type: AsyncEvent
 
 export const deleteWorkFlow = (workFlowId) => ({type: AsyncEventTypes.REQUEST.DELETE_WORKFLOW, payload: workFlowId})
 export const fullFilledDeleteWorkFlow = (workFlowId) => ({type: AsyncEventTypes.FULL_FILLED.DELETE_WORKFLOW, payload: workFlowId})
+
+export const fetchIssue = (projectId, issueId) => ({type: AsyncEventTypes.REQUEST.FETCH_ISSUE, payload: {issueId: issueId, projectId: projectId}})
+export const fullFilledFetchIssue = (data) => ({type: AsyncEventTypes.FULL_FILLED.FETCH_ISSUE, payload: data})
+
+export const createSubTask = (data) => ({type: AsyncEventTypes.REQUEST.CREATE_SUBTASK, payload: data})
+export const fullFilledCreateSubtask = (data) => ({type: AsyncEventTypes.FULL_FILLED.CREATE_SUBTASK, payload: data})
+
+export const updateIssueDescription = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_ISSUE_DESCRIPTION, payload: data})
+export const fullFilledUpdateIssueDescription = (data) => ({type: AsyncEventTypes.FULL_FILLED.UPDATE_ISSUE_DESCRIPTION, payload: data})
+
+export const updateIssueDetails = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_ISSUE_DETAILS, payload: data})
+
+

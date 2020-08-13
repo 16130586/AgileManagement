@@ -8,6 +8,7 @@ import Backlog from './project/Backlog'
 import Board from './project/Board'
 import WorkFlow from "./project/WorkFlow";
 import Settings from './project/Settings'
+import IssueDetail from "./project/IssueDetailContainer";
 import {connect} from "react-redux";
 import {fetchAboutMe} from "../actions/global";
 let WorkplaceContainer = function (props) {
@@ -35,6 +36,7 @@ let WorkplaceContainer = function (props) {
                 <Route path="/project/:projectId/boards" component={Board} />
                 <Route path="/project/:projectId/workflow" component={WorkFlow} />
                 <Route path="/project/:projectId/settings/details" component={Settings} />
+                <Route path="/project/1/issue/3" component={IssueDetail}/>
                 <Route exact path="/">
                     <div>Welcome</div>
                 </Route>

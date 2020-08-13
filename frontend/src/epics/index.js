@@ -33,7 +33,8 @@ import {fetchBacklogPage as Project_Backlog_Page,
         createNewIssue as Project_Create_New_Issue,
         completeSprint as Project_Complete_Sprint,
         updateDetailIssue as Project_Update_Issue_Detail,
-} from "./project/backlog" 
+} from "./project/backlog"
+import {createSubTask, fetchIssue, updateDescription, updateIssue} from "./project/issue-epic";
 export default combineEpics(
     login,
     signUp,
@@ -71,5 +72,9 @@ export default combineEpics(
     addMemberToGroup,
     removeMemberToGroup,
     createGroup,
-    deleteGroup
+    deleteGroup,
+    fetchIssue,
+    createSubTask,
+    updateDescription,
+    updateIssue
 );
