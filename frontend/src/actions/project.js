@@ -76,3 +76,12 @@ export const fullFilledRequestUpdateDetailIssue = (issue) => ({ type: AsyncEvent
 
 export const deleteWorkFlow = (workFlowId) => ({type: AsyncEventTypes.REQUEST.DELETE_WORKFLOW, payload: workFlowId})
 export const fullFilledDeleteWorkFlow = (workFlowId) => ({type: AsyncEventTypes.FULL_FILLED.DELETE_WORKFLOW, payload: workFlowId})
+
+
+export const fetchBoardPage = (projectId) => ({ type: AsyncEventTypes.REQUEST.BOARD_PAGE, payload: projectId })
+export const fullFilledBoardPage = (data) => ({ type: AsyncEventTypes.FULL_FILLED.BOARD_PAGE, payload: data })
+
+
+
+export const requestDADIssue = (data) => ({ type: AsyncEventTypes.REQUEST.DADIssue, payload: data })
+export const fullFilledRequestDADIssue = (data) => ({ type: AsyncEventTypes.FULL_FILLED.DADIssue, payload: data })

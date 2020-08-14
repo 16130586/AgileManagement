@@ -9,6 +9,7 @@ export const ASYNC = {
         ALL_GROUP:'load-more.all-group',
         ALL_WORKFLOW : 'load-more.all-workflow',
         BACKLOG_PAGE: 'load-more.project.backlog-items',
+        
     },
     FULL_FILLED: {
         TOTAL_ASSIGN_TO_ME : 'full-filled.total-assign-to-me',
@@ -46,7 +47,9 @@ export const ASYNC = {
         GROUP_ADD_MEMBER: 'full-filled.group-add-member',
         GROUP_REMOVE_MEMBER: 'full-filled.group-remove-member',
         CREATE_GROUP: 'full-filled.create-group',
-        DELETE_GROUP: 'full-filled.delete-group'
+        DELETE_GROUP: 'full-filled.delete-group',
+        BOARD_PAGE : 'full-filled.board-page',
+        DADIssue : 'full-filled.project.board-drag-and-drop-issue',
 
     },
     REQUEST: {
@@ -79,7 +82,9 @@ export const ASYNC = {
         GROUP_ADD_MEMBER : 'request.group-add-member',
         GROUP_REMOVE_MEMBER : 'request.group-remove-member',
         CREATE_GROUP : 'request.create-group',
-        DELETE_GROUP : 'request.delete-group'
+        DELETE_GROUP : 'request.delete-group',
+        BOARD_PAGE : 'request.project.board-page',
+        DADIssue : 'request.project.board-drag-and-drop-issue',
        
     }
    

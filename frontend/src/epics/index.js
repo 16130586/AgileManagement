@@ -34,6 +34,11 @@ import {fetchBacklogPage as Project_Backlog_Page,
         completeSprint as Project_Complete_Sprint,
         updateDetailIssue as Project_Update_Issue_Detail,
 } from "./project/backlog" 
+
+import {
+    fetchBoardPage as Project_Board_Page,
+    DADIssue as Project_Board_DAD_Issue,
+} from "./project/board" 
 export default combineEpics(
     login,
     signUp,
@@ -71,5 +76,7 @@ export default combineEpics(
     addMemberToGroup,
     removeMemberToGroup,
     createGroup,
-    deleteGroup
+    deleteGroup,
+    Project_Board_Page,
+    Project_Board_DAD_Issue,
 );

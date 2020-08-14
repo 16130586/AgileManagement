@@ -676,10 +676,14 @@ code {
 
 .my-btn:hover{
   background: rgba(9, 30, 66, 0.08) none repeat scroll 0% 0%;
+  cursor: pointer;
 }
 .w-100 {
   width: 100%
 }
 .w-50 {
   width: 50%
+}
+.bg--white{
+  background : white
 }

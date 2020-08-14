@@ -235,7 +235,6 @@ let IssueItem = function (props) {
 }
 
 let CreateNewBacklogItem = function (props) {
-    console.log(props)
     const self = createRef()
     const [isOpenCreateInput, setIsOpenCreateInput] = useState(false)
 
@@ -590,7 +589,7 @@ let SprintComponent = function (props) {
                                     style={{
                                         marginRight: "1rem"
                                     }}>Start sprint
-                            </Button>
+                                </Button>
                             }
 
                             {data.status == 1 &&
@@ -890,7 +889,6 @@ let SprintComponent = function (props) {
 }
 
 let DetailIssueEdit = function (props) {
-    console.log(props)
     const projectId = props.projectId
     const closeIssueDetail = props.closeIssueDetail
     const [updateDetailState, setUpdateDetailState] = useState(null)
@@ -950,7 +948,7 @@ let DetailIssueEdit = function (props) {
                     <div>
                         <Button variant="contained" color="default" size={'small'}>
                             <AccountTreeIcon fontSize="small" color='inherit' ></AccountTreeIcon>
-                        </Button> 
+                        </Button>
                     </div>
                     <FormControl className="mt-3">
                         <InputLabel shrink id="label-description">
@@ -1186,7 +1184,6 @@ let BacklogComponent = function (props) {
 }
 
 let BacklogSpaceComponent = function (props) {
-    console.log(props)
     const projectId = parseInt(props.projectId)
     const anySprintStarted = []
     const [isIssueDetailOpen, setIsIssueDetailOpen] = useState(false)
@@ -1204,7 +1201,6 @@ let BacklogSpaceComponent = function (props) {
     }
 
     const openIssueDetail = (data) => {
-        console.log(data)
         setIsIssueDetailOpen(true)
         setIssueSelected({
             issueId: data.id,

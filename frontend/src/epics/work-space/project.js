@@ -128,7 +128,6 @@ export const deleteProject = action$ =>
                     catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
         }),
         map(response => {
-            console.log(response)
             if (response.data.isDelete == 'true')
                 return fullFilledDeleteProject(response.data.projectId)
             return madeRequestFail(ajax.response.data)
