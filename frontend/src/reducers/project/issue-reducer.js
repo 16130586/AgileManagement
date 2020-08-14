@@ -38,8 +38,6 @@ const IssueReducer = (state = init, action) => {
         default:
             break;
     }
-    console.log("next issue")
-    console.log(nextState)
     return nextState;
 }
 

@@ -23,6 +23,7 @@ const IssueDetailContainer = function(props){
             subTasks={props.subTasks}
             updateIssueDescription={props.updateIssueDescription}
             updateIssue={props.updateIssue}
+            me={props.me}
         />
     )
 }
@@ -34,7 +35,8 @@ const mapStateToProps = state => {
         priority: state.IssueReducer.priority,
         project: state.IssueReducer.project,
         workFlow: state.IssueReducer.workFlow,
-        subTasks: state.IssueReducer.subTasks
+        subTasks: state.IssueReducer.subTasks,
+        me: state.Common.user
     }
 }
 const mapDispatchToProps = dispatch => {
