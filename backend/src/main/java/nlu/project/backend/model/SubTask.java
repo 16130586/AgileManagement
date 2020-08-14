@@ -1,5 +1,6 @@
 package nlu.project.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,10 +18,13 @@ public class SubTask {
     private Integer id;
     @ManyToOne
     @JoinColumn(name = "issue_id")
+    @JsonIgnore
     private Issue issue;
     @ManyToOne
     @JoinColumn(name = "assignment")
     private User assignment;
+    @Column(name = "code")
+    private String code;
     @Column(name = "name")
     private String name;
     @Column(name = "estimate_time")

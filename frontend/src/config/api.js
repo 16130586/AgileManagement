@@ -40,5 +40,9 @@ export const BACKEND_API = {
         DELETE_GROUP : '/group/delete',
         CURRENT_SPRINT: '/project/{projectId}/currentSprint',
         DAD_ISSUE : '/issue/dad',
+        FETCH_ISSUE: '/issue/{issueId}',
+        FETCH_PRIORITY : '/issue/priority',
+        CREATE_SUBTASK: '/issue/subTask/create',
+        FETCH_SUBTASK: '/issue/subTask/getByIssue',
     }
 }

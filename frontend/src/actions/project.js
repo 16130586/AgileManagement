@@ -81,7 +81,17 @@ export const fullFilledDeleteWorkFlow = (workFlowId) => ({type: AsyncEventTypes.
 export const fetchBoardPage = (projectId) => ({ type: AsyncEventTypes.REQUEST.BOARD_PAGE, payload: projectId })
 export const fullFilledBoardPage = (data) => ({ type: AsyncEventTypes.FULL_FILLED.BOARD_PAGE, payload: data })
 
-
-
 export const requestDADIssue = (data) => ({ type: AsyncEventTypes.REQUEST.DADIssue, payload: data })
 export const fullFilledRequestDADIssue = (data) => ({ type: AsyncEventTypes.FULL_FILLED.DADIssue, payload: data })
+
+export const fetchIssue = (projectId, issueId) => ({type: AsyncEventTypes.REQUEST.FETCH_ISSUE, payload: {issueId: issueId, projectId: projectId}})
+export const fullFilledFetchIssue = (data) => ({type: AsyncEventTypes.FULL_FILLED.FETCH_ISSUE, payload: data})
+
+export const createSubTask = (data) => ({type: AsyncEventTypes.REQUEST.CREATE_SUBTASK, payload: data})
+export const fullFilledCreateSubtask = (data) => ({type: AsyncEventTypes.FULL_FILLED.CREATE_SUBTASK, payload: data})
+
+export const updateIssueDescription = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_ISSUE_DESCRIPTION, payload: data})
+export const fullFilledUpdateIssueDescription = (data) => ({type: AsyncEventTypes.FULL_FILLED.UPDATE_ISSUE_DESCRIPTION, payload: data})
+
+export const updateIssueDetails = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_ISSUE_DETAILS, payload: data})
+

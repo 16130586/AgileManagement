@@ -7,4 +7,5 @@ public class UpdateDetailParams {
     public Integer storyPoint;
     public String assigneeEmail;
     public Integer workflowStatus;
+    public Integer priority;
 }

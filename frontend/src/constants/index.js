@@ -50,6 +50,10 @@ export const ASYNC = {
         DELETE_GROUP: 'full-filled.delete-group',
         BOARD_PAGE : 'full-filled.board-page',
         DADIssue : 'full-filled.project.board-drag-and-drop-issue',
+        FETCH_ISSUE: 'full-filled.fetch-issue',
+        CREATE_SUBTASK: 'full-filled.create-subtask',
+        UPDATE_ISSUE_DESCRIPTION: 'full-filled.update-issue-description',
+        UPDATE_ISSUE_DETAILS: 'full-filled.update-issue-details'
 
     },
     REQUEST: {
@@ -85,9 +89,11 @@ export const ASYNC = {
         DELETE_GROUP : 'request.delete-group',
         BOARD_PAGE : 'request.project.board-page',
         DADIssue : 'request.project.board-drag-and-drop-issue',
-       
+        FETCH_ISSUE : 'request.fetch-issue',
+        CREATE_SUBTASK: 'request.create-subtask',
+        UPDATE_ISSUE_DESCRIPTION: 'request.update-issue-description',
+        UPDATE_ISSUE_DETAILS : 'request.update-issue-details',
     }
-   
 }
 export const Router = {
     REDIRECT : "redirect-to",

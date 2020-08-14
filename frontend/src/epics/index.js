@@ -1,9 +1,9 @@
 import { combineEpics } from 'redux-observable'
 import WorkSpace_WorkOn from './work-space/your-work/work-on/index'
 import WorkSpace_Viewed from './work-space/your-work/viewed/index'
-import {fetchTotalAssignToMeEpic , fetchWorkOnEpic} from './work-space/your-work/assign-to-me/index'
-import {deleteProject , fetchProjects , createProject, searchProject} from './work-space/project'
-import {validateToken, login, signUp, fetchAboutMe} from './global'
+import { fetchTotalAssignToMeEpic, fetchWorkOnEpic } from './work-space/your-work/assign-to-me/index'
+import { deleteProject, fetchProjects, createProject, searchProject } from './work-space/project'
+import { validateToken, login, signUp, fetchAboutMe } from './global'
 import {
     addMemberToGroup,
     createGroup,
@@ -19,26 +19,27 @@ import {
     addWorkFlowLink, deleteWorkFlow
 } from "./work-space/project/workflow-epic";
 
-import {fetchBacklogPage as Project_Backlog_Page,
-        topOfBacklog as Project_Top_Of_Backlog,
-        bottomOfBacklog as Project_Bottom_Of_Backlog,
-        deleteSprint as Project_Delete_Sprint,
-        moveUp as Project_Move_Up_Sprint,
-        moveDown as Project_Move_Down_Sprint,
-        createSprint as Project_Create_Sprint,
-        editSprint as Project_Edit_Sprint,
-        startSprint as Project_Start_Sprint,
-        deleteIssue as Project_Delete_Issue,
-        moveIssueToSprint as Project_Move_Issue,
-        createNewIssue as Project_Create_New_Issue,
-        completeSprint as Project_Complete_Sprint,
-        updateDetailIssue as Project_Update_Issue_Detail,
-} from "./project/backlog" 
-
+import {
+    fetchBacklogPage as Project_Backlog_Page,
+    topOfBacklog as Project_Top_Of_Backlog,
+    bottomOfBacklog as Project_Bottom_Of_Backlog,
+    deleteSprint as Project_Delete_Sprint,
+    moveUp as Project_Move_Up_Sprint,
+    moveDown as Project_Move_Down_Sprint,
+    createSprint as Project_Create_Sprint,
+    editSprint as Project_Edit_Sprint,
+    startSprint as Project_Start_Sprint,
+    deleteIssue as Project_Delete_Issue,
+    moveIssueToSprint as Project_Move_Issue,
+    createNewIssue as Project_Create_New_Issue,
+    completeSprint as Project_Complete_Sprint,
+    updateDetailIssue as Project_Update_Issue_Detail,
+} from "./project/backlog"
 import {
     fetchBoardPage as Project_Board_Page,
     DADIssue as Project_Board_DAD_Issue,
-} from "./project/board" 
+} from "./project/board"
+import { createSubTask, fetchIssue, updateDescription, updateIssue } from "./project/issue-epic";
 export default combineEpics(
     login,
     signUp,
@@ -79,4 +80,8 @@ export default combineEpics(
     deleteGroup,
     Project_Board_Page,
     Project_Board_DAD_Issue,
+    fetchIssue,
+    createSubTask,
+    updateDescription,
+    updateIssue,
 );

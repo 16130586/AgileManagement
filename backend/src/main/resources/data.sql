@@ -2,7 +2,7 @@ INSERT INTO jira.`user` VALUES (1,'https://encrypted-tbn0.gstatic.com/images?q=t
 INSERT INTO jira.`project` VALUES (1,'NCL-W',0,'Nuclear','http://localhost:8081/storage/xlenehrdliyubycvzbimmlhdyogetddffazlxtvscqzuhemcaa_1597074389893.jpg','Nuclear',1,1,NULL,1,1);
 INSERT INTO jira.`project_dev_team` VALUES (1,1);
 INSERT INTO jira.`role` VALUES (1,'Product Owner'),(2,'Team Lead'),(3,'Team Member'),(4,'Architecture Owner'),(5,'Stakeholder');
-INSERT INTO jira.`user_role` VALUES (1,1,1,1),(2,1,1,3);
+INSERT INTO jira.`user_role` VALUES (1,1,1,1),(2,1,3,2);
 INSERT INTO jira.`backlog` VALUES (1,NULL,1);
 INSERT INTO jira.`sprint` VALUES (1,'2020-08-11 00:00:00',NULL,NULL,'Sprint 1',0,'2020-08-18 00:00:00',1,1),(2,NULL,NULL,NULL,'Sprint 2',1,NULL,0,1),(3,NULL,NULL,NULL,'Sprint 3',2,NULL,-1,1),(4,NULL,NULL,NULL,'Sprint 4',3,NULL,-1,1),(5,NULL,NULL,NULL,'Sprint 5',4,NULL,-1,1),(6,NULL,NULL,NULL,'Sprint 6',5,NULL,-1,1),(7,NULL,NULL,NULL,'Sprint 7',6,NULL,-1,1);
 INSERT INTO jira.`issue_type` VALUES (1,'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQZWHrMjDcbpaMaFGL4CXJuM8tqxcBtYFEu1A&usqp=CAU','Task',NULL),(2,'https://cdn.icon-icons.com/icons2/1808/PNG/512/bug_115148.png','Bug',NULL);

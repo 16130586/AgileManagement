@@ -28,6 +28,12 @@ public class IssueController extends BaseController{
     @Autowired
     IssueBusiness issueBusiness;
 
+    @GetMapping("/{issueId}")
+    public ApiResponse fetchIssue(@PathVariable Integer issueId) {
+        Object result = issueBusiness.fetchIssue(issueId);
+        return ApiResponse.OnSuccess(result, "Fetch Issue Success!");
+    }
+
     @PostMapping("/create")
     public ApiResponse createIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
         Object result = issueBusiness.create(issueParams, getUser(request));
@@ -72,8 +78,8 @@ public class IssueController extends BaseController{
     }
 
     @PostMapping("/subTask/create")
-    public ApiResponse createSubTask(@RequestBody SubTaskParams params) {
-        Object result = issueBusiness.createSubTask(params);
+    public ApiResponse createSubTask(@RequestBody SubTaskParams params, HttpServletRequest request) {
+        Object result = issueBusiness.createSubTask(params, ((CustomUserDetails) getUser(request)).getUser());
         return ApiResponse.OnSuccess(result, "Create SubTask Success!");
     }
 
@@ -138,24 +144,29 @@ public class IssueController extends BaseController{
     }
     @PostMapping("/dad")
     public ApiResponse dragAndDrop(HttpServletRequest request,
-                                                @RequestBody DragAndDrop params){
+                                                @RequestBody DragAndDrop params) {
 
-        if("unassigned".equals(params.fromAssignee))
+        if ("unassigned".equals(params.fromAssignee))
             params.fromAssignee = null;
-        if("unassigned".equals(params.toAssignee))
+        if ("unassigned".equals(params.toAssignee))
             params.toAssignee = null;
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
-        Issue result = issueBusiness.dragAndDrop(params , userDetails);
-        Map<String , Object> jsonObject = new HashMap<>();
+        Issue result = issueBusiness.dragAndDrop(params, userDetails);
+        Map<String, Object> jsonObject = new HashMap<>();
 
-        jsonObject.put("data" , result);
-        jsonObject.put("id" , params.id);
-        jsonObject.put("fromStatus" , params.fromStatusId);
-        jsonObject.put("toStatusId" , params.toStatusId);
-        jsonObject.put("fromAssignee" , params.fromAssignee);
-        jsonObject.put("toAssignee" , params.toAssignee);
-        if(result == null)
+        jsonObject.put("data", result);
+        jsonObject.put("id", params.id);
+        jsonObject.put("fromStatus", params.fromStatusId);
+        jsonObject.put("toStatusId", params.toStatusId);
+        jsonObject.put("fromAssignee", params.fromAssignee);
+        jsonObject.put("toAssignee", params.toAssignee);
+        if (result == null)
             return ApiResponse.OnBadRequest("Cannot done");
-        return ApiResponse.OnSuccess(jsonObject , "done");
+        return ApiResponse.OnSuccess(jsonObject, "done");
+    }
+    @GetMapping("/priority")
+    public ApiResponse getPriority() {
+        Object result = issueBusiness.fetchPriorityList();
+        return ApiResponse.OnSuccess(result, "Fetch list priority success!");
     }
 }
