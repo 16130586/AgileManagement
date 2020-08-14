@@ -95,3 +95,5 @@ export const fullFilledUpdateIssueDescription = (data) => ({type: AsyncEventType
 
 export const updateIssueDetails = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_ISSUE_DETAILS, payload: data})
 
+export const requestBoardFilterIssue = (filter) => ({type: AsyncEventTypes.REQUEST.BOARD_FILTER_ISSUE, payload: filter})
+export const fullFilledRequestBoardFilterIssue = (data) => ({type: AsyncEventTypes.FULL_FILLED.BOARD_FILTER_ISSUE, payload: data})

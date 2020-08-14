@@ -44,5 +44,6 @@ export const BACKEND_API = {
         FETCH_PRIORITY : '/issue/priority',
         CREATE_SUBTASK: '/issue/subTask/create',
         FETCH_SUBTASK: '/issue/subTask/getByIssue',
+        FILTER_ISSUE_IN_SPRINT: '/sprint/searchIssueInSprintIssue',
     }
 }

@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { pageContextualNavigation } from '../../actions/global'
 import {
-    fetchBoardPage, requestDADIssue
+    fetchBoardPage, requestDADIssue,
+    requestBoardFilterIssue,
 }
     from '../../actions/project'
 
@@ -34,6 +35,8 @@ const Board = function (props) {
                 sprint={props.sprint}
                 onDropIssueBox={props.onDropIssueBox}
                 navigateTo={props.navigateTo}
+                filterIssue={props.filterIssue}
+                onFilterResult={props.onFilterResult}
             ></BoardSpaceComponent>
         </DndProvider>
 
@@ -48,6 +51,7 @@ const mapStateToProps = state => {
         isLoadBoardPage: state.Project_Board.isLoadBoardPage,
         devTeam: state.Project_Board.devTeam,
         sprint: state.Project_Board.sprint,
+        onFilterResult : state.Project_Board.onFilter
     }
 }
 const mapDispatchToProps = dispatch => {
@@ -56,6 +60,7 @@ const mapDispatchToProps = dispatch => {
         getNavigation: (pageName, data) => dispatch(pageContextualNavigation(pageName, data)),
         fetchBoardPage: (projectId) => dispatch(fetchBoardPage(projectId)),
         onDropIssueBox: (data) => dispatch(requestDADIssue(data)),
+        filterIssue : (filter) => dispatch(requestBoardFilterIssue(filter)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Board)

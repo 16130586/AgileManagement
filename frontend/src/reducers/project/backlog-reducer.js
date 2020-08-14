@@ -261,6 +261,7 @@ const Backlog = (state = init, action) => {
             // (function () {
             //     let spr
             // })()
+            console.log(action.payload)
             let data = action.payload
             let sprintId = data.sprint != null ? data.sprint.id : -1
             let issueId = data.id

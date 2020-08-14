@@ -38,6 +38,7 @@ import {
 import {
     fetchBoardPage as Project_Board_Page,
     DADIssue as Project_Board_DAD_Issue,
+    seachIssues as Project_Board_Filter_Issue,
 } from "./project/board"
 import { createSubTask, fetchIssue, updateDescription, updateIssue } from "./project/issue-epic";
 export default combineEpics(
@@ -84,4 +85,5 @@ export default combineEpics(
     createSubTask,
     updateDescription,
     updateIssue,
+    Project_Board_Filter_Issue,
 );

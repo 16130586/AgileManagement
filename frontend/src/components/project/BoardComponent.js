@@ -8,8 +8,17 @@ import MuiAccordionSummary from "@material-ui/core/AccordionSummary"
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import Button from '@material-ui/core/Button'
+import Select from '@material-ui/core/Select'
+import { fade, makeStyles } from '@material-ui/core/styles'
+import InputBase from '@material-ui/core/InputBase'
+import SearchIcon from '@material-ui/icons/Search'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import Tooltip from '@material-ui/core/Tooltip'
+import TimerIcon from '@material-ui/icons/Timer'
 import { useDrag, useDrop } from 'react-dnd'
 
+import * as moment from 'moment'
 let IssueBox = function (props) {
     let description = props.data.description
     let issueType = props.data.issueType
@@ -252,7 +261,135 @@ let UserIssueWorkSpace = function (props) {
         </Fragment>
     )
 }
+
+const useStyles = makeStyles((theme) => ({
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(0),
+            width: 'auto',
+        },
+    },
+    inputRoot: {
+        color: 'inherit',
+    },
+    root: {
+        flexGrow: 2,
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        width: '100%',
+        border: '#cad8de solid 1px',
+        borderRadius: "5px",
+
+    },
+    button: {
+        marginLeft: "1.4rem",
+        marginBottom: ".4rem"
+    }
+}))
+
+let SearchForm = function (props) {
+    const classes = useStyles()
+    let nameInputRef = React.createRef()
+    const [formState, setFormState] = useState({
+        name: '',
+        issueTypeId: ''
+    })
+    useEffect(() => {
+        if (props.issueTypes != null && props.issueTypes.length > 0)
+            setFormState({ ...formState, issueTypeId: props.issueTypes[0].id })
+    }, [props.issueTypes])
+
+    let handleKeyPress = (event) => {
+        let ENTER_KEY = 13
+        if (event.charCode == ENTER_KEY) {
+            handleSearch()
+        }
+    }
+    let handleSearch = () => {
+        const data = {
+            ...formState,
+            sprintId: props.sprintId,
+            name: formState.name == null ? '' : formState.name
+        }
+        if (props.submit)
+            props.submit(data);
+    }
+    const handleChange = (event) => {
+        const name = event.target.name
+        const value = event.target.value
+        const nextState = {
+            ...formState
+        }
+        nextState[name] = value
+        setFormState(nextState)
+    }
+    return (
+        <div
+            className={classes.search.concat(' ').concat(props.className)}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <div className={classes.searchIcon}>
+                    <SearchIcon />
+                </div>
+                <InputBase
+                    inputRef={nameInputRef}
+                    name='name'
+                    value={formState.name}
+                    onKeyPress={handleKeyPress}
+                    onChange={event => handleChange(event)}
+                    placeholder="......."
+                    classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                    }}
+                    inputProps={{ 'aria-label': 'search' }}
+                />
+                {props.issueTypes && props.issueTypes.length > 0 &&
+                    <Select
+                        name="issueTypeId"
+                        className="ml-2"
+                        value={formState.issueTypeId}
+                        onChange={(event) => handleChange(event)}
+                    >
+                        {props.issueTypes.map(item =>
+                            <MenuItem
+                                value={item.id}>
+                                {item.name}
+                            </MenuItem>)
+                        }
+                    </Select>}
+
+                <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSearch}>
+                    Search
+                </Button>
+            </div>
+        </div>
+    )
+}
 let BoardSpaceComponent = function (props) {
+    console.log(props)
     let issueArgtor = {
         unassigned: []
     }
@@ -270,10 +407,59 @@ let BoardSpaceComponent = function (props) {
                 issueArgtor['unassigned'].push(iss)
         })
     }
+    let [duration, setDuration] = useState({
+        from: null,
+        to: null,
+        left: 0
+    })
+    useEffect(() => {
+        if (props.sprint != null) {
+            let start = moment(props.sprint.dateBegin, 'YYYY-MM-DD')
+            let end = moment(props.sprint.planDateEnd, 'YYYY-MM-DD')
+            setDuration({
+                from: start.format('MM/DD/YYYY'),
+                to: end.format('MM/DD/YYYY'),
+                left: moment.duration(end.diff(start)).days()
+            })
+        }
+    }, [props.sprint])
 
     return (
         <div className="pd-2">
             <MyBreadCrumbs project={props.project} />
+            {
+                props.sprint != null &&
+                <div style={{ display: "flex", alignItems: "center" }}>
+                    <SearchForm
+                        className="mt-1"
+                        sprintId={props.sprint.id}
+                        issueTypes={props.issueTypes}
+                        submit={props.filterIssue}
+                    />
+                    <div style={{
+                        display: "flex",
+                        marginLeft: "auto",
+                        alignItems: "center",
+                        justifyItems: "center"
+                    }}>
+                        <Tooltip title={'From: '.concat(duration.from).concat(' - To: '.concat(duration.to))}>
+                            <TimerIcon></TimerIcon>
+                        </Tooltip>
+                        <span className="ml-1" >{duration.left}
+                            {duration.left > 1 ? " days remain" : " day remain"}
+                        </span>
+                        <Button
+                            color="default"
+                            variant="contained"
+                            className="ml-2"
+                            onClick={() => props.navigateTo(`/project/${props.projectId}/backlog`)}
+                        >
+                            More
+                        </Button>
+                    </div>
+                </div>
+            }
+
             {
                 props.workflow && props.workflow.items &&
                 <div className="mt-3">
@@ -305,7 +491,7 @@ let BoardSpaceComponent = function (props) {
                 />)
             }
             {
-                (props.sprint == null || props.sprint.issues.length == 0) &&
+                (!props.onFilterResult && (props.sprint == null || props.sprint.issues.length == 0)) &&
                 <div className="mt-5" style={{ width: "100%", textAlign: "center" }}>
                     <Typography>Board will ready while you're starting sprint and working with sprint backlog </Typography>
                     <Button

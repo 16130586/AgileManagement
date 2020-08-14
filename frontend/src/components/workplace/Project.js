@@ -13,10 +13,10 @@ import Icon from '@material-ui/core/Icon'
 import TextField from '@material-ui/core/TextField'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
-import SearchIcon from '@material-ui/icons/Search';
-import { fade, makeStyles } from '@material-ui/core/styles';
-import InputBase from '@material-ui/core/InputBase';
-import Select from '@material-ui/core/Select';
+import SearchIcon from '@material-ui/icons/Search'
+import { fade, makeStyles } from '@material-ui/core/styles'
+import InputBase from '@material-ui/core/InputBase'
+import Select from '@material-ui/core/Select'
 
 const useStyles = makeStyles((theme) => ({
     searchIcon: {

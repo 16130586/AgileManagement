@@ -8,7 +8,8 @@ import { madeRequestFail } from '../../actions/global'
 import { getToken } from '../../common/localStorage'
 import {
     fullFilledBoardPage,
-    fullFilledRequestDADIssue
+    fullFilledRequestDADIssue,
+    fullFilledRequestBoardFilterIssue,
 } from '../../actions/project'
 
 export const fetchBoardPage = action$ =>
@@ -150,6 +151,46 @@ export const DADIssue = action$ =>
                 return madeRequestFail('No response from server!')
             else if (ajax.status > 0 && ajax.response.status < 400) {
                 return fullFilledRequestDADIssue(ajax.response.data)
+            }
+            else
+                return madeRequestFail(ajax.response.data)
+        })
+    );
+
+
+export const seachIssues = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.BOARD_FILTER_ISSUE),
+        mergeMap(action => {
+            const searchIssuesUrl = BACKEND_API.BASE_URL
+                .concat(BACKEND_API.ACTIONS.FILTER_ISSUE_IN_SPRINT)
+
+            const searchIssuesSettings = {
+                url: searchIssuesUrl,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: {
+                    sprintId: action.payload.sprintId,
+                    name : action.payload.name,
+                    issueTypeId: action.payload.issueTypeId,
+                }
+            }
+            return ajax(searchIssuesSettings)
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message }))
+                )
+        }),
+        map(ajax => {
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return fullFilledRequestBoardFilterIssue(ajax.response.data)
             }
             else
                 return madeRequestFail(ajax.response.data)
