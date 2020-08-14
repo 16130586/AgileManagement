@@ -214,4 +214,22 @@ public class IssueBusinessImp implements IssueBusiness {
         iss.setAssignment(assignee);
         return issueDAO.update(iss);
     }
+
+    @Override
+    public Issue dragAndDrop(DragAndDrop params, CustomUserDetails userDetails) {
+        // just product owner and it's issue assignee can change
+        boolean checkPermission = true;
+        if(!checkPermission)  throw new InvalidParameterException("Invalid parameters!");
+        Issue iss = issueDAO.getOne(params.id);
+        WorkFlowItem newStatus = workFlowItemRepository.getOne(params.toStatusId);
+        iss.setStatus(newStatus);
+        if(params.toAssignee != null){
+            User user = userDAO.getUserByUserName(params.toAssignee);
+            iss.setAssignment(user);
+        }else {
+            iss.setAssignment(null);
+        }
+        issueDAO.update(iss);
+        return iss;
+    }
 }

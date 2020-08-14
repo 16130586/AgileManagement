@@ -36,4 +36,6 @@ public interface IssueBusiness {
     Issue moveToBacklog(MoveToBacklog params , CustomUserDetails cusUser) throws InvalidParameterException;
 
     Issue updateDetail(UpdateDetailParams issueParams, UserDetails user);
+
+    Issue dragAndDrop(DragAndDrop params, CustomUserDetails userDetails);
 }

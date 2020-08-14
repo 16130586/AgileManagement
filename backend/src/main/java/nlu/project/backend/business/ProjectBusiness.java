@@ -40,4 +40,6 @@ public interface ProjectBusiness {
     Project getProject(Integer projectId, CustomUserDetails user);
 
     Integer deleteWorkFlow(WorkFlowParams params);
+
+    Sprint getCurrentSprint(Integer projectId, CustomUserDetails user);
 }

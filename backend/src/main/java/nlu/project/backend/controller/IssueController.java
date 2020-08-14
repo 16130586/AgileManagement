@@ -8,6 +8,7 @@ import nlu.project.backend.entry.issue.SubTaskParams;
 import nlu.project.backend.entry.issue.IssueTypeParams;
 import nlu.project.backend.entry.issue.MoveToBacklog;
 import nlu.project.backend.entry.issue.MoveToParams;
+import nlu.project.backend.model.Issue;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -132,5 +135,27 @@ public class IssueController extends BaseController{
         if(result == null)
             return ApiResponse.OnBadRequest("Cannot move");
         return ApiResponse.OnSuccess(params , "move!");
+    }
+    @PostMapping("/dad")
+    public ApiResponse dragAndDrop(HttpServletRequest request,
+                                                @RequestBody DragAndDrop params){
+
+        if("unassigned".equals(params.fromAssignee))
+            params.fromAssignee = null;
+        if("unassigned".equals(params.toAssignee))
+            params.toAssignee = null;
+        CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+        Issue result = issueBusiness.dragAndDrop(params , userDetails);
+        Map<String , Object> jsonObject = new HashMap<>();
+
+        jsonObject.put("data" , result);
+        jsonObject.put("id" , params.id);
+        jsonObject.put("fromStatus" , params.fromStatusId);
+        jsonObject.put("toStatusId" , params.toStatusId);
+        jsonObject.put("fromAssignee" , params.fromAssignee);
+        jsonObject.put("toAssignee" , params.toAssignee);
+        if(result == null)
+            return ApiResponse.OnBadRequest("Cannot done");
+        return ApiResponse.OnSuccess(jsonObject , "done");
     }
 }

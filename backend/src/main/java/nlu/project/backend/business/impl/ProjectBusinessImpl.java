@@ -6,9 +6,7 @@ import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.business.ProjectBusiness;
-import nlu.project.backend.business.SprintBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
-import nlu.project.backend.entry.filter.SprintFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
@@ -24,6 +22,7 @@ import java.security.InvalidParameterException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -170,8 +169,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     @Override
     public List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails cusUser) {
         User user = cusUser.getUser();
-        if (!userDAO.isProductOwner(user.getId(), projectId))
+//        if (!userDAO.isProductOwner(user.getId(), projectId)) or jointIn Project
+        boolean isOwnerOrJointInProject = true;
+        if(!isOwnerOrJointInProject)
             throw new InvalidParameterException("Invalid parameters!");
+
         return sprintDAO.findWorkingSprints(projectId);
     }
     @Override
@@ -230,6 +232,16 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     @Override
     public Integer deleteWorkFlow(WorkFlowParams params) {
         return projectDAO.deleteWorkFlow(params);
+    }
+
+    @Override
+    public Sprint getCurrentSprint(Integer projectId, CustomUserDetails user) {
+        List<Sprint> sprints = getWorkingSprints(projectId , user);
+        Sprint currentStartSprint = null;
+        Optional<Sprint> lookup = sprints.stream().filter(s -> s.getStatus() == 1).findFirst();
+        if(lookup.isPresent())
+            currentStartSprint = lookup.get();
+        return currentStartSprint;
     }
 
     public boolean isInProject(Integer projectId , Integer userId){
