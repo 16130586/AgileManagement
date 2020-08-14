@@ -11,6 +11,7 @@ import nlu.project.backend.business.SprintBusiness;
 import nlu.project.backend.entry.filter.SprintFilterParams;
 import nlu.project.backend.entry.sprint.CreateSprintParams;
 import nlu.project.backend.entry.sprint.EditSprintParams;
+import nlu.project.backend.entry.sprint.IssueInSprintSearchParams;
 import nlu.project.backend.entry.sprint.StartSprintParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -214,6 +216,15 @@ public class SprintBusinessImp implements SprintBusiness {
         sprint.setGoal(entry.goal);
         sprintDAO.update(sprint);
         return sprint;
+    }
+
+    @Override
+    public List<Issue> issueInSprintSearchParams(IssueInSprintSearchParams entry, CustomUserDetails userDetails) {
+        Sprint sprint = sprintDAO.getOne(entry.sprintId);
+        List<Issue> issues = sprint.getIssues();
+        List<Issue> result  = issues.stream().filter(iss -> iss.getIssueType().getId() == entry.issueTypeId)
+                .filter(iss -> iss.getDescription().toUpperCase().contains(entry.name.toUpperCase())).collect(Collectors.toList());
+        return result;
     }
 
 }
