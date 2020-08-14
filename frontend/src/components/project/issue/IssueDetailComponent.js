@@ -30,7 +30,7 @@ let MyBreadCrumbs = function (props) {
             <Link color="inherit" href={`/project/${projectId}/settings/details`}>
                 {projectCode == null ? projectName : projectCode}
             </Link>
-            <Typography color="textPrimary">{issueCode}</Typography>
+            <Typography color="textPrimary">{issueName}</Typography>
         </Breadcrumbs>
     )
 }
@@ -94,8 +94,10 @@ let IssueDescription = (props) => {
 
     let [isFocusDescription, setIsFocusDescription] = React.useState()
     const handleFocusEdit = () => {
-        setIsFocusDescription(!isFocusDescription)
-        setUpdateDescriptionForm({...updateDescriptionForm, description: ''})
+        if (props.hasRightEdit) {
+            setIsFocusDescription(!isFocusDescription)
+            setUpdateDescriptionForm({...updateDescriptionForm, description: ''})
+        }
     }
 
     const update = () => {
@@ -142,7 +144,8 @@ let ListSubTask = (props) => {
         name:''
     });
     const handleIsFocus = () => {
-        setIsFocusAddSubTask(!isFocusAddSubTask)
+        if (props.hasRightEdit)
+            setIsFocusAddSubTask(!isFocusAddSubTask)
     }
     const createSubTask = () => {
         props.createSubTask(createSubTaskForm);
@@ -294,6 +297,7 @@ let IssueStatus = (props) => {
                     name="workflowStatus"
                     onChange={(event) => props.setChange(event)}
                     defaultValue={props.status.id}
+                    disabled={!props.hasRightEdit}
             >
                 {props.workFlow.items.map((item) => (
                     <MenuItem
@@ -319,6 +323,7 @@ let IssueType = (props) => {
                     name="issueType"
                     onChange={(event) => props.setChange(event)}
                     defaultValue={props.currentIssueType.id}
+                    disabled={!props.hasRightEdit}
             >
                 {props.issueTypes.map((item) => (
                     <MenuItem
@@ -345,6 +350,7 @@ let IssueAssignment = (props) => {
                     name="assignmentEmail"
                     onChange={(event) => props.setChange(event)}
                     defaultValue={props.currentAssignee != null ? props.currentAssignee.email : ''}
+                    disabled={!props.hasRightEdit}
             >
                 {props.devTeam.map((dev) => (
                     <MenuItem
@@ -370,6 +376,7 @@ let Priority = (props) => {
                     name="priority"
                     onChange={(event) => props.setChange(event)}
                     defaultValue={props.currentPriority ? props.currentPriority.id : ''}
+                    disabled={!props.hasRightEdit}
             >
                 {props.priority.map(item => (
                     <MenuItem
@@ -391,6 +398,7 @@ let IssueStoryPoint = (props) => {
             <div style={{marginTop:'10px', fontWeight:'500'}}>
                 <span>Story Point</span>
             </div>
+            {props.me &&
             <TextField
                 style={{width:'200px'}}
                 name="storyPoint"
@@ -400,13 +408,15 @@ let IssueStoryPoint = (props) => {
                 required={true}
                 size='small'
                 type='number'
+                disabled={props.me.id != props.project.owner.id}
             />
+            }
         </div>
     )
 }
 
 let IssueDetailComponent = function (props) {
-
+    let hasRightEdit = false;
     const classes = useStyles();
     const [updateIssueForm, setUpdateWorkFlowForm] = React.useState({
         issueId: null,
@@ -419,7 +429,6 @@ let IssueDetailComponent = function (props) {
 
     const updateIssue = () => {
         let newForm = {...updateIssueForm, issueId: props.issue.id}
-        console.log(newForm)
         setUpdateWorkFlowForm(newForm)
         props.updateIssue(newForm);
     }
@@ -428,16 +437,24 @@ let IssueDetailComponent = function (props) {
         setUpdateWorkFlowForm({...updateIssueForm, [event.target.name]: event.target.value})
     }
 
+    const checkIsDevMember = (dev, team) => {
+        team.forEach(i => {
+            if (i.id == dev.id)
+                hasRightEdit = true;
+        })
+    }
+
     return (
         <Fragment>
+            {props.me && props.devTeam && checkIsDevMember(props.me, props.devTeam)}
             <MyBreadCrumbs project={props.project} issue={props.issue} />
             <div className={classes.main}>
                 <div className={classes.issueMainDetail}>
                     {props.issue &&
                     <div>
                         <IssueName issueName={props.issue.name}/>
-                        <IssueDescription content={props.issue.description} issueId={props.issue.id} update={props.updateIssueDescription}/>
-                        <ListSubTask subTasks={props.subTasks} createSubTask={props.createSubTask}
+                        <IssueDescription hasRightEdit={hasRightEdit} content={props.issue.description} issueId={props.issue.id} update={props.updateIssueDescription}/>
+                        <ListSubTask hasRightEdit={hasRightEdit} subTasks={props.subTasks} createSubTask={props.createSubTask}
                                      projectId={props.project.id} issueId={props.issue.id}/>
                         <IssueActivity/>
                     </div>
@@ -447,15 +464,18 @@ let IssueDetailComponent = function (props) {
                     {props.issue &&
                     <div>
                         <IssueMenu/>
-                        <IssueStatus status={props.issue.status} workFlow={props.workFlow} setChange={onFormChange}/>
-                        <IssueType issueTypes={props.issueTypes} currentIssueType={props.issue.issueType} setChange={onFormChange}/>
-                        <IssueAssignment currentAssignee={props.issue.assignment} devTeam={props.devTeam} setChange={onFormChange}/>
-                        <Priority priority={props.priority} currentPriority={props.issue.priority} setChange={onFormChange}/>
-                        <IssueStoryPoint storyPoint={props.issue.storyPoint} setChange={onFormChange}/>
+                        <IssueStatus hasRightEdit={hasRightEdit} status={props.issue.status} workFlow={props.workFlow} setChange={onFormChange}/>
+                        <IssueType hasRightEdit={hasRightEdit} issueTypes={props.issueTypes} currentIssueType={props.issue.issueType} setChange={onFormChange}/>
+                        <IssueAssignment hasRightEdit={hasRightEdit} currentAssignee={props.issue.assignment} devTeam={props.devTeam} setChange={onFormChange}/>
+                        <Priority hasRightEdit={hasRightEdit} priority={props.priority} currentPriority={props.issue.priority} setChange={onFormChange}/>
+                        <IssueStoryPoint me={props.me} project={props.project} storyPoint={props.issue.storyPoint} setChange={onFormChange}/>
+                        {hasRightEdit &&
                         <div style={{padding: '8px'}}>
-                            <button onClick={updateIssue} className='custom-button' style={{backgroundColor: 'blue', color: 'white'}}>Save
+                            <button onClick={updateIssue} className='custom-button'
+                                    style={{backgroundColor: 'blue', color: 'white'}}>Save
                             </button>
                         </div>
+                        }
                     </div>
                     }
                 </div>

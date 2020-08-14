@@ -38,7 +38,6 @@ const groupReducer = (state = All_Group_Init, action) => {
         default:
             break;
     }
-    console.log(nextState)
     return nextState;
 }
 
