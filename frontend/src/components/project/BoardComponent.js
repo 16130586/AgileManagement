@@ -16,10 +16,18 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Tooltip from '@material-ui/core/Tooltip'
 import TimerIcon from '@material-ui/icons/Timer'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import ClearIcon from '@material-ui/icons/Clear'
 import { useDrag, useDrop } from 'react-dnd'
 
 import * as moment from 'moment'
+import { checkPropTypes } from 'prop-types'
 let IssueBox = function (props) {
+    console.log(props)
     let description = props.data.description
     let issueType = props.data.issueType
     let issueName = props.data.name
@@ -64,8 +72,15 @@ let IssueBox = function (props) {
                 height: "auto",
                 padding: "1rem"
             }}>
-            <div>
-                {description}
+            <div style={{ display: "flex" }}>
+                <div>
+                    {description}
+                </div>
+                <ClearIcon
+                    className="opa-0 opa-100--hover"
+                    style={{ marginLeft: "auto", opacity: "0" }}
+                    onClick={() => {props.deleteIssue(props.data.id , props.data.sprint.id) }}
+                />
             </div>
             <div className="mt-1"
                 style={{
@@ -143,7 +158,11 @@ let BoardColumn = function (props) {
             ref={dropRef}
             style={{ ...props.style, witdth: "auto", minHeight: "8rem" }}>
             <Typography>{props.current.name} - {props.issues && props.issues.length}</Typography>
-            {props.issues && props.issues.map(iss => <IssueBox className="mt-1" data={iss} />)}
+            {props.issues && props.issues.map(iss =>
+                <IssueBox
+                    className="mt-1" data={iss}
+                    deleteIssue={props.deleteIssue}
+                />)}
         </div>
     )
 }
@@ -252,6 +271,7 @@ let UserIssueWorkSpace = function (props) {
                                     all={props.workflow.items}
                                     owner={props.assignee}
                                     onDropIssueBox={props.onDropIssueBox}
+                                    deleteIssue={props.deleteIssue}
                                 />
                             )
                         }
@@ -419,8 +439,33 @@ let BoardSpaceComponent = function (props) {
             setDuration({
                 from: start.format('MM/DD/YYYY'),
                 to: end.format('MM/DD/YYYY'),
-                left: moment.duration(end.diff(start)).days()
+                left: moment.duration(end.diff(start)).asDays()
             })
+        }
+    }, [props.sprint])
+    let [openCompleteDialog, setOpenCompleteDialog] = useState(false)
+
+    let [issueSumary, setIssueSumary] = useState({})
+    useEffect(() => {
+        if (props.sprint != null) {
+            let container = {}
+            props.sprint.issues.forEach(iss => {
+                if (container[iss.status.id] == null) {
+                    container[iss.status.id] = {}
+                    container[iss.status.id].totalStoryPoint = 0
+                    container[iss.status.id].statusName = ''
+                    container[iss.status.id].isStart = false
+                    container[iss.status.id].isEnd = false
+                    container[iss.status.id].count = 0
+                }
+                container[iss.status.id].totalStoryPoint += iss.storyPoint
+                container[iss.status.id].statusName = iss.status.name
+                container[iss.status.id].isStart = iss.status.start
+                container[iss.status.id].isEnd = iss.status.end
+                container[iss.status.id].count += 1
+            });
+            setIssueSumary(container)
+            console.log(container)
         }
     }, [props.sprint])
 
@@ -449,6 +494,14 @@ let BoardSpaceComponent = function (props) {
                             {duration.left > 1 ? " days remain" : " day remain"}
                         </span>
                         <Button
+                            onClick={(event) => { event.stopPropagation(); setOpenCompleteDialog(true) }}
+                            className="ml-2"
+                            color="secondary"
+                            variant="contained"
+                        >
+                            Complete sprint
+                        </Button>
+                        <Button
                             color="default"
                             variant="contained"
                             className="ml-2"
@@ -456,6 +509,48 @@ let BoardSpaceComponent = function (props) {
                         >
                             More
                         </Button>
+                        <Dialog
+                            open={openCompleteDialog}
+                            onClose={(event) => { event.stopPropagation(); setOpenCompleteDialog(false) }}
+                            aria-labelledby="board-complete-dialog-title"
+                            aria-describedby="board-complete-dialog-description">
+                            <DialogTitle
+                                id="board-complete-dialog-title">
+                                Complete Sprint {props.sprint.code && '-'.concat(props.sprint.code)}{props.sprint.name && '-'.concat(props.sprint.name)}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="board-complete-dialog-description">
+                                    The sprint contains:
+                                </DialogContentText>
+                                <div>
+                                    {Object.keys(issueSumary).length > 0 &&
+                                        <ul>
+                                            {Object.keys(issueSumary).map(key =>
+                                                <li className="mt-1">
+                                                    {issueSumary[key].count}
+                                                    {issueSumary[key].count > 1 && ' items are '}
+                                                    {issueSumary[key].count <= 1 && ' item is '}
+                                                    <span style={{ textTransform: 'lowercase' }}>
+                                                        {issueSumary[key].statusName}
+                                                    </span>
+                                                </li>
+                                            )}
+
+                                        </ul>
+                                    }
+                                </div>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    onClick={(e) => { e.stopPropagation(); props.completeSprint(props.sprint.id) }}
+                                    color="primary">
+                                    Complete sprint
+                                    </Button>
+                                <Button onClick={(e) => { e.stopPropagation(); setOpenCompleteDialog(false) }} color="primary" autoFocus>
+                                    Cancle
+                                    </Button>
+                            </DialogActions>
+                        </Dialog>
                     </div>
                 </div>
             }
@@ -488,6 +583,7 @@ let BoardSpaceComponent = function (props) {
                     issues={issueArgtor[assignee]}
                     workflow={props.workflow}
                     onDropIssueBox={props.onDropIssueBox}
+                    deleteIssue={props.deleteIssue}
                 />)
             }
             {

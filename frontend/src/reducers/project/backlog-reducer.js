@@ -261,7 +261,6 @@ const Backlog = (state = init, action) => {
             // (function () {
             //     let spr
             // })()
-            console.log(action.payload)
             let data = action.payload
             let sprintId = data.sprint != null ? data.sprint.id : -1
             let issueId = data.id
@@ -277,16 +276,16 @@ const Backlog = (state = init, action) => {
                 ]
                 let newSprint = {
                     ...oldSprt,
-                    issues : newIssues
+                    issues: newIssues
                 }
                 let newWorkingSprints = [
-                    ...nextState.workingSprints.slice(0 , idoSprint),
+                    ...nextState.workingSprints.slice(0, idoSprint),
                     newSprint,
                     ...nextState.workingSprints.slice(idoSprint + 1)
                 ]
                 nextState = {
                     ...nextState,
-                    workingSprints : newWorkingSprints
+                    workingSprints: newWorkingSprints
                 }
             }
             // edit from click from backlog
@@ -302,6 +301,35 @@ const Backlog = (state = init, action) => {
                     backlogItems: newBacklogItems
                 }
             }
+            break;
+        case AsyncEventTypes.FULL_FILLED.DADIssue:
+            (function () {
+                if(!nextState.isLoadBacklogPage) return
+                let issue = action.payload.data
+                let sprint = action.payload.data.sprint
+              
+                let idoSprint = nextState.workingSprints.findIndex(sp => sp.id == sprint.id)
+                let oldSprt = nextState.workingSprints[idoSprint]
+                let idoIss = oldSprt.issues.findIndex(iss => iss.id == issue.id)
+                let newIssues = [
+                    ...oldSprt.issues.slice(0, idoIss),
+                    issue,
+                    ...oldSprt.issues.slice(idoIss + 1)
+                ]
+                let newSprint = {
+                    ...oldSprt,
+                    issues: newIssues
+                }
+                let newWorkingSprints = [
+                    ...nextState.workingSprints.slice(0, idoSprint),
+                    newSprint,
+                    ...nextState.workingSprints.slice(idoSprint + 1)
+                ]
+                nextState = {
+                    ...nextState,
+                    workingSprints: newWorkingSprints
+                }
+            })()
             break;
         default:
             break;
