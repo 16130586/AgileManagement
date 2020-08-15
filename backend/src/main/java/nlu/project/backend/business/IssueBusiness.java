@@ -40,4 +40,8 @@ public interface IssueBusiness {
     Issue fetchIssue(Integer issueId);
 
     List<Priority> fetchPriorityList();
+
+    SubTask getSubTaskById(int subTaskId);
+
+    LogWork logWork(SubTaskParams params, User owner);
 }

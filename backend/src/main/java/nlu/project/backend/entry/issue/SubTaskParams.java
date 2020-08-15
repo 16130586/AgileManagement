@@ -5,7 +5,10 @@ public class SubTaskParams {
     public Integer issueId;
     public Integer assignedId;
     public String name;
-    public double estimateTime;
+    public Double estimateTime;
     public Integer projectId;
+    public String description;
+    public Integer workFlowStatus;
+    public Double logWorkTime;
 
 }
