@@ -183,7 +183,7 @@ export const logWork = action$ =>
                 return madeRequestFail('No response from server!')
             else if (ajax.status > 0 && ajax.response.status < 400) {
                 alert(ajax.response.message)
-                return madeRequestSuccess(ajax.response.message)
+                return fullFilledLogWork(ajax.response.data)
             }
             else
                 return madeRequestFail(ajax.response.data)

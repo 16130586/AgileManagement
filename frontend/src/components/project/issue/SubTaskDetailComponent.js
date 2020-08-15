@@ -165,9 +165,9 @@ let SubTaskLogWork = (props) => {
     return (
         <div>
             {props.logWorkList.map(item => (
-            <div style={{width: '100%', marginTop:'10px'}}>
+            <div key={item.id} style={{width: '100%', marginTop:'10px'}}>
 
-                <span key={item.id}>{`${item.owner.nickName} logged ${item.hours}h`}</span>
+                <span>{`${item.owner.nickName} logged ${item.hours}h`}</span>
 
             </div>
             ))}
@@ -242,6 +242,7 @@ let SubTaskMenu = (props) => {
         setLogWorkForm(newForm)
         props.logWork(newForm)
         handleCloseLogWorkDialog()
+        handleCloseOptsMenu()
     }
     return (
         <div style={{padding: '8px'}}>

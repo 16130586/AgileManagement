@@ -20,11 +20,14 @@ const SubTaskReducer = (state = init, action) => {
             }
             break;
         case AsyncEventTypes.FULL_FILLED.LOG_WORK:
-            nextState.subTask.logWorkList = [...nextState.subTask.logWorkList, action.payload]
+            let newLogWorkList = [...nextState.subTask.logWorkList, action.payload]
+            let newSubTask = {...nextState.subTask, logWorkList:newLogWorkList}
+            nextState = {...nextState, subTask: newSubTask}
             break;
         default:
             break;
     }
+    console.log(nextState)
     return nextState;
 }
 
