@@ -45,19 +45,19 @@ const Board = (state = init, action) => {
             break;
         case AsyncEventTypes.FULL_FILLED.START_SPRINT:
             (function () {
-                if(!nextState.isLoadBoardPage) return
+                if (!nextState.isLoadBoardPage) return
                 nextState = { ...nextState, sprint: action.payload }
             })()
             break;
         case AsyncEventTypes.FULL_FILLED.COMPLETE_SPRINT:
             (function () {
-                if(!nextState.isLoadBoardPage || nextState.sprint == null) return;
+                if (!nextState.isLoadBoardPage || nextState.sprint == null) return;
                 nextState = { ...nextState, sprint: null }
             })()
             break;
         case AsyncEventTypes.FULL_FILLED.CREATE_NEW_ISSUE:
             (function () {
-                if(!nextState.isLoadBoardPage || nextState.sprint == null) return;
+                if (!nextState.isLoadBoardPage || nextState.sprint == null) return;
                 let newIssues = [...nextState.sprint.issues, action.payload]
                 let newSprint = { ...nextState.sprint }
                 newSprint.issues = newIssues
@@ -66,7 +66,7 @@ const Board = (state = init, action) => {
             break;
         case AsyncEventTypes.FULL_FILLED.DELETE_ISSUE:
             (function () {
-                if(!nextState.isLoadBoardPage || nextState.sprint == null) return;
+                if (!nextState.isLoadBoardPage || nextState.sprint == null) return;
                 let ido = nextState.sprint.issues.findIndex(iss => iss.id == action.payload.id)
                 let newIssues = [...nextState.sprint.issues.slice(0, ido), ...nextState.sprint.issues.slice(ido + 1)]
                 let newSprint = { ...nextState.sprint }
@@ -76,7 +76,7 @@ const Board = (state = init, action) => {
             break;
         case AsyncEventTypes.FULL_FILLED.ISSUE_UPDATE_DETAIL:
             (function () {
-                if(!nextState.isLoadBoardPage || nextState.sprint == null) return;
+                if (!nextState.isLoadBoardPage || nextState.sprint == null) return;
                 let ido = nextState.sprint.issues.findIndex(iss => iss.id == action.payload.id)
                 let newIssues = [...nextState.sprint.issues.slice(0, ido),
                 action.payload,
@@ -95,6 +95,26 @@ const Board = (state = init, action) => {
                     sprint: newSprint,
                     onFilter: true,
                 }
+            })()
+            break;
+        case AsyncEventTypes.FULL_FILLED.DELETE_ISSUE:
+            (function () {
+                if (!nextState.isLoadBoardPage) return
+                const issueId = action.payload.id
+                const ido = nextState.sprint.issues.findIndex(iss => iss.id == issueId)
+                const newIssues = [
+                    ...nextState.sprint.issues.slice(0, ido),
+                    ...nextState.sprint.issues.slice(ido + 1)
+                ]
+                const newSprint = {
+                    ...nextState.sprint
+                }
+                newSprint.issues = newIssues
+                nextState = {
+                    ...nextState , 
+                    sprint : newSprint
+                }
+
             })()
             break;
         default:
