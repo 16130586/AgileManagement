@@ -163,7 +163,7 @@ let ListSubTask = (props) => {
             <div>
                 {props.subTasks.map((subTask) => (
                     <div key={subTask.id} className='subTask custom-hover'>
-                        <Link color='inherit' href='' style={{paddingLeft:'9px'}}>
+                        <Link color='inherit' href={`/project/${props.projectId}/issue/${props.issueId}/subtask/${subTask.id}`} style={{paddingLeft:'9px'}}>
                             {subTask.code + " " + subTask.name}
                         </Link>
                         <span style={{textAlign:"right"}}>{subTask.assignment ? subTask.assignment.name : "Not Assignment" }</span>

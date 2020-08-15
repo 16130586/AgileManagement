@@ -55,6 +55,9 @@ export const ASYNC = {
         UPDATE_ISSUE_DESCRIPTION: 'full-filled.update-issue-description',
         UPDATE_ISSUE_DETAILS: 'full-filled.update-issue-details',
         BOARD_FILTER_ISSUE: 'full-filled.board-filter-issue',
+        SUBTASK_DETAILS: 'full-filled.subtask-detail',
+        UPDATE_SUBTASK: 'full-filled.update-subtask',
+        LOG_WORK: 'full-filled.log-work',
 
     },
     REQUEST: {
@@ -95,6 +98,10 @@ export const ASYNC = {
         UPDATE_ISSUE_DESCRIPTION: 'request.update-issue-description',
         UPDATE_ISSUE_DETAILS : 'request.update-issue-details',
         BOARD_FILTER_ISSUE: 'request.board-filter-issue',
+        SUBTASK_DETAILS: 'request.subtask-detail',
+        UPDATE_SUBTASK: 'request.update-subtask',
+        LOG_WORK: 'request.log-work',
+
     }
 }
 export const Router = {
