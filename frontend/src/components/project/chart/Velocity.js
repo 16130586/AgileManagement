@@ -74,7 +74,13 @@ let Velocity = function (props) {
                                 display: true,
                                 text: "Velocity chart"
                             },
-                            steps: 5
+                            scales: {
+                                yAxes : [{
+                                    ticks: {
+                                        min: 0 
+                                    }
+                                }]
+                            }
                         }}
                     />
                 </div>
@@ -87,7 +93,7 @@ let Velocity = function (props) {
                         color="primary"
                         variant="contained"
                         className="mt-2"
-                        onClick={() => props.navigateTo(`/project/${props.projectId}/backlog`)}
+                        onClick={() => props.navigateTo(`/project/${props.project.id}/backlog`)}
                     >
                         Start sprint
                     </Button>
