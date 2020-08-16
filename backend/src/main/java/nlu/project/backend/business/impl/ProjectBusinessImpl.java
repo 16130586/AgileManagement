@@ -12,6 +12,7 @@ import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.exception.custom.InvalidInputException;
+import nlu.project.backend.exception.custom.UnauthorizedException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,27 +112,37 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public WorkFlow createWorkFlow(WorkFlowParams params) {
+    public WorkFlow createWorkFlow(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.createWorkFlow(params);
     }
 
     @Override
-    public WorkFlowItem addWorkFlowItem(WorkFlowParams params) {
+    public WorkFlowItem addWorkFlowItem(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.addWorkFlowItem(params);
     }
 
     @Override
-    public WorkFlowItem addLinkWorkFlow(WorkFlowParams params) {
+    public WorkFlowItem addLinkWorkFlow(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.addLinkWorkFlow(params);
     }
 
     @Override
-    public WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params) {
+    public WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.deleteLinkWorkFlow(params);
     }
 
     @Override
-    public WorkFlowItem deleteWorkFlowItem(WorkFlowParams params) {
+    public WorkFlowItem deleteWorkFlowItem(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.deleteWorkFlowItem(params);
     }
 
@@ -230,7 +241,9 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public Integer deleteWorkFlow(WorkFlowParams params) {
+    public Integer deleteWorkFlow(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.deleteWorkFlow(params);
     }
 

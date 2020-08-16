@@ -106,38 +106,44 @@ public class ProjectController extends BaseController{
     }
 
     @PostMapping("/workflow/create")
-    public ApiResponse createWorkflow(@RequestBody WorkFlowParams params) {
-        Object result = projectBusiness.createWorkFlow(params);
+    public ApiResponse createWorkflow(@RequestBody WorkFlowParams params, HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.createWorkFlow(params, userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Create WorkFlow Success!");
     }
 
     @PostMapping("/workflow/delete")
-    public ApiResponse deleteWorkFlow(@RequestBody WorkFlowParams params) {
-        Object result = projectBusiness.deleteWorkFlow(params);
+    public ApiResponse deleteWorkFlow(@RequestBody WorkFlowParams params, HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.deleteWorkFlow(params, userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Delete WorkFlow Success!");
     }
 
     @PostMapping("/workflow/add-item")
-    public ApiResponse addWorkFlowItem(@RequestBody WorkFlowParams params) {
-        Object result = projectBusiness.addWorkFlowItem(params);
+    public ApiResponse addWorkFlowItem(@RequestBody WorkFlowParams params, HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.addWorkFlowItem(params, userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Add WorkFlow Item Success!");
     }
 
     @PostMapping("/workflow/delete-item")
-    public ApiResponse deleteWorkFlowItem(@RequestBody WorkFlowParams params) {
-        Object result = projectBusiness.deleteWorkFlowItem(params);
+    public ApiResponse deleteWorkFlowItem(@RequestBody WorkFlowParams params, HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.deleteWorkFlowItem(params, userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Delete WorkFlow Item Success!");
     }
 
     @PostMapping("/workflow/add-link")
-    public ApiResponse addLinkWorkFlow(@RequestBody WorkFlowParams params) {
-        Object result = projectBusiness.addLinkWorkFlow(params);
+    public ApiResponse addLinkWorkFlow(@RequestBody WorkFlowParams params, HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.addLinkWorkFlow(params, userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Add Link WorkFlow Item Success!");
     }
 
     @PostMapping("/workflow/delete-link")
-    public ApiResponse deleteLinkWorkFlow(@RequestBody WorkFlowParams params) {
-        Object result = projectBusiness.deleteLinkWorkFlow(params);
+    public ApiResponse deleteLinkWorkFlow(@RequestBody WorkFlowParams params, HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Object result = projectBusiness.deleteLinkWorkFlow(params, userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Delete Link WorkFlow Item Success!");
     }
 

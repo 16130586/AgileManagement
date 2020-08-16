@@ -1,6 +1,6 @@
 INSERT INTO jira.`user` VALUES (1,'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTtxGy67tYnzbu9_weh3S2nIexg8eqVLP1HcA&usqp=CAU','admin@xyz.com','Administrator','$2a$10$Xs4.NukKenO7qIYuM58vAel9Y9eRWyU.BFZKcctydiH5IQR7qXyxK','admin'),(2,'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSS8qtvIlXMXe3Yazw614v0A69ieNBHdBFeeA&usqp=CAU','user@abc.com','Dev A','$2a$10$Xs4.NukKenO7qIYuM58vAel9Y9eRWyU.BFZKcctydiH5IQR7qXyxK','user');
 INSERT INTO jira.`project` VALUES (1,'NCL-W',0,'Nuclear','http://localhost:8081/storage/xlenehrdliyubycvzbimmlhdyogetddffazlxtvscqzuhemcaa_1597074389893.jpg','Nuclear',1,1,NULL,1,1);
-INSERT INTO jira.`project_dev_team` VALUES (1,1);
+INSERT INTO jira.`project_dev_team` VALUES (1,1),(2,1);
 INSERT INTO jira.`role` VALUES (1,'Product Owner'),(2,'Team Lead'),(3,'Team Member'),(4,'Architecture Owner'),(5,'Stakeholder');
 INSERT INTO jira.`user_role` VALUES (1,1,1,1),(2,1,3,2);
 INSERT INTO jira.`backlog` VALUES (1,NULL,1);
