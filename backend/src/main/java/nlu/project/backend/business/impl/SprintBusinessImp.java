@@ -1,10 +1,7 @@
 package nlu.project.backend.business.impl;
 
 import lombok.NoArgsConstructor;
-import nlu.project.backend.DAO.IssueDAO;
-import nlu.project.backend.DAO.ProjectDAO;
-import nlu.project.backend.DAO.SprintDAO;
-import nlu.project.backend.DAO.UserDAO;
+import nlu.project.backend.DAO.*;
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.business.SprintBusiness;
@@ -15,6 +12,7 @@ import nlu.project.backend.entry.sprint.IssueInSprintSearchParams;
 import nlu.project.backend.entry.sprint.StartSprintParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
+import nlu.project.backend.repository.SprintVelocityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +43,9 @@ public class SprintBusinessImp implements SprintBusiness {
 
     @Autowired
     ProjectBusiness productBusiness;
+
+    @Autowired
+    SprintVelocityDAO sprintVelocityDAO;
 
     @Override
     public List<Sprint> findByFilter(SprintFilterParams filter) {
@@ -92,6 +93,27 @@ public class SprintBusinessImp implements SprintBusiness {
             }
         }).findFirst().get();
         List<Issue> issues = sprint.getIssues();
+
+        //saving velocity
+        List<Issue> doneIssues = sprint.getIssues().stream()
+                .filter(iss -> iss.getStatus().getId() == endStatus.getId())
+                .collect(Collectors.toList());
+
+        int totalStoryPoint = 0;
+        for(Issue doneIssue : doneIssues){
+            totalStoryPoint += doneIssue.getStoryPoint();
+        }
+        int totalExpectStoryPoint = 0;
+        for(Issue issue : issues){
+            totalExpectStoryPoint+=issue.getStoryPoint();
+        }
+        SprintVelocity velocity = new SprintVelocity();
+        velocity.setDate(new Date());
+        velocity.setProjectId(sprint.getProject().getId());
+        velocity.setSprintName(sprint.getName());
+        velocity.setTotalStoryPoint(totalStoryPoint);
+        velocity.setSprintId(sprint.getId());
+        velocity.setTotalExpectStoryPoint(totalExpectStoryPoint);
         if (issues.size() > 0)
             issues.forEach(new Consumer<Issue>() {
                 @Override
@@ -106,6 +128,7 @@ public class SprintBusinessImp implements SprintBusiness {
                     }
                 }
             });
+        sprintVelocityDAO.save(velocity);
         sprintDAO.update(sprint);
         return sprint;
     }

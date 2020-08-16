@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CharBusinessImpl implements ChartBusiness {
+public class ChartBusinessImpl implements ChartBusiness {
     @Autowired
     ProjectDAO projectDAO;
 
