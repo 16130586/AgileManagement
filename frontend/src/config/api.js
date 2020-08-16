@@ -48,5 +48,6 @@ export const BACKEND_API = {
         FETCH_ONE_SUBTASK: '/issue/subTask/{subTaskId}',
         UPDATE_SUBTASK: '/issue/subTask/update',
         LOG_WORK: '/issue/subTask/logWork',
+        VELOCITY_DATA_FEED: '/chart/{projectId}/velocityData',
     }
 }

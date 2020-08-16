@@ -10,6 +10,7 @@ import People_Group from './work-space/people/group-reducer'
 import WorkFlow_Reducer from './work-space/project/workflow-reducer'
 import Project_Backlog from './project/backlog-reducer'
 import Project_Board from './project/board-reducer'
+import Project_Chart_Velocity from './project/velocity-chart-reducer'
 import IssueReducer from "./project/issue-reducer";
 import SubTaskReducer from "./project/subtask-reducer";
 export default combineReducers({
@@ -24,6 +25,7 @@ export default combineReducers({
     WorkFlow_Reducer,
     Project_Backlog,
     Project_Board,
+    Project_Chart_Velocity,
     IssueReducer,
     SubTaskReducer
 })

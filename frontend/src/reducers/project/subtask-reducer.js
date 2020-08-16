@@ -27,7 +27,6 @@ const SubTaskReducer = (state = init, action) => {
         default:
             break;
     }
-    console.log(nextState)
     return nextState;
 }
 

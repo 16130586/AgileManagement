@@ -51,6 +51,9 @@ public class ProjectDAO {
     @Autowired
     IssueTypeRepository issueTypeRepository;
 
+    @Autowired
+    SprintVelocityDAO sprintVelocityDAO;
+
     public boolean isExistedProjectName(String name) {
         return projectRepository.existsByName(name);
     }
@@ -362,5 +365,9 @@ public class ProjectDAO {
     public Integer deleteWorkFlow(WorkFlowParams params) {
         workflowRepository.deleteById(params.id);
         return params.id;
+    }
+
+    public List<SprintVelocity> getVelocities(Integer projectId) {
+        return sprintVelocityDAO.getVelocities(projectId);
     }
 }

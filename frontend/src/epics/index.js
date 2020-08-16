@@ -3,7 +3,7 @@ import WorkSpace_WorkOn from './work-space/your-work/work-on/index'
 import WorkSpace_Viewed from './work-space/your-work/viewed/index'
 import { fetchTotalAssignToMeEpic, fetchWorkOnEpic } from './work-space/your-work/assign-to-me/index'
 import { deleteProject, fetchProjects, createProject, searchProject } from './work-space/project'
-import { validateToken, login, signUp, fetchAboutMe , logout } from './global'
+import { validateToken, login, signUp, fetchAboutMe, logout } from './global'
 import {
     addMemberToGroup,
     createGroup,
@@ -40,8 +40,12 @@ import {
     DADIssue as Project_Board_DAD_Issue,
     seachIssues as Project_Board_Filter_Issue,
 } from "./project/board"
+import {
+    fetchSingleProject as Project_Chart_Single_Project,
+    fetchVelocityDataFeedChart as Project_Chart_Velocity_Data,
+} from "./project/chart"
 import { createSubTask, fetchIssue, updateDescription, updateIssue } from "./project/issue-epic";
-import {fetchSubTaskPage, logWork, updateSubTask} from "./project/subtask-epic";
+import { fetchSubTaskPage, logWork, updateSubTask } from "./project/subtask-epic";
 export default combineEpics(
     login,
     logout,
@@ -75,6 +79,8 @@ export default combineEpics(
     Project_Create_New_Issue,
     Project_Complete_Sprint,
     Project_Update_Issue_Detail,
+    Project_Chart_Single_Project,
+    Project_Chart_Velocity_Data,
     deleteWorkFlow,
     fetchAboutMe,
     addMemberToGroup,

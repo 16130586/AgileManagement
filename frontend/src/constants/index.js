@@ -58,7 +58,9 @@ export const ASYNC = {
         SUBTASK_DETAILS: 'full-filled.subtask-detail',
         UPDATE_SUBTASK: 'full-filled.update-subtask',
         LOG_WORK: 'full-filled.log-work',
-
+        FETCH_VELOCITY_CHART: 'full-filled.fetch.velocity-chart',
+        FETCH_PROJECT: 'full-filled.fetch.single-project',
+        
     },
     REQUEST: {
         DELETE_PROJECT : 'request.delete-project',
@@ -101,7 +103,8 @@ export const ASYNC = {
         SUBTASK_DETAILS: 'request.subtask-detail',
         UPDATE_SUBTASK: 'request.update-subtask',
         LOG_WORK: 'request.log-work',
-
+        FETCH_VELOCITY_CHART: 'request.fetch.velocity-chart',
+        FETCH_PROJECT: 'full-filled.fetch.single-project',
     }
 }
 export const Router = {

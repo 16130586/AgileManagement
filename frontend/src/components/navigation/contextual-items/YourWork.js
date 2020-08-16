@@ -12,7 +12,4 @@ function YourWork(props) {
         </Link>
     )
 }
-YourWork.propTypes = {
-    changeContext: PropTypes.func.isRequired
-}
 export default YourWork;

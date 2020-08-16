@@ -105,3 +105,10 @@ export const updateSubTask = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_SU
 
 export const logWork = (data) => ({type: AsyncEventTypes.REQUEST.LOG_WORK, payload: data})
 export const fullFilledLogWork = (data) => ({type: AsyncEventTypes.FULL_FILLED.LOG_WORK, payload: data})
+
+export const fetchProject = (projectId) => ({type: AsyncEventTypes.REQUEST.FETCH_PROJECT, payload: projectId})
+export const fullFilledFetchProject = (data) => ({type: AsyncEventTypes.FULL_FILLED.FETCH_PROJECT, payload: data})
+
+
+export const fetchVelocityChart = (projectId) => ({type: AsyncEventTypes.REQUEST.FETCH_VELOCITY_CHART, payload: projectId})
+export const fullFilledFetchVelocityChart = (data) => ({type: AsyncEventTypes.FULL_FILLED.FETCH_VELOCITY_CHART, payload: data})

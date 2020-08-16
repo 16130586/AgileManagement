@@ -5,7 +5,6 @@ function GroupMenu(props) {
     let isRender = props.items !== null && props.items !== undefined && props.items.length > 0
     let listMenuItem = null
     let menuItems = []
-    console.log(props.items)
     if (isRender) {
         // menuItems = props.items.map((e, index) =>
         //     <li key={index} className="list-item cursor-pointer--hover">
