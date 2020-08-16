@@ -77,6 +77,12 @@ public class IssueController extends BaseController{
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 
+    @GetMapping("/subTask/{subTaskId}")
+    public ApiResponse getSubTask(@PathVariable int subTaskId) {
+        Object result = issueBusiness.getSubTaskById(subTaskId);
+        return ApiResponse.OnSuccess(result, "Fetch SubTask Success!");
+    }
+
     @PostMapping("/subTask/create")
     public ApiResponse createSubTask(@RequestBody SubTaskParams params, HttpServletRequest request) {
         Object result = issueBusiness.createSubTask(params, ((CustomUserDetails) getUser(request)).getUser());
@@ -168,5 +174,12 @@ public class IssueController extends BaseController{
     public ApiResponse getPriority() {
         Object result = issueBusiness.fetchPriorityList();
         return ApiResponse.OnSuccess(result, "Fetch list priority success!");
+    }
+
+    @PostMapping("/subTask/logWork")
+    public ApiResponse logWork(@RequestBody SubTaskParams params, HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Object result = issueBusiness.logWork(params, userDetails.getUser());
+        return ApiResponse.OnSuccess(result, "Logged!");
     }
 }

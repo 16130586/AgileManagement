@@ -41,6 +41,7 @@ import {
     seachIssues as Project_Board_Filter_Issue,
 } from "./project/board"
 import { createSubTask, fetchIssue, updateDescription, updateIssue } from "./project/issue-epic";
+import {fetchSubTaskPage, logWork, updateSubTask} from "./project/subtask-epic";
 export default combineEpics(
     login,
     logout,
@@ -87,4 +88,7 @@ export default combineEpics(
     updateDescription,
     updateIssue,
     Project_Board_Filter_Issue,
+    fetchSubTaskPage,
+    updateSubTask,
+    logWork
 );

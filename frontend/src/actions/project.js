@@ -97,3 +97,11 @@ export const updateIssueDetails = (data) => ({type: AsyncEventTypes.REQUEST.UPDA
 
 export const requestBoardFilterIssue = (filter) => ({type: AsyncEventTypes.REQUEST.BOARD_FILTER_ISSUE, payload: filter})
 export const fullFilledRequestBoardFilterIssue = (data) => ({type: AsyncEventTypes.FULL_FILLED.BOARD_FILTER_ISSUE, payload: data})
+
+export const fetchSubTaskPage = (data) => ({type: AsyncEventTypes.REQUEST.SUBTASK_DETAILS, payload: data})
+export const fullFilledFetchSubTaskPage = (data) => ({type: AsyncEventTypes.FULL_FILLED.SUBTASK_DETAILS, payload: data})
+
+export const updateSubTask = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_SUBTASK, payload: data})
+
+export const logWork = (data) => ({type: AsyncEventTypes.REQUEST.LOG_WORK, payload: data})
+export const fullFilledLogWork = (data) => ({type: AsyncEventTypes.FULL_FILLED.LOG_WORK, payload: data})

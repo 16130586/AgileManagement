@@ -253,4 +253,14 @@ public class IssueBusinessImp implements IssueBusiness {
     public List<Priority> fetchPriorityList() {
         return priorityRepository.findAll();
     }
+
+    @Override
+    public SubTask getSubTaskById(int subTaskId) {
+        return subTaskDAO.getSubTaskById(subTaskId);
+    }
+
+    @Override
+    public LogWork logWork(SubTaskParams params, User owner) {
+        return subTaskDAO.logWork(params, owner);
+    }
 }

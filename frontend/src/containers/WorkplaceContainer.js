@@ -13,6 +13,7 @@ import Settings from './project/Settings'
 import IssueDetail from "./project/IssueDetailContainer"
 import {connect} from "react-redux"
 import {fetchAboutMe} from "../actions/global";
+import SubTaskDetail from "./project/SubTaskDetailContainer";
 let WorkplaceContainer = function (props) {
     useEffect(() => {
         props.fetchAboutMe()
@@ -39,6 +40,8 @@ let WorkplaceContainer = function (props) {
                 <Route path="/project/:projectId/workflow" component={WorkFlow} />
                 <Route path="/project/:projectId/charts/burndown" component={BurndownChart} />
                 <Route path="/project/:projectId/charts/velocity" component={VelocityChart} />
+                <Route path="/project/:projectId/settings/details" component={Settings} />
+                <Route path="/project/1/issue/3/subtask/1" component={SubTaskDetail}/>
                 <Route path="/project/1/issue/3" component={IssueDetail}/>
                 <Route exact path="/">
                     <div>Welcome</div>

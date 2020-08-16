@@ -11,6 +11,7 @@ import WorkFlow_Reducer from './work-space/project/workflow-reducer'
 import Project_Backlog from './project/backlog-reducer'
 import Project_Board from './project/board-reducer'
 import IssueReducer from "./project/issue-reducer";
+import SubTaskReducer from "./project/subtask-reducer";
 export default combineReducers({
     Common,
     Login,
@@ -24,4 +25,5 @@ export default combineReducers({
     Project_Backlog,
     Project_Board,
     IssueReducer,
+    SubTaskReducer
 })
