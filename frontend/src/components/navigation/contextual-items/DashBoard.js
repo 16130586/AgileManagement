@@ -14,8 +14,4 @@ function DashBoard(props) {
     )
 }
 
-DashBoard.propTypes = {
-    changeContext: PropTypes.func.isRequired
-}
-
 export default DashBoard;

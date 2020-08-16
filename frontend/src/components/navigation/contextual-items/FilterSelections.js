@@ -8,7 +8,6 @@ function FilterSelections(props) {
         </div>
     )
 }
-//<a onClick={() => props.changeContext(ABC)} href="#" style={{ display: "block" }}>Filter 3</a>
 FilterSelections.propTypes = {
     changeContext : PropTypes.func.isRequired
 }

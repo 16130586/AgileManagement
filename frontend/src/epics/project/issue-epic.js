@@ -196,7 +196,6 @@ export const updateIssue = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.UPDATE_ISSUE_DETAILS),
         mergeMap(action => {
-            console.log(action)
             const updateDetailIssueUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.ISSUE_UPDATE_DETAIL)
 
             const updateDetailIssueSettings = {

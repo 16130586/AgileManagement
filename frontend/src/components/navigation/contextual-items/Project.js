@@ -12,7 +12,5 @@ function Projects(props) {
     )
 }
 
-Projects.propTypes = {
-    changeContext: PropTypes.func.isRequired
-}
+
 export default Projects;

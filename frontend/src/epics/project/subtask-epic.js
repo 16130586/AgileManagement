@@ -110,7 +110,6 @@ export const updateSubTask = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.UPDATE_SUBTASK),
         mergeMap(action => {
-            console.log(action)
             const updateSubTaskUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.UPDATE_SUBTASK)
 
             const updateSubTaskSettings = {
@@ -154,7 +153,6 @@ export const logWork = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.LOG_WORK),
         mergeMap(action => {
-            console.log(action)
             const logWorkUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.LOG_WORK)
 
             const logWorkSetting = {
