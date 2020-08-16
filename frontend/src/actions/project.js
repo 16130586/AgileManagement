@@ -73,3 +73,10 @@ export const fullFilledRequestCompleteSprint = (sprint) => ({ type: AsyncEventTy
 
 export const requestUpdateDetailIssue = (data) => ({ type: AsyncEventTypes.REQUEST.ISSUE_UPDATE_DETAIL, payload: data })
 export const fullFilledRequestUpdateDetailIssue = (issue) => ({ type: AsyncEventTypes.FULL_FILLED.ISSUE_UPDATE_DETAIL, payload: issue })
+
+export const requestProjectDetail = (projectID) => ({ type: AsyncEventTypes.REQUEST.PROJECT_DETAIL, payload: projectID})
+export const fullFilledRequestProjectDetail = (project) => ({type:AsyncEventTypes.FULL_FILLED.PROJECT_DETAIL, payload: project})
+
+export const requestUpdateProject= (data) => ({type:AsyncEventTypes.REQUEST.PROJECT_UPDATE, payload: data})
+export const requestProjectAddMember= (data) => ({type:AsyncEventTypes.REQUEST.PROJECT_ADD_MEMBER, payload: data})
+export const requestProjectRemoveMember= (data) => ({type:AsyncEventTypes.REQUEST.PROJECT_REMOVE_MEMBER, payload: data})

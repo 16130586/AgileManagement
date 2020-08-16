@@ -41,6 +41,7 @@ export const ASYNC = {
         MOVE_ISSUE : 'full-filled.project.move-issue',
         CREATE_NEW_ISSUE : 'full-filled.project.create-new-issue',
         ISSUE_UPDATE_DETAIL : 'full-filled.project.issue-update-detail',
+        PROJECT_DETAIL: 'full-filled.project.detail',
 
     },
     REQUEST: {
@@ -68,7 +69,10 @@ export const ASYNC = {
         MOVE_ISSUE : 'request.project.move-issue',
         CREATE_NEW_ISSUE : 'request.project.create-new-issue',
         ISSUE_UPDATE_DETAIL : 'request.project.issue-update-detail',
-       
+        PROJECT_DETAIL: 'request.project.detail',
+        PROJECT_UPDATE: 'request.project.update',
+        PROJECT_ADD_MEMBER: 'request.project.add-member',
+        PROJECT_REMOVE_MEMBER: 'request.project.remove-member'
     }
    
 }

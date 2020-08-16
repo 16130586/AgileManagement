@@ -23,3 +23,14 @@ export let All_Group_Init = {
 }
 
 export let All_WorkFlow = []
+
+export let Project = {
+    project: {
+        leader: {},
+        owner: {},
+        devTeam: [],
+        currentWorkFlow: {},
+        save: "",
+        add: ""
+    }
+}
