@@ -27,7 +27,6 @@ import { useDrag, useDrop } from 'react-dnd'
 import * as moment from 'moment'
 import { checkPropTypes } from 'prop-types'
 let IssueBox = function (props) {
-    console.log(props)
     let description = props.data.description
     let issueType = props.data.issueType
     let issueName = props.data.name
@@ -117,7 +116,6 @@ let IssueBox = function (props) {
     )
 }
 let MyBreadCrumbs = function (props) {
-    console.log(props)
     let projectId = props.project ? props.project.id : 0
     let projectCode = props.project ? props.project.code : ''
     let projectName = props.project ? props.project.name : ''
@@ -409,7 +407,6 @@ let SearchForm = function (props) {
     )
 }
 let BoardSpaceComponent = function (props) {
-    console.log(props)
     let issueArgtor = {
         unassigned: []
     }
@@ -465,7 +462,6 @@ let BoardSpaceComponent = function (props) {
                 container[iss.status.id].count += 1
             });
             setIssueSumary(container)
-            console.log(container)
         }
     }, [props.sprint])
 

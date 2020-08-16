@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from 'react';
-
+import Button from '@material-ui/core/Button'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 function ContextualNavigation(props) {
     let [history, setHistory] = useState([])
     let navItems = props.navItems
@@ -13,14 +14,27 @@ function ContextualNavigation(props) {
         setHistory(history.length > 0 ? [...history] : [])
     }
     return (
-        <div style={{overflow: "hidden" , width: "100%" ,  backgroundColor : "inherit" , color: "inherit"}}>
+        <div style={{ overflow: "hidden", width: "100%", backgroundColor: "inherit", color: "inherit" }}>
             <div className="contextual-navigation__header">
                 <h2>Real Ng</h2>
             </div>
             {
                 ContextComponent != null &&
                 <div>
-                    <a href="#" onClick={goBack}>Back button</a>
+                    <div>
+                        <Button onClick={goBack} style={{ width: "150%", marginLeft: "-38%", color: "white" }}>
+                            <ArrowBackIcon></ArrowBackIcon>
+                            <span className="ml-2" style={{textTransform: "none"}}>Go back</span>
+                        </Button>
+                    </div>
+                    <div 
+                    className="mt-1"
+                    style={{
+                        width: "100%",
+                        marginLeft: "18%",
+                        height: "1px",
+                        backgroundColor : "rgba(158, 158, 158 , 0.4)"
+                    }}></div>
                     <ContextComponent {...props.data} changeContext={changeContext} />
                 </div>
             }
@@ -32,8 +46,8 @@ function ContextualNavigation(props) {
                                 let E = e
                                 if (e.prototype && e.prototype.component) {
                                     return <E className="contextual-navigation__item"
-                                    {...props.data}    
-                                    onClick={() => {
+                                        {...props.data}
+                                        onClick={() => {
                                             changeContext(e.prototype.component)
                                         }} />
                                 }

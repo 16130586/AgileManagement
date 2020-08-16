@@ -1,19 +1,22 @@
-import { Auth as AuthEventTypes} from '../constants/index'
+import { Auth as AuthEventTypes } from '../constants/index'
 const init = {
-    userName : null,
-    password : null,
-    errorMessage : null
+    userName: null,
+    password: null,
+    errorMessage: null
 }
 const Login = function (state = init, action) {
     let nextState = state;
-    switch(action.type){
+    switch (action.type) {
         case AuthEventTypes.LOGIN_SUCCESS:
-            nextState = {userName : null , password : null , errorMessage : null};
+            nextState = { userName: null, password: null, errorMessage: null };
             break;
         case AuthEventTypes.LOGIN_FAILED:
-            nextState = {...state , errorMessage : "Your credentials are in-correct!"}
+            nextState = { ...state, errorMessage: "Your credentials are in-correct!" }
             break;
-        default: 
+        case AuthEventTypes.LOGOUT_SUCCESS:
+            nextState = init
+            break;
+        default:
             break;
     }
     return nextState

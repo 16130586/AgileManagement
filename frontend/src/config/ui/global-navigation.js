@@ -6,6 +6,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
+import ProfileMenu from '../../containers/global-nav-items/ProfileContainer'
 const menuType = {
     TOP: "TOP",
     BOTTOM: "BOTTOM"
@@ -21,12 +22,12 @@ const createMenuItemConfig = function (name, type, componentType, materialUiIcon
 }
 
 const globalMenuItems = [
-    createMenuItemConfig("HOME", menuType.TOP, HomeMenu, HomeIcon, true),
-    createMenuItemConfig("SEARCH", menuType.TOP , "m2", SearchIcon),
-    createMenuItemConfig("CREATE-NEW-PROJECT", menuType.TOP, "m3", AddIcon),
-    createMenuItemConfig("NOTIFICATION", menuType.BOTTOM , "m4", NotificationsIcon),
-    createMenuItemConfig("HELP", menuType.BOTTOM , "m5", HelpIcon),
-    createMenuItemConfig("SETTING", menuType.BOTTOM , "m6", SettingsIcon),
-    createMenuItemConfig("PROFILE-AND-SETTINGS", menuType.BOTTOM , "m7", PersonIcon)
+    createMenuItemConfig("HOME", menuType.TOP, null, HomeIcon, true),
+    createMenuItemConfig("SEARCH", menuType.TOP ,null, SearchIcon , false),
+    createMenuItemConfig("CREATE-NEW-PROJECT", menuType.TOP, null, AddIcon, false),
+    createMenuItemConfig("NOTIFICATION", menuType.BOTTOM , null, NotificationsIcon, false),
+    createMenuItemConfig("HELP", menuType.BOTTOM , null, HelpIcon, false),
+    createMenuItemConfig("SETTING", menuType.BOTTOM , null, SettingsIcon, false),
+    createMenuItemConfig("PROFILE-AND-SETTINGS", menuType.BOTTOM , ProfileMenu, PersonIcon,false)
 ]
 export default globalMenuItems

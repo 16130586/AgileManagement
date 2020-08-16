@@ -6,10 +6,12 @@ import People from './Workplace/PeopleContainer'
 import RoadMap from './project/RoadMap'
 import Backlog from './project/Backlog'
 import Board from './project/Board'
-import WorkFlow from "./project/WorkFlow";
+import WorkFlow from "./project/WorkFlow"
+import BurndownChart from "./project/BurndownChart"
+import VelocityChart from "./project/VelocityChart";
 import Settings from './project/Settings'
-import IssueDetail from "./project/IssueDetailContainer";
-import {connect} from "react-redux";
+import IssueDetail from "./project/IssueDetailContainer"
+import {connect} from "react-redux"
 import {fetchAboutMe} from "../actions/global";
 let WorkplaceContainer = function (props) {
     useEffect(() => {
@@ -35,7 +37,8 @@ let WorkplaceContainer = function (props) {
                 <Route path="/project/:projectId/backlog" component={Backlog} />
                 <Route path="/project/:projectId/boards" component={Board} />
                 <Route path="/project/:projectId/workflow" component={WorkFlow} />
-                <Route path="/project/:projectId/settings/details" component={Settings} />
+                <Route path="/project/:projectId/charts/burndown" component={BurndownChart} />
+                <Route path="/project/:projectId/charts/velocity" component={VelocityChart} />
                 <Route path="/project/1/issue/3" component={IssueDetail}/>
                 <Route exact path="/">
                     <div>Welcome</div>

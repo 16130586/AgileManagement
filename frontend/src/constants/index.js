@@ -111,6 +111,8 @@ export const Auth = {
     SIGN_UP : "auth-sign-up",
     SIGN_UP_SUCCESS : "auth-sign-up-success",
     SIGN_UP_FAILED : "auth-sign-up-failed",
+    LOGOUT: "auth-log-out",
+    LOGOUT_SUCCESS : "auth-log-out-sucess",
 }
 export const UI = {
     CHANGE_CONTEXTUAL_NAVIGATION_BAR : "UI-change-contextual-navigation-bar",

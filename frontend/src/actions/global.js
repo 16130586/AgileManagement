@@ -4,6 +4,8 @@ export const clearNavigateTo = () => ({type : RouterEventTypes.CLEAR_REDIRECT_UR
 export const validateToken = (token) => ({type : AuthEventTypes.VALIDATE_TOKEN , payload : token})
 export const tokenValid = (user) => ({type : AuthEventTypes.TOKEN_VALID , payload : user})
 export const tokenInValid = () => ({type : AuthEventTypes.TOKEN_IN_VALID , payload : null})
+export const logout = () => ({type: AuthEventTypes.LOGOUT, payload : null})
+export const logoutSuccess= () => ({type: AuthEventTypes.LOGOUT_SUCCESS, payload : null})
 export const madeRequestFail = (msg) => ({type : AsyncEventTypes.REQUEST.FAILED, payload: msg})
 export const madeRequestSuccess = (msg) => ({type : AsyncEventTypes.REQUEST.SUCCESS, payload: msg})
 export const login = (userName,password) => ({type : AuthEventTypes.LOGIN, payload: {userName , password}})
