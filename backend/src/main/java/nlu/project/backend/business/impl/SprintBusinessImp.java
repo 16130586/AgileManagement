@@ -86,12 +86,16 @@ public class SprintBusinessImp implements SprintBusiness {
         sprint.setDateEnd(new Date(System.currentTimeMillis()));
         sprint.setStatus(2);
         Project project = sprint.getProject();
-        WorkFlowItem endStatus = project.getCurrentWorkFlow().getItems().stream().filter(new Predicate<WorkFlowItem>() {
-            @Override
-            public boolean test(WorkFlowItem workFlowItem) {
-                return workFlowItem.isEnd();
-            }
-        }).findFirst().get();
+
+        WorkFlowItem endStatus = project.getCurrentWorkFlow()
+                .getItems().stream()
+                .filter(status->status.isEnd()).findFirst().get();
+
+        WorkFlowItem startStatus = project.getCurrentWorkFlow()
+                .getItems().stream()
+                .filter(status -> status.isStart())
+                .findFirst().get();
+
         List<Issue> issues = sprint.getIssues();
 
         //saving velocity
@@ -114,6 +118,10 @@ public class SprintBusinessImp implements SprintBusiness {
         velocity.setTotalStoryPoint(totalStoryPoint);
         velocity.setSprintId(sprint.getId());
         velocity.setTotalExpectStoryPoint(totalExpectStoryPoint);
+        //end saving velocity
+
+
+        // moving the status isn't done to not started
         if (issues.size() > 0)
             issues.forEach(new Consumer<Issue>() {
                 @Override
@@ -123,7 +131,8 @@ public class SprintBusinessImp implements SprintBusiness {
                         issueDAO.update(issue);
                     }
                     if(!issue.getStatus().isStart() && !issue.getStatus().isEnd()){
-                        issue.setStatus(endStatus);
+                        issue.setSprint(null);
+                        issue.setStatus(startStatus);
                         issueDAO.update(issue);
                     }
                 }
