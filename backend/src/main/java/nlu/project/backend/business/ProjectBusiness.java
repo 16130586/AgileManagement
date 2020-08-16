@@ -25,7 +25,8 @@ public interface ProjectBusiness {
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
     UserRole addMember(UserRoleParams params);
-    void removeMember(UserRoleParams params);
+    Project addMemberByUserName(UserRoleParams params);
+    Project removeMember(UserRoleParams params);
     UserRole addRoleToMember(UserRoleParams params);
     void removeRoleFromMember(UserRoleParams params);
     WorkFlowItem deleteWorkFlowItem(WorkFlowParams params);

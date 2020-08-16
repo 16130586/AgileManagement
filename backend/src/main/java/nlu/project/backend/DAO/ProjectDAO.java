@@ -123,6 +123,7 @@ public class ProjectDAO {
     }
     @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project update(Project project, ProjectParams projectParams) {
+        System.out.println("here");
         Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
         UserRole leader = userRoleRepository.findByRoleAndProject(leadRole, project);
         if (leader.getUser().getId() != projectParams.leader) {
@@ -310,18 +311,65 @@ public class ProjectDAO {
         Role defaultRole = roleRepository.getOne(3);
         Project project = projectRepository.getOne(params.projectID);
 
-        UserRole userRole = new UserRole();
+        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        // check if user in the project
+        if (userRole != null) {
+            return null;
+        }
+        userRole = new UserRole();
         userRole.setUser(user);
         userRole.setRole(defaultRole);
         userRole.setProject(project);
         return userRoleRepository.save(userRole);
     }
 
-    public void removeMember(UserRoleParams params) {
+    //@Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+    public Project removeMember(UserRoleParams params) {
         User user = userRepository.getOne(params.userID);
         Project project = projectRepository.getOne(params.projectID);
         UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+
+
+        Collection<Project> projects = user.getJointProjects();
+        projects.remove(project);
+        user.setJointProjects(projects);
+        userRepository.save(user);
         userRoleRepository.delete(userRole);
+
+        Collection<User> devTeam = project.getDevTeam();
+        devTeam.remove(user);
+        project.setDevTeam(devTeam);
+
+        return project;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+    public Project addMemberByUserName(UserRoleParams params) {
+        User user = userRepository.findByUserName(params.userName);
+        Project project = projectRepository.getOne(params.projectID);
+        Role defaultRole = roleRepository.getOne(3);
+
+        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        // check if user in the project
+        if (userRole != null) {
+            return project;
+        }
+        userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(defaultRole);
+        userRole.setProject(project);
+        userRoleRepository.save(userRole);
+
+        Collection<Project> projects = user.getJointProjects();
+        projects.add(project);
+        user.setJointProjects(projects);
+        userRepository.save(user);
+
+        Collection<User> devTeam = project.getDevTeam();
+        devTeam.add(user);
+        project.setDevTeam(devTeam);
+
+        return project;
     }
 
     public UserRole addRoleToMember(UserRoleParams params) {

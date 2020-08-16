@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @NoArgsConstructor
 public class ProjectParams {
-    public int id;
+    public Integer id;
     public String name;
     public String key;
     public String description;
@@ -15,4 +15,6 @@ public class ProjectParams {
     public Integer productOwner;
     public MultipartFile file;
     public String imgUrl;
+
+
 }

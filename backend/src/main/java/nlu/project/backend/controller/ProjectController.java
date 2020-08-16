@@ -43,6 +43,7 @@ public class ProjectController extends BaseController{
 
     @PostMapping("/update")
     public ApiResponse updateProject(@RequestBody ProjectParams projectParams) {
+        System.out.println(projectParams.id);
         Object result = projectBusiness.update(projectParams);
         return ApiResponse.OnSuccess(result, "Update Project Success!");
     }
@@ -141,10 +142,16 @@ public class ProjectController extends BaseController{
         return ApiResponse.OnSuccess(result, "Add member success!");
     }
 
+    @PostMapping("/member/addByUserName")
+    public ApiResponse addByUserName(@RequestBody UserRoleParams params) {
+        Object result = projectBusiness.addMemberByUserName(params);
+        return ApiResponse.OnSuccess(result, "Add member success!");
+    }
+
     @PostMapping("/member/remove")
     public ApiResponse removeMember(@RequestBody UserRoleParams params) {
-        projectBusiness.removeMember(params);
-        return ApiResponse.OnSuccess(null, "Remove member success!");
+        Object result = projectBusiness.removeMember(params);
+        return ApiResponse.OnSuccess(result, "Remove member success!");
     }
 
     @PostMapping("/member/addRole")

@@ -142,8 +142,13 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public void removeMember(UserRoleParams params) {
-        projectDAO.removeMember(params);
+    public Project addMemberByUserName(UserRoleParams params) {
+        return projectDAO.addMemberByUserName(params);
+    }
+
+    @Override
+    public Project removeMember(UserRoleParams params) {
+        return projectDAO.removeMember(params);
     }
 
     @Override
