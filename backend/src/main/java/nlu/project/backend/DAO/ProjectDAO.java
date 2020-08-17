@@ -54,6 +54,9 @@ public class ProjectDAO {
     @Autowired
     SprintVelocityDAO sprintVelocityDAO;
 
+    @Autowired
+    FileBusiness fileBusiness;
+
     public boolean isExistedProjectName(String name) {
         return projectRepository.existsByName(name);
     }
@@ -68,7 +71,11 @@ public class ProjectDAO {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = IllegalArgumentException.class)
     public Project save(ProjectParams projectParams) {
-
+        String imgUrl = "";
+        if (projectParams.file != null)
+            imgUrl = fileBusiness.save(projectParams.file);
+        projectParams.setImgUrl(imgUrl);
+        // Project
         Project project = new Project();
         project.setName(projectParams.name);
         project.setCode(projectParams.key);

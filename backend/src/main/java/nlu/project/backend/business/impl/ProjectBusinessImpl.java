@@ -50,16 +50,13 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             throw new InvalidInputException("Project's Name already exists");
         if (projectDAO.isExistedProjectCode(projectParams.key))
             throw new InvalidInputException("Project's Key already exists");
-        String imgUrl = "";
-        if (projectParams.file != null)
-            imgUrl = fileBusiness.save(projectParams.file);
-        // Project
-         projectParams.setImgUrl(imgUrl);
          return projectDAO.save(projectParams);
     }
 
     @Override
-    public Project update(ProjectParams projectParams) {
+    public Project update(ProjectParams projectParams, User user) {
+        if(!userDAO.isProductOwner(user.getId(), projectParams.id))
+            throw new UnauthorizedException("Unauthorised!");
         Project project = projectDAO.getProjectById(projectParams.id);
         // Check New Name != Old Name && Existed
         if (!projectParams.name.equals(project.getName()) && projectDAO.isExistedProjectName(projectParams.name))
@@ -147,12 +144,16 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public UserRole addMember(UserRoleParams params) {
+    public UserRole addMember(UserRoleParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectID))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.addMember(params);
     }
 
     @Override
-    public void removeMember(UserRoleParams params) {
+    public void removeMember(UserRoleParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectID))
+            throw new UnauthorizedException("Unauthorised!");
         projectDAO.removeMember(params);
     }
 

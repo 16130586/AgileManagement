@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ProjectBusiness {
     Project create(ProjectParams projectParams);
-    Project update(ProjectParams projectParams);
+    Project update(ProjectParams projectParams, User user);
     boolean delete(ProjectParams projectParams, UserDetails userDetails);
     List<Project> findByName(String name);
     List<Project> findByKey(String key);
@@ -24,8 +24,8 @@ public interface ProjectBusiness {
     WorkFlowItem addWorkFlowItem(WorkFlowParams params, User user);
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params, User user);
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params, User user);
-    UserRole addMember(UserRoleParams params);
-    void removeMember(UserRoleParams params);
+    UserRole addMember(UserRoleParams params, User user);
+    void removeMember(UserRoleParams params, User user);
     UserRole addRoleToMember(UserRoleParams params);
     void removeRoleFromMember(UserRoleParams params);
     WorkFlowItem deleteWorkFlowItem(WorkFlowParams params, User user);
