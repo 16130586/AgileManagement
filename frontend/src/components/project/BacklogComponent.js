@@ -184,7 +184,7 @@ let IssueItem = function (props) {
                         disabled
                     >Actions</MenuItem>
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}>
-                        Coppy issue link</MenuItem>
+                        Copy issue link</MenuItem>
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleDelete(data.id, props.projectId) }}>Delete</MenuItem>
                     <MenuItem onClick={(e) => { e.stopPropagation(); handleCloseOptsMenu() }}
                         disabled

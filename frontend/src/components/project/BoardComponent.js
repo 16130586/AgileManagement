@@ -94,7 +94,7 @@ let IssueBox = function (props) {
                         alt='' />
                     <Typography
                         style={{ fontSize: "1rem" }}
-                        className="ml-1">{issueName}</Typography>
+                        className="ml-1"><Link color="inherit" href={`/project/1/issue/${issueId}`}>{issueName}</Link></Typography>
                 </div>
                 <div style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
                     <span style={storyPointStyle}>{storyPoint}</span>
@@ -158,6 +158,7 @@ let BoardColumn = function (props) {
             <Typography>{props.current.name} - {props.issues && props.issues.length}</Typography>
             {props.issues && props.issues.map(iss =>
                 <IssueBox
+                    projectId={props.projectId}
                     className="mt-1" data={iss}
                     deleteIssue={props.deleteIssue}
                 />)}
@@ -270,6 +271,7 @@ let UserIssueWorkSpace = function (props) {
                                     owner={props.assignee}
                                     onDropIssueBox={props.onDropIssueBox}
                                     deleteIssue={props.deleteIssue}
+                                    projectId={props.projectId}
                                 />
                             )
                         }
@@ -580,6 +582,7 @@ let BoardSpaceComponent = function (props) {
                     workflow={props.workflow}
                     onDropIssueBox={props.onDropIssueBox}
                     deleteIssue={props.deleteIssue}
+                    projectId={props.sprint.project.id}
                 />)
             }
             {
