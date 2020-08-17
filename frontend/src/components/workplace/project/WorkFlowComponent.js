@@ -202,7 +202,8 @@ let WorkFlow = function (props) {
         workFlowId: '',
         name: '',
         isStart: false,
-        isEnd: false
+        isEnd: false,
+        projectId:null
     }
 
     const [addWorkFlowItemForm, setAddWorkFlowItemForm] = React.useState(initialAddWorkFlowItemForm)
@@ -225,7 +226,8 @@ let WorkFlow = function (props) {
     }
 
     const handleAddWorkFlowItemSubmit = function(){
-        props.addWorkFlowItem(addWorkFlowItemForm)
+        let newForm = {...addWorkFlowItemForm, projectId: props.projectId}
+        props.addWorkFlowItem(newForm)
         handleCloseAddWorkFlowItemDialog()
     }
 
@@ -237,7 +239,8 @@ let WorkFlow = function (props) {
 
     const [addLinkWorkFlowForm, setAddLinkWorkFlowForm] = React.useState({
         from: '',
-        to: ''
+        to: '',
+        projectId: null
     })
 
     const formAddLinkWorkFlowChange = function (event) {
@@ -249,14 +252,15 @@ let WorkFlow = function (props) {
     const isFormAddWorkFlowLinkValid = () => {
         let requiredAllNoneNull = true
         Object.keys(addLinkWorkFlowForm).forEach(name => {
-            if (addLinkWorkFlowForm[name] == null || addLinkWorkFlowForm[name] == 0)
+            if (name != "projectId" && addLinkWorkFlowForm[name] == null || addLinkWorkFlowForm[name] == 0)
                 requiredAllNoneNull = false
         })
         return !requiredAllNoneNull
     }
 
     const handleAddLinkWorkFlowSubmit = function(){
-        props.addWorkFlowLink(addLinkWorkFlowForm)
+        let newForm = {...addLinkWorkFlowForm, projectId: props.projectId}
+        props.addWorkFlowLink(newForm)
         handleCloseAddLinkWorkFlowDialog()
     }
 

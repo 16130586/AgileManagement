@@ -135,7 +135,8 @@ export const addWorkFlowItem = action$ =>
                     id: action.payload.workFlowId,
                     itemName: action.payload.name,
                     isStart: action.payload.isStart,
-                    isEnd: action.payload.isEnd
+                    isEnd: action.payload.isEnd,
+                    projectId: action.payload.projectId
                 }
             }
             return ajax(requestSettings)
@@ -172,7 +173,8 @@ export const addWorkFlowLink = action$ =>
                 },
                 body: {
                     fromItemId: action.payload.from,
-                    toItemId: action.payload.to
+                    toItemId: action.payload.to,
+                    projectId: action.payload.projectId
                 }
             }
             return ajax(requestSettings)
