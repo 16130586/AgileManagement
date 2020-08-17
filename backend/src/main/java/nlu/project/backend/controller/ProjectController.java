@@ -164,8 +164,8 @@ public class ProjectController extends BaseController{
     @PostMapping("/member/remove")
     public ApiResponse removeMember(@RequestBody UserRoleParams params, HttpServletRequest request) {
         CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
-        projectBusiness.removeMember(params);
-        return ApiResponse.OnSuccess(null, "Remove member success!");
+        Object result = projectBusiness.removeMember(params);
+        return ApiResponse.OnSuccess(result, "Remove member success!");
     }
 
     @PostMapping("/member/addRole")
