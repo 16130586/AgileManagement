@@ -1,7 +1,7 @@
 package nlu.project.backend.DAO;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import lombok.NoArgsConstructor;
+import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -151,14 +151,20 @@ public class ProjectController extends BaseController{
     @PostMapping("/member/add")
     public ApiResponse addMember(@RequestBody UserRoleParams params, HttpServletRequest request) {
         CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
-        Object result = projectBusiness.addMember(params, userDetails.getUser());
+        Object result = projectBusiness.addMember(params);
+        return ApiResponse.OnSuccess(result, "Add member success!");
+    }
+
+    @PostMapping("/member/addByUserName")
+    public ApiResponse addByUserName(@RequestBody UserRoleParams params) {
+        Object result = projectBusiness.addMemberByUserName(params);
         return ApiResponse.OnSuccess(result, "Add member success!");
     }
 
     @PostMapping("/member/remove")
     public ApiResponse removeMember(@RequestBody UserRoleParams params, HttpServletRequest request) {
         CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
-        projectBusiness.removeMember(params, userDetails.getUser());
+        projectBusiness.removeMember(params);
         return ApiResponse.OnSuccess(null, "Remove member success!");
     }
 

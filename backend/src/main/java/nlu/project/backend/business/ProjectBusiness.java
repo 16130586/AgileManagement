@@ -20,12 +20,13 @@ public interface ProjectBusiness {
     List<Project> findByOwner(int ownerId);
     List<Project> findByFilter(ProjectFilterParams filter);
     List<Project> findJointIn(int userId);
+    UserRole addMember(UserRoleParams params);
+    Project addMemberByUserName(UserRoleParams params);
+    Project removeMember(UserRoleParams params);
     WorkFlow createWorkFlow(WorkFlowParams params, User user);
     WorkFlowItem addWorkFlowItem(WorkFlowParams params, User user);
     WorkFlowItem addLinkWorkFlow(WorkFlowParams params, User user);
     WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params, User user);
-    UserRole addMember(UserRoleParams params, User user);
-    void removeMember(UserRoleParams params, User user);
     UserRole addRoleToMember(UserRoleParams params);
     void removeRoleFromMember(UserRoleParams params);
     WorkFlowItem deleteWorkFlowItem(WorkFlowParams params, User user);

@@ -144,17 +144,18 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public UserRole addMember(UserRoleParams params, User user) {
-        if(!userDAO.isProductOwner(user.getId(), params.projectID))
-            throw new UnauthorizedException("Unauthorised!");
+    public UserRole addMember(UserRoleParams params) {
         return projectDAO.addMember(params);
     }
 
     @Override
-    public void removeMember(UserRoleParams params, User user) {
-        if(!userDAO.isProductOwner(user.getId(), params.projectID))
-            throw new UnauthorizedException("Unauthorised!");
-        projectDAO.removeMember(params);
+    public Project addMemberByUserName(UserRoleParams params) {
+        return projectDAO.addMemberByUserName(params);
+    }
+
+    @Override
+    public Project removeMember(UserRoleParams params) {
+        return projectDAO.removeMember(params);
     }
 
     @Override

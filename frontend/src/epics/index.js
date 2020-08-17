@@ -1,6 +1,7 @@
 import { combineEpics } from 'redux-observable'
 import WorkSpace_WorkOn from './work-space/your-work/work-on/index'
 import WorkSpace_Viewed from './work-space/your-work/viewed/index'
+import {getProject, updateProject, addMember, removeMember} from './project/setting'
 import { fetchTotalAssignToMeEpic, fetchWorkOnEpic } from './work-space/your-work/assign-to-me/index'
 import { deleteProject, fetchProjects, createProject, searchProject } from './work-space/project'
 import { validateToken, login, signUp, fetchAboutMe, logout } from './global'
@@ -58,6 +59,10 @@ export default combineEpics(
     deleteProject,
     fetchProjects,
     createProject,
+    addMember,
+    removeMember,
+    getProject,
+    updateProject,
     fetchGroup,
     searchProject,
     fetchWorkFlows,
