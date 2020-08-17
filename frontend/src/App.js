@@ -47,7 +47,6 @@ function App(props) {
 }
 
 const mapStateToProps = state => {
-  console.log(state)
   return {
     common: state.Common,
   }

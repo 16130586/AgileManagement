@@ -8,45 +8,8 @@ import {
     fullFilledUpdateWorkFlowItem,
     updateWorkFlowItem,
     createWorkFlow,
-    addWorkFlowItem, addWorkFlowLink, fullFilledRemovedWorkFlowItem, fullFilledRemovedWorkFlowLink
+    addWorkFlowItem, addWorkFlowLink, fullFilledRemovedWorkFlowItem, fullFilledRemovedWorkFlowLink, deleteWorkFlow
 } from "../../actions/project";
-
-const fakeWorkFlowList = [
-    {
-        id: 1,
-        name: "Workflow 1",
-        nodeDataArray: [
-            { key: 0, text: 'Alpha', color: 'lightblue', loc: '0 0' },
-            { key: 1, text: 'Beta', color: '#777', loc: '150 0' },
-            { key: 2, text: 'Gamma', color: 'lightgreen', loc: '0 150' },
-            { key: 3, text: 'Delta', color: 'pink', loc: '150 150' }
-        ],
-        linkDataArray: [
-            { key: -1, from: 0, to: 1 },
-            { key: -2, from: 0, to: 2 },
-            { key: -3, from: 1, to: 1 },
-            { key: -4, from: 2, to: 3 },
-            { key: -5, from: 3, to: 0 }
-        ]
-    },
-    {
-        id: 2,
-        name: "Workflow 2",
-        nodeDataArray: [
-            { key: 0, text: 'A', color: 'lightblue', loc: '0 0' },
-            { key: 1, text: 'B', color: 'lightblue', loc: '150 0' },
-            { key: 2, text: 'C', color: 'lightblue', loc: '0 150' },
-            { key: 3, text: 'D', color: 'lightblue', loc: '150 150' }
-        ],
-        linkDataArray: [
-            { key: -1, from: 0, to: 1 },
-            { key: -2, from: 0, to: 2 },
-            { key: -3, from: 1, to: 1 },
-            { key: -4, from: 2, to: 3 },
-            { key: -5, from: 3, to: 0 }
-        ]
-    }
-]
 
 const WorkFlow = function(props){
     const listWorkFlow = props.listWorkFlow;
@@ -68,6 +31,7 @@ const WorkFlow = function(props){
             projectId={projectId}
             removeWorkFlowItem={props.fullFilledRemovedWorkFlowItem}
             removeWorkFlowLink={props.fullFilledRemovedWorkFlowLink}
+            deleteWorkFlow={props.deleteWorkFlow}
         />
     )
 }
@@ -86,7 +50,8 @@ const mapDispatchToProps = dispatch => {
         addWorkFlowItem: (data) => dispatch(addWorkFlowItem(data)),
         addWorkFlowLink: (data) => dispatch(addWorkFlowLink(data)),
         fullFilledRemovedWorkFlowItem: (workFlowId, data) => dispatch(fullFilledRemovedWorkFlowItem(workFlowId, data)),
-        fullFilledRemovedWorkFlowLink: (workFlowId, data) => dispatch(fullFilledRemovedWorkFlowLink(workFlowId, data))
+        fullFilledRemovedWorkFlowLink: (workFlowId, data) => dispatch(fullFilledRemovedWorkFlowLink(workFlowId, data)),
+        deleteWorkFlow: (workFlowId) => dispatch(deleteWorkFlow(workFlowId)),
 
     }
 }

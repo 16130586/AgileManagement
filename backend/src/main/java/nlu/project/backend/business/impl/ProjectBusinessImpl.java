@@ -6,14 +6,13 @@ import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.business.FileBusiness;
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.business.ProjectBusiness;
-import nlu.project.backend.business.SprintBusiness;
 import nlu.project.backend.entry.filter.ProjectFilterParams;
-import nlu.project.backend.entry.filter.SprintFilterParams;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.entry.project.UserRoleParams;
 import nlu.project.backend.entry.project.WorkFlowParams;
 import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.exception.custom.InvalidInputException;
+import nlu.project.backend.exception.custom.UnauthorizedException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import java.security.InvalidParameterException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -50,16 +50,13 @@ public class ProjectBusinessImpl implements ProjectBusiness {
             throw new InvalidInputException("Project's Name already exists");
         if (projectDAO.isExistedProjectCode(projectParams.key))
             throw new InvalidInputException("Project's Key already exists");
-        String imgUrl = "";
-        if (projectParams.file != null)
-            imgUrl = fileBusiness.save(projectParams.file);
-        // Project
-         projectParams.setImgUrl(imgUrl);
          return projectDAO.save(projectParams);
     }
 
     @Override
-    public Project update(ProjectParams projectParams) {
+    public Project update(ProjectParams projectParams, User user) {
+        if(!userDAO.isProductOwner(user.getId(), projectParams.id))
+            throw new UnauthorizedException("Unauthorised!");
         Project project = projectDAO.getProjectById(projectParams.id);
         // Check New Name != Old Name && Existed
         if (!projectParams.name.equals(project.getName()) && projectDAO.isExistedProjectName(projectParams.name))
@@ -112,27 +109,37 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     }
 
     @Override
-    public WorkFlow createWorkFlow(WorkFlowParams params) {
+    public WorkFlow createWorkFlow(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.createWorkFlow(params);
     }
 
     @Override
-    public WorkFlowItem addWorkFlowItem(WorkFlowParams params) {
+    public WorkFlowItem addWorkFlowItem(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.addWorkFlowItem(params);
     }
 
     @Override
-    public WorkFlowItem addLinkWorkFlow(WorkFlowParams params) {
+    public WorkFlowItem addLinkWorkFlow(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.addLinkWorkFlow(params);
     }
 
     @Override
-    public WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params) {
+    public WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.deleteLinkWorkFlow(params);
     }
 
     @Override
-    public WorkFlowItem deleteWorkFlowItem(WorkFlowParams params) {
+    public WorkFlowItem deleteWorkFlowItem(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
         return projectDAO.deleteWorkFlowItem(params);
     }
 
@@ -175,8 +182,11 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     @Override
     public List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails cusUser) {
         User user = cusUser.getUser();
-        if (!userDAO.isProductOwner(user.getId(), projectId))
+//        if (!userDAO.isProductOwner(user.getId(), projectId)) or jointIn Project
+        boolean isOwnerOrJointInProject = true;
+        if(!isOwnerOrJointInProject)
             throw new InvalidParameterException("Invalid parameters!");
+
         return sprintDAO.findWorkingSprints(projectId);
     }
     @Override
@@ -230,6 +240,23 @@ public class ProjectBusinessImpl implements ProjectBusiness {
     public Project getProject(Integer projectId, CustomUserDetails user) {
         // must check is In project
         return projectDAO.getProjectById(projectId);
+    }
+
+    @Override
+    public Integer deleteWorkFlow(WorkFlowParams params, User user) {
+        if(!userDAO.isProductOwner(user.getId(), params.projectId))
+            throw new UnauthorizedException("Unauthorised!");
+        return projectDAO.deleteWorkFlow(params);
+    }
+
+    @Override
+    public Sprint getCurrentSprint(Integer projectId, CustomUserDetails user) {
+        List<Sprint> sprints = getWorkingSprints(projectId , user);
+        Sprint currentStartSprint = null;
+        Optional<Sprint> lookup = sprints.stream().filter(s -> s.getStatus() == 1).findFirst();
+        if(lookup.isPresent())
+            currentStartSprint = lookup.get();
+        return currentStartSprint;
     }
 
     public boolean isInProject(Integer projectId , Integer userId){

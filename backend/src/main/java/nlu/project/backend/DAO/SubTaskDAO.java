@@ -3,17 +3,15 @@ package nlu.project.backend.DAO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.entry.issue.SubTaskParams;
-import nlu.project.backend.model.Issue;
-import nlu.project.backend.model.SubTask;
-import nlu.project.backend.model.User;
-import nlu.project.backend.repository.IssueRepository;
-import nlu.project.backend.repository.ProjectRepository;
-import nlu.project.backend.repository.SubTaskRepository;
-import nlu.project.backend.repository.UserRepository;
+import nlu.project.backend.exception.custom.InvalidInputException;
+import nlu.project.backend.model.*;
+import nlu.project.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Component
 @NoArgsConstructor
@@ -32,34 +30,78 @@ public class SubTaskDAO {
     @Autowired
     SubTaskRepository subTaskRepository;
 
+    @Autowired
+    WorkFlowItemRepository workFlowItemRepository;
 
-    public SubTask create(SubTaskParams params) {
-        User user = userRepository.getOne(params.assignedID);
-        Issue issue = issueReposistory.getOne(params.issueID);
+    @Autowired
+    LogWorkRepository logWorkRepository;
+
+
+    public SubTask create(SubTaskParams params, User user) {
+        Issue issue = issueReposistory.getOne(params.issueId);
         SubTask subTask = new SubTask();
-        subTask.setAssignment(user);
+        subTask.setName(params.name);
         subTask.setIssue(issue);
-        subTask.setEstimateTime(params.estimateTime);
+        //set code
+        String code = issue.getName() + "-" + (issue.getSubTasks().size() + 1);
+        subTask.setCode(code);
+        // set status
+        Project project = projectRepository.getOne(params.projectId);
+        List<WorkFlowItem> workFlowItems = project.getCurrentWorkFlow().getItems();
+        WorkFlowItem started = workFlowItems.stream().filter(new Predicate<WorkFlowItem>() {
+            @Override
+            public boolean test(WorkFlowItem workFlowItem) {
+                return workFlowItem.isStart();
+            }
+        }).findFirst().get();
+        subTask.setStatus(started);
+        //
         return subTaskRepository.save(subTask);
     }
 
     public SubTask update(SubTaskParams params) {
-        User user = userRepository.getOne(params.assignedID);
-        Issue issue = issueReposistory.getOne(params.issueID);
-        SubTask subTask = subTaskRepository.getOne(params.subtaskID);
-        subTask.setAssignment(user);
-        subTask.setIssue(issue);
-        subTask.setEstimateTime(params.estimateTime);
+        SubTask subTask = subTaskRepository.getOne(params.subtaskId);
+        if (params.assignedId != null) {
+            User user = userRepository.getOne(params.assignedId);
+            subTask.setAssignment(user);
+        }
+        if (params.estimateTime != null) {
+            subTask.setEstimateTime(params.estimateTime);
+        }
+        if (params.name != null) {
+            subTask.setName(params.name);
+        }
+        if (params.description != null) {
+            subTask.setDescription(params.description);
+        }
+        if (params.workFlowStatus != null) {
+            subTask.setStatus(workFlowItemRepository.getOne(params.workFlowStatus));
+        }
         return subTaskRepository.save(subTask);
     }
 
     public void delete(SubTaskParams params) {
-        SubTask subTask = subTaskRepository.getOne(params.subtaskID);
+        SubTask subTask = subTaskRepository.getOne(params.subtaskId);
         subTaskRepository.delete(subTask);
     }
 
     public List<SubTask> getSubTaskByIssueID(SubTaskParams params) {
-        Issue issue = issueReposistory.getOne(params.issueID);
+        Issue issue = issueReposistory.getOne(params.issueId);
         return subTaskRepository.getSubTasksByIssue(issue);
+    }
+
+    public SubTask getSubTaskById(int subTaskId) {
+        return subTaskRepository.getOne(subTaskId);
+    }
+
+
+    public LogWork logWork(SubTaskParams params, User owner) {
+        SubTask subTask = getSubTaskById(params.subtaskId);
+        LogWork logWork = new LogWork();
+        logWork.setOwner(owner);
+        logWork.setSubTask(subTask);
+        logWork.setHours(params.logWorkTime);
+        logWork.setDate(new Date());
+        return logWorkRepository.save(logWork);
     }
 }

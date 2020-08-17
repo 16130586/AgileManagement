@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Component
 @NoArgsConstructor
@@ -48,6 +51,12 @@ public class ProjectDAO {
     @Autowired
     IssueTypeRepository issueTypeRepository;
 
+    @Autowired
+    SprintVelocityDAO sprintVelocityDAO;
+
+    @Autowired
+    FileBusiness fileBusiness;
+
     public boolean isExistedProjectName(String name) {
         return projectRepository.existsByName(name);
     }
@@ -60,9 +69,13 @@ public class ProjectDAO {
         return projectRepository.getOne(id);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = IllegalArgumentException.class)
     public Project save(ProjectParams projectParams) {
-
+        String imgUrl = "";
+        if (projectParams.file != null)
+            imgUrl = fileBusiness.save(projectParams.file);
+        projectParams.setImgUrl(imgUrl);
+        // Project
         Project project = new Project();
         project.setName(projectParams.name);
         project.setCode(projectParams.key);
@@ -76,7 +89,7 @@ public class ProjectDAO {
         backlogRepository.save(backLog);
         project.setBacklog(backLog);
 
-        if(projectParams.leader != projectParams.productOwner){
+        if (projectParams.leader != projectParams.productOwner) {
             // Leader
             User teamLead = userRepository.getOne(projectParams.leader);
             Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
@@ -102,7 +115,7 @@ public class ProjectDAO {
             projectRepository.saveAndFlush(project);
 
 
-        }else {
+        } else {
             User creator = userRepository.findById(projectParams.productOwner).get();
             Role poRole = roleRepository.findByName(ConstraintRole.PRODUCT_OWNER);
             UserRole productOwner = new UserRole();
@@ -121,7 +134,8 @@ public class ProjectDAO {
         // End
         return project;
     }
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = IllegalArgumentException.class)
     public Project update(Project project, ProjectParams projectParams) {
         System.out.println("here");
         Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
@@ -137,36 +151,49 @@ public class ProjectDAO {
         projectRepository.save(project);
         return project;
     }
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = IllegalArgumentException.class)
     public boolean delete(int projectId) {
         try {
-            projectRepository.deleteById(projectId);
-        }
-        catch (Exception e) {
+            Project project = projectRepository.getOne(projectId);
+            project.setDeleted(true);
+            projectRepository.saveAndFlush(project);
+        } catch (Exception e) {
             return false;
         }
         return true;
     }
 
     public List<Project> findByNameLike(String name) {
-        return projectRepository.findByNameContaining(name);
+        List<Project> result = projectRepository
+                .findByNameContaining(name)
+                .stream().filter(p -> !p.isDeleted())
+                .collect(Collectors.toList());
+        return result;
     }
 
     public List<Project> findByCode(String key) {
-        return projectRepository.findByCode(key);
+        List<Project> result = projectRepository
+                .findByCode(key)
+                .stream().filter(p -> !p.isDeleted())
+                .collect(Collectors.toList());
+        return result;
     }
+
     public List<Project> findByKeyLike(String key) {
-        return projectRepository.findByCodeContaining(key);
+        List<Project> result = projectRepository
+                .findByCodeContaining(key)
+                .stream().filter(p -> !p.isDeleted())
+                .collect(Collectors.toList());
+        return result;
     }
 
     public List<Project> findByUser(int userId) {
         User user = userRepository.getOne(userId);
-        List<Project> result = new ArrayList<>();
+        final List<Project> result = new ArrayList<>();
         List<UserRole> userRoles = userRoleRepository.findByUser(user);
-        for (UserRole i : userRoles) {
-            result.add(i.getProject());
-        }
-        return result;
+        userRoles.forEach(userRole -> result.add(userRole.getProject()));
+        return result.stream().filter(p -> !p.isDeleted()).collect(Collectors.toList());
     }
 
     public List<Project> findByOwner(int ownerId) {
@@ -177,18 +204,18 @@ public class ProjectDAO {
             if (i.getRole().getId() == 1)
                 result.add(i.getProject());
         }
-        return result;
+        return result.stream().filter(p -> !p.isDeleted()).collect(Collectors.toList());
     }
 
     public List<Project> findByFilter(ProjectFilterParams filter) {
         List<Project> result;
         String name = (filter.name == null) ? "" : filter.name;
         String key = (filter.key == null) ? "" : filter.key;
-        if ( (filter.name != null) || (filter.key != null) ) {
+        if ((filter.name != null) || (filter.key != null)) {
             result = projectRepository.findByNameContainingAndCodeContaining(name, key);
             result = filterByUserId(result, filter);
             result = filterByOwnerId(result, filter);
-            return  result;
+            return result;
         }
         if (filter.userId != null) {
             result = findByUser(filter.userId);
@@ -207,12 +234,12 @@ public class ProjectDAO {
         List<Project> result = new ArrayList<>();
         User owner = userRepository.getOne(filter.ownerId);
         UserRole userRole;
-        for(Project project : projectList) {
+        for (Project project : projectList) {
             userRole = userRoleRepository.findByUserAndProject(owner, project);
             if (userRole != null && userRole.getRole().getId() == 1)
                 result.add(project);
         }
-        return result;
+        return result.stream().filter(pro -> !pro.isDeleted()).collect(Collectors.toList());
     }
 
     public List<Project> filterByUserId(List<Project> projectList, ProjectFilterParams filter) {
@@ -222,14 +249,15 @@ public class ProjectDAO {
         List<Project> result = new ArrayList<>();
         User owner = userRepository.getOne(filter.ownerId);
         UserRole userRole;
-        for(Project project : projectList) {
+        for (Project project : projectList) {
             userRole = userRoleRepository.findByUserAndProject(owner, project);
-            if (userRole != null )
+            if (userRole != null)
                 result.add(project);
         }
         return result;
     }
-    public List<Project> findJointIn(int userId){
+
+    public List<Project> findJointIn(int userId) {
         return projectRepository.findJointIn(userId);
     }
 
@@ -246,7 +274,7 @@ public class ProjectDAO {
         WorkFlowItem item = new WorkFlowItem();
         item.setName(params.itemName);
         if (params.isStart)
-            item.setColor("lightgray");
+            item.setColor("green");
         else if (params.isEnd)
             item.setColor("blue");
         else
@@ -286,16 +314,15 @@ public class ProjectDAO {
         return workflowRepository.getOne(id);
     }
 
-    public List<IssueType> getIssueTypes(Integer projectId){
-        List<IssueType> result = Collections.emptyList();
-        try{
-            result = issueTypeRepository.findAllByProjectId(projectId);
-            if(result.size() <= 0){
+    public List<IssueType> getIssueTypes(Integer projectId) {
+        try {
+            List<IssueType> result = issueTypeRepository.findAllByProjectId(projectId);
+            if (result.size() <= 0) {
                 return issueTypeRepository.findDefaultIssueTypes();
             }
-            return result;
+            return Collections.emptyList();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new InternalException(e.getMessage());
         }
@@ -303,7 +330,7 @@ public class ProjectDAO {
 
     public List<WorkFlow> getWorkFlowByProjectId(int projectId) {
         Project project = projectRepository.getOne(projectId);
-        return workflowRepository.findByProject(project);
+        return workflowRepository.findByProjectOrProjectIsNullOrderByProjectAsc(project);
     }
 
     public UserRole addMember(UserRoleParams params) {
@@ -323,7 +350,7 @@ public class ProjectDAO {
         return userRoleRepository.save(userRole);
     }
 
-    //@Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
+    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public Project removeMember(UserRoleParams params) {
         User user = userRepository.getOne(params.userID);
         Project project = projectRepository.getOne(params.projectID);
@@ -388,5 +415,14 @@ public class ProjectDAO {
         UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
         userRole.setRole(null);
         return userRoleRepository.save(userRole);
+    }
+
+    public Integer deleteWorkFlow(WorkFlowParams params) {
+        workflowRepository.deleteById(params.id);
+        return params.id;
+    }
+
+    public List<SprintVelocity> getVelocities(Integer projectId) {
+        return sprintVelocityDAO.getVelocities(projectId);
     }
 }

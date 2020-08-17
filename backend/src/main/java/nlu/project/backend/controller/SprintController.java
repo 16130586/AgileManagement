@@ -4,6 +4,7 @@ import nlu.project.backend.business.SprintBusiness;
 import nlu.project.backend.entry.filter.SprintFilterParams;
 import nlu.project.backend.entry.sprint.CreateSprintParams;
 import nlu.project.backend.entry.sprint.EditSprintParams;
+import nlu.project.backend.entry.sprint.IssueInSprintSearchParams;
 import nlu.project.backend.entry.sprint.StartSprintParams;
 import nlu.project.backend.model.Sprint;
 import nlu.project.backend.model.response.ApiResponse;
@@ -73,4 +74,12 @@ public class SprintController extends  BaseController{
         Object result = sprintBusiness.updateSprint(entry , userDetails);
         return ApiResponse.OnSuccess(result, "delete sprint Success!");
     }
+    @PostMapping("/searchIssueInSprintIssue")
+    public ApiResponse searchIssueInSprintIssue(HttpServletRequest request ,@RequestBody IssueInSprintSearchParams entry){
+        CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+        Object result = sprintBusiness.issueInSprintSearchParams(entry , userDetails);
+        return ApiResponse.OnSuccess(result, "delete sprint Success!");
+    }
+
+
 }

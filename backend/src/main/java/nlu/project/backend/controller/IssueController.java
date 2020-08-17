@@ -8,6 +8,7 @@ import nlu.project.backend.entry.issue.SubTaskParams;
 import nlu.project.backend.entry.issue.IssueTypeParams;
 import nlu.project.backend.entry.issue.MoveToBacklog;
 import nlu.project.backend.entry.issue.MoveToParams;
+import nlu.project.backend.model.Issue;
 import nlu.project.backend.model.response.ApiResponse;
 import nlu.project.backend.model.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -24,6 +27,12 @@ public class IssueController extends BaseController{
 
     @Autowired
     IssueBusiness issueBusiness;
+
+    @GetMapping("/{issueId}")
+    public ApiResponse fetchIssue(@PathVariable Integer issueId) {
+        Object result = issueBusiness.fetchIssue(issueId);
+        return ApiResponse.OnSuccess(result, "Fetch Issue Success!");
+    }
 
     @PostMapping("/create")
     public ApiResponse createIssue(@RequestBody IssueParams issueParams, HttpServletRequest request) {
@@ -68,9 +77,15 @@ public class IssueController extends BaseController{
         return ApiResponse.OnSuccess(result, "Find Project Success!");
     }
 
+    @GetMapping("/subTask/{subTaskId}")
+    public ApiResponse getSubTask(@PathVariable int subTaskId) {
+        Object result = issueBusiness.getSubTaskById(subTaskId);
+        return ApiResponse.OnSuccess(result, "Fetch SubTask Success!");
+    }
+
     @PostMapping("/subTask/create")
-    public ApiResponse createSubTask(@RequestBody SubTaskParams params) {
-        Object result = issueBusiness.createSubTask(params);
+    public ApiResponse createSubTask(@RequestBody SubTaskParams params, HttpServletRequest request) {
+        Object result = issueBusiness.createSubTask(params, ((CustomUserDetails) getUser(request)).getUser());
         return ApiResponse.OnSuccess(result, "Create SubTask Success!");
     }
 
@@ -132,5 +147,39 @@ public class IssueController extends BaseController{
         if(result == null)
             return ApiResponse.OnBadRequest("Cannot move");
         return ApiResponse.OnSuccess(params , "move!");
+    }
+    @PostMapping("/dad")
+    public ApiResponse dragAndDrop(HttpServletRequest request,
+                                                @RequestBody DragAndDrop params) {
+
+        if ("unassigned".equals(params.fromAssignee))
+            params.fromAssignee = null;
+        if ("unassigned".equals(params.toAssignee))
+            params.toAssignee = null;
+        CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
+        Issue result = issueBusiness.dragAndDrop(params, userDetails);
+        Map<String, Object> jsonObject = new HashMap<>();
+
+        jsonObject.put("data", result);
+        jsonObject.put("id", params.id);
+        jsonObject.put("fromStatus", params.fromStatusId);
+        jsonObject.put("toStatusId", params.toStatusId);
+        jsonObject.put("fromAssignee", params.fromAssignee);
+        jsonObject.put("toAssignee", params.toAssignee);
+        if (result == null)
+            return ApiResponse.OnBadRequest("Cannot done");
+        return ApiResponse.OnSuccess(jsonObject, "done");
+    }
+    @GetMapping("/priority")
+    public ApiResponse getPriority() {
+        Object result = issueBusiness.fetchPriorityList();
+        return ApiResponse.OnSuccess(result, "Fetch list priority success!");
+    }
+
+    @PostMapping("/subTask/logWork")
+    public ApiResponse logWork(@RequestBody SubTaskParams params, HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Object result = issueBusiness.logWork(params, userDetails.getUser());
+        return ApiResponse.OnSuccess(result, "Logged!");
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ProjectBusiness {
     Project create(ProjectParams projectParams);
-    Project update(ProjectParams projectParams);
+    Project update(ProjectParams projectParams, User user);
     boolean delete(ProjectParams projectParams, UserDetails userDetails);
     List<Project> findByName(String name);
     List<Project> findByKey(String key);
@@ -20,16 +20,16 @@ public interface ProjectBusiness {
     List<Project> findByOwner(int ownerId);
     List<Project> findByFilter(ProjectFilterParams filter);
     List<Project> findJointIn(int userId);
-    WorkFlow createWorkFlow(WorkFlowParams params);
-    WorkFlowItem addWorkFlowItem(WorkFlowParams params);
-    WorkFlowItem addLinkWorkFlow(WorkFlowParams params);
-    WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params);
     UserRole addMember(UserRoleParams params);
     Project addMemberByUserName(UserRoleParams params);
     Project removeMember(UserRoleParams params);
+    WorkFlow createWorkFlow(WorkFlowParams params, User user);
+    WorkFlowItem addWorkFlowItem(WorkFlowParams params, User user);
+    WorkFlowItem addLinkWorkFlow(WorkFlowParams params, User user);
+    WorkFlowItem deleteLinkWorkFlow(WorkFlowParams params, User user);
     UserRole addRoleToMember(UserRoleParams params);
     void removeRoleFromMember(UserRoleParams params);
-    WorkFlowItem deleteWorkFlowItem(WorkFlowParams params);
+    WorkFlowItem deleteWorkFlowItem(WorkFlowParams params, User user);
     List<IssueType> getIssueTypes(Integer projectId, Integer requestedUserId);
     List<Sprint> getWorkingSprints(Integer projectId, CustomUserDetails user);
     List<WorkFlow> getWorkFlow(int projectId);
@@ -39,4 +39,8 @@ public interface ProjectBusiness {
     List<User> getDevTeam(Integer projectId, CustomUserDetails user);
 
     Project getProject(Integer projectId, CustomUserDetails user);
+
+    Integer deleteWorkFlow(WorkFlowParams params, User user);
+
+    Sprint getCurrentSprint(Integer projectId, CustomUserDetails user);
 }

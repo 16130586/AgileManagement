@@ -23,7 +23,6 @@ let CollapseContextualNavigationButton = function (props) {
     )
 }
 let NavigationContainer = function (props) {
-    console.log(props)
     let [currentContextualState, setContextualState] = useState("OPEN")
     let nextContextualDisplay = (state = currentContextualState) => {
         return {
@@ -51,7 +50,6 @@ let NavigationContainer = function (props) {
 }
 
 const mapStateToProps = state => {
-    console.log(state)
     return {
         navItems : state.Common.navItems
     }

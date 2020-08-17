@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface WorkflowRepository extends JpaRepository<WorkFlow, Integer> {
-    List<WorkFlow> findByProject(Project project);
+    List<WorkFlow> findByProjectOrProjectIsNullOrderByProjectAsc(Project project);
     @Query(value = "SELECT wf.* FROM workflow wf WHERE project_id IS NULL" , nativeQuery =  true)
     List<WorkFlow> findDefault();
 }

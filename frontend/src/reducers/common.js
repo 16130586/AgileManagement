@@ -7,23 +7,26 @@ import {
 } from '../constants/index'
 import { saveToken, getToken, clearToken } from '../common/localStorage'
 
-import People from '../components/navigation/contextual-items/People';
-import DashBoard from '../components/navigation/contextual-items/DashBoard';
-import Filter from '../components/navigation/contextual-items/Filter';
-import FilterSelections from '../components/navigation/contextual-items/FilterSelections';
-import Projects from '../components/navigation/contextual-items/Project';
-import YourWork from '../components/navigation/contextual-items/YourWork';
+import People from '../components/navigation/contextual-items/People'
+import DashBoard from '../components/navigation/contextual-items/DashBoard'
+import Filter from '../components/navigation/contextual-items/Filter'
+import FilterSelections from '../components/navigation/contextual-items/FilterSelections'
+import Projects from '../components/navigation/contextual-items/Project'
+import YourWork from '../components/navigation/contextual-items/YourWork'
 
-import RoadMap from '../components/navigation/contextual-items/project/RoadMap';
-import Backlog from '../components/navigation/contextual-items/project/Backlog';
-import Boards from '../components/navigation/contextual-items/project/Boards';
-import Settings from '../components/navigation/contextual-items/project/Settings';
-import WorkFlow from "../components/navigation/contextual-items/project/Workflow";
+import RoadMap from '../components/navigation/contextual-items/project/RoadMap'
+import Backlog from '../components/navigation/contextual-items/project/Backlog'
+import Boards from '../components/navigation/contextual-items/project/Boards'
+import Settings from '../components/navigation/contextual-items/project/Settings'
+import WorkFlow from "../components/navigation/contextual-items/project/Workflow"
+import Charts from "../components/navigation/contextual-items/project/Charts"
+import ChartSelections from "../components/navigation/contextual-items/project/ChartSelections"
 
 let globalNavigationItemsConfig = [YourWork, Projects, DashBoard, People, Filter]
 Filter.prototype.component = FilterSelections
 
-let projectNavigationItemsConfig = [Projects,RoadMap, Backlog, Boards, WorkFlow, Settings]
+let projectNavigationItemsConfig = [Projects, RoadMap, Backlog, Boards, Charts, WorkFlow, Settings]
+Charts.prototype.component = ChartSelections
 
 const initState = {
     isAppLoad: false,
@@ -41,9 +44,14 @@ const Common = (state = initState, action) => {
                 ...state,
                 isAppLoad: false,
                 token: action.payload,
-                user: null,
                 forceRedirectTo: "/"
             }
+            break;
+        case AuthEventTypes.LOGOUT_SUCCESS:
+            nextState = { ...initState, forceRedirectTo: "/login" }
+            break;
+        case AsyncEventTypes.FULL_FILLED.ABOUT_ME:
+            nextState = { ...nextState, user: action.payload }
             break;
         case AuthEventTypes.SIGN_UP_SUCCESS:
             nextState = { ...state, forceRedirectTo: '/login' }
@@ -59,7 +67,6 @@ const Common = (state = initState, action) => {
             nextState = { ...state, forceRedirectTo: `/project/${action.payload.id}/roadmap`, isAppLoad: true }
             break;
         case RouterTypes.REDIRECT:
-            console.log(action)
             nextState = { ...state, forceRedirectTo: action.payload }
             break;
         case RouterTypes.CLEAR_REDIRECT_URL:
@@ -73,11 +80,16 @@ const Common = (state = initState, action) => {
                 case 'BACKLOG':
                 case 'BOARDS':
                 case 'WORKFLOW':
+                case 'CHARTS':
                 case 'SETTINGS':
                     let projectItemsWithData = []
                     for (let i = 0; i < projectNavigationItemsConfig.length; i++) {
                         let Item = projectNavigationItemsConfig[i]
-                        let newItemWithData = (props) => <Item {...props} data={action.payload.data} />
+                        let newItemWithData = function (props) { return <Item {...props} data={action.payload.data} /> }
+                        if (projectNavigationItemsConfig[i].prototype && projectNavigationItemsConfig[i].prototype.component) {
+                            let Child = projectNavigationItemsConfig[i].prototype.component
+                            newItemWithData.prototype.component = (props) => <Child {...props} data={action.payload.data} />
+                        }
                         projectItemsWithData.push(newItemWithData)
                     }
                     nextState = { ...state, navItems: projectItemsWithData }
@@ -87,8 +99,10 @@ const Common = (state = initState, action) => {
                     for (let i = 0; i < globalNavigationItemsConfig.length; i++) {
                         let Item = globalNavigationItemsConfig[i]
                         let newItemWithData = function (props) { return <Item {...props} data={action.payload.data} /> }
-                        if (globalNavigationItemsConfig[i].prototype && globalNavigationItemsConfig[i].prototype.component)
-                            newItemWithData.prototype.component = globalNavigationItemsConfig[i].prototype.component
+                        if (globalNavigationItemsConfig[i].prototype && globalNavigationItemsConfig[i].prototype.component) {
+                            let Child = globalNavigationItemsConfig[i].prototype.component
+                            newItemWithData.prototype.component = (props) => <Child {...props} data={action.payload.data} />
+                        }
                         globalItemsWithData.push(newItemWithData)
                     }
                     nextState = { ...state, navItems: globalItemsWithData }

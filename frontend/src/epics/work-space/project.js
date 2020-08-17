@@ -101,8 +101,37 @@ export const fetchProjects = action$ =>
 export const deleteProject = action$ =>
     action$.pipe(
         ofType(AsyncTypes.REQUEST.DELETE_PROJECT),
-        mergeMap(action => delelteProjectFakeAjax(action.payload)),
-        map(response => fullFilledDeleteProject(response.data))
+        mergeMap(action => {
+            const projectId = action.payload
+            const deleteUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.DELETE_PROJECT);
+            const deleteSettings = {
+                url: deleteUrl,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: {
+                    id: projectId
+                }
+            }
+            return ajax(deleteSettings)
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({
+                        status: ajaxResponse.status, response: {
+                            data: {
+                                isDelete : ajaxResponse.response.data,
+                                projectId : projectId
+                            }
+                        }
+                    })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
+        }),
+        map(response => {
+            if (response.data.isDelete == 'true')
+                return fullFilledDeleteProject(response.data.projectId)
+            return madeRequestFail(ajax.response.data)
+        })
     );
 
 export const searchProject = action$ =>
@@ -117,15 +146,15 @@ export const searchProject = action$ =>
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${getToken()}`
                 },
-                body : {
+                body: {
                     name: action.payload.name,
                     key: action.payload.key
                 }
             }
             return ajax(requestSettings)
-                    .pipe(
-                        mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
-                        catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
         }),
         map(ajax => {
             if (ajax.status == 0)
@@ -147,8 +176,8 @@ export const createProject = action$ =>
 
             let formData = new FormData();
             formData.append('name', action.payload.projectName)
-            formData.append('key' , action.payload.projectKey)
-            formData.append('description' , action.payload.shortDescription)
+            formData.append('key', action.payload.projectKey)
+            formData.append('description', action.payload.shortDescription)
             formData.append('file', action.payload.img)
             const fullyUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.CREATE_PROJECT)
             // do not declare content-type, let the browser do that such thing or get a bug
@@ -163,7 +192,7 @@ export const createProject = action$ =>
                 //     key: action.payload.projectKey,
                 //     description: action.payload.shortDescription,
                 // }
-                body : formData
+                body: formData
             }
             return ajax(requestSettings)
                 .pipe(

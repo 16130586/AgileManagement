@@ -14,7 +14,4 @@ function Filter(props) {
     )
 }
 
-Filter.propTypes = {
-    changeContext: PropTypes.func.isRequired
-}
 export default Filter;

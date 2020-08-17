@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "_group")
@@ -19,6 +21,9 @@ public class Group {
     @Column(name = "name")
     private String name;
 
+    @ManyToMany(mappedBy = "groups")
+    @JsonIgnoreProperties("groups")
+    private List<User> member = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "owner_id")

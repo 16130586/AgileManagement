@@ -17,3 +17,15 @@ export const fullFilledTotalAssignToMe = (total) => ({type : AsyncEventTypes.FUL
 
 export const fetchAllGroup = () => ({type: AsyncEventTypes.LOAD_MORE.ALL_GROUP})
 export const fullFilledAllGroup = (listGroup) => ({type: AsyncEventTypes.FULL_FILLED.ALL_GROUP, payload: {data: listGroup}})
+
+export const addMemberToGroup = (data) => ({type: AsyncEventTypes.REQUEST.GROUP_ADD_MEMBER, payload: data})
+export const fullFilledAddMemberToGroup = (data) => ({type: AsyncEventTypes.FULL_FILLED.GROUP_ADD_MEMBER, payload: data})
+
+export const removeMemberFromGroup = (groupId, userId) => ({type: AsyncEventTypes.REQUEST.GROUP_REMOVE_MEMBER, payload: {groupId: groupId, userId: userId}})
+export const fullFilledRemoveMemberFromGroup = (data) => ({type: AsyncEventTypes.FULL_FILLED.GROUP_REMOVE_MEMBER, payload: data})
+
+export const createGroup = (data) => ({type: AsyncEventTypes.REQUEST.CREATE_GROUP, payload: data})
+export const fullFilledCreateGroup = (data) => ({type: AsyncEventTypes.FULL_FILLED.CREATE_GROUP, payload: data})
+
+export const deleteGroup = (data) => ({type: AsyncEventTypes.REQUEST.DELETE_GROUP, payload: data})
+export const fullFilledDeleteGroup = (data) => ({type: AsyncEventTypes.FULL_FILLED.DELETE_GROUP, payload: data})

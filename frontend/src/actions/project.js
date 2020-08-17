@@ -80,3 +80,41 @@ export const fullFilledRequestProjectDetail = (project) => ({type:AsyncEventType
 export const requestUpdateProject= (data) => ({type:AsyncEventTypes.REQUEST.PROJECT_UPDATE, payload: data})
 export const requestProjectAddMember= (data) => ({type:AsyncEventTypes.REQUEST.PROJECT_ADD_MEMBER, payload: data})
 export const requestProjectRemoveMember= (data) => ({type:AsyncEventTypes.REQUEST.PROJECT_REMOVE_MEMBER, payload: data})
+export const deleteWorkFlow = (workFlowId) => ({type: AsyncEventTypes.REQUEST.DELETE_WORKFLOW, payload: workFlowId})
+export const fullFilledDeleteWorkFlow = (workFlowId) => ({type: AsyncEventTypes.FULL_FILLED.DELETE_WORKFLOW, payload: workFlowId})
+
+
+export const fetchBoardPage = (projectId) => ({ type: AsyncEventTypes.REQUEST.BOARD_PAGE, payload: projectId })
+export const fullFilledBoardPage = (data) => ({ type: AsyncEventTypes.FULL_FILLED.BOARD_PAGE, payload: data })
+
+export const requestDADIssue = (data) => ({ type: AsyncEventTypes.REQUEST.DADIssue, payload: data })
+export const fullFilledRequestDADIssue = (data) => ({ type: AsyncEventTypes.FULL_FILLED.DADIssue, payload: data })
+
+export const fetchIssue = (projectId, issueId) => ({type: AsyncEventTypes.REQUEST.FETCH_ISSUE, payload: {issueId: issueId, projectId: projectId}})
+export const fullFilledFetchIssue = (data) => ({type: AsyncEventTypes.FULL_FILLED.FETCH_ISSUE, payload: data})
+
+export const createSubTask = (data) => ({type: AsyncEventTypes.REQUEST.CREATE_SUBTASK, payload: data})
+export const fullFilledCreateSubtask = (data) => ({type: AsyncEventTypes.FULL_FILLED.CREATE_SUBTASK, payload: data})
+
+export const updateIssueDescription = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_ISSUE_DESCRIPTION, payload: data})
+export const fullFilledUpdateIssueDescription = (data) => ({type: AsyncEventTypes.FULL_FILLED.UPDATE_ISSUE_DESCRIPTION, payload: data})
+
+export const updateIssueDetails = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_ISSUE_DETAILS, payload: data})
+
+export const requestBoardFilterIssue = (filter) => ({type: AsyncEventTypes.REQUEST.BOARD_FILTER_ISSUE, payload: filter})
+export const fullFilledRequestBoardFilterIssue = (data) => ({type: AsyncEventTypes.FULL_FILLED.BOARD_FILTER_ISSUE, payload: data})
+
+export const fetchSubTaskPage = (data) => ({type: AsyncEventTypes.REQUEST.SUBTASK_DETAILS, payload: data})
+export const fullFilledFetchSubTaskPage = (data) => ({type: AsyncEventTypes.FULL_FILLED.SUBTASK_DETAILS, payload: data})
+
+export const updateSubTask = (data) => ({type: AsyncEventTypes.REQUEST.UPDATE_SUBTASK, payload: data})
+
+export const logWork = (data) => ({type: AsyncEventTypes.REQUEST.LOG_WORK, payload: data})
+export const fullFilledLogWork = (data) => ({type: AsyncEventTypes.FULL_FILLED.LOG_WORK, payload: data})
+
+export const fetchProject = (projectId) => ({type: AsyncEventTypes.REQUEST.FETCH_PROJECT, payload: projectId})
+export const fullFilledFetchProject = (data) => ({type: AsyncEventTypes.FULL_FILLED.FETCH_PROJECT, payload: data})
+
+
+export const fetchVelocityChart = (projectId) => ({type: AsyncEventTypes.REQUEST.FETCH_VELOCITY_CHART, payload: projectId})
+export const fullFilledFetchVelocityChart = (data) => ({type: AsyncEventTypes.FULL_FILLED.FETCH_VELOCITY_CHART, payload: data})

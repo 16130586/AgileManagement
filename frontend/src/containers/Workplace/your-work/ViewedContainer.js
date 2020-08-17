@@ -10,7 +10,7 @@ let ItemLayout = function (props) {
                 className="work-on-item-container"
             >
                 <div>
-                    <img class="work-on-item_img" src="https://realng.atlassian.net/secure/viewavatar?size=medium&avatarId=10315&avatarType=issuetype"></img>
+                    <img class="work-on-item_img" alt="" src="https://realng.atlassian.net/secure/viewavatar?size=medium&avatarId=10315&avatarType=issuetype"></img>
                 </div>
                 <span class="work-on-item_info">
                     <span>A40</span>

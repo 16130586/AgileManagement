@@ -9,6 +9,7 @@ export const ASYNC = {
         ALL_GROUP:'load-more.all-group',
         ALL_WORKFLOW : 'load-more.all-workflow',
         BACKLOG_PAGE: 'load-more.project.backlog-items',
+        
     },
     FULL_FILLED: {
         TOTAL_ASSIGN_TO_ME : 'full-filled.total-assign-to-me',
@@ -43,6 +44,25 @@ export const ASYNC = {
         ISSUE_UPDATE_DETAIL : 'full-filled.project.issue-update-detail',
         PROJECT_DETAIL: 'full-filled.project.detail',
 
+        DELETE_WORKFLOW : 'full-filled.delete-workflow',
+        ABOUT_ME: 'full-filled.about-me',
+        GROUP_ADD_MEMBER: 'full-filled.group-add-member',
+        GROUP_REMOVE_MEMBER: 'full-filled.group-remove-member',
+        CREATE_GROUP: 'full-filled.create-group',
+        DELETE_GROUP: 'full-filled.delete-group',
+        BOARD_PAGE : 'full-filled.board-page',
+        DADIssue : 'full-filled.project.board-drag-and-drop-issue',
+        FETCH_ISSUE: 'full-filled.fetch-issue',
+        CREATE_SUBTASK: 'full-filled.create-subtask',
+        UPDATE_ISSUE_DESCRIPTION: 'full-filled.update-issue-description',
+        UPDATE_ISSUE_DETAILS: 'full-filled.update-issue-details',
+        BOARD_FILTER_ISSUE: 'full-filled.board-filter-issue',
+        SUBTASK_DETAILS: 'full-filled.subtask-detail',
+        UPDATE_SUBTASK: 'full-filled.update-subtask',
+        LOG_WORK: 'full-filled.log-work',
+        FETCH_VELOCITY_CHART: 'full-filled.fetch.velocity-chart',
+        FETCH_PROJECT: 'full-filled.fetch.single-project',
+        
     },
     REQUEST: {
         DELETE_PROJECT : 'request.delete-project',
@@ -72,9 +92,26 @@ export const ASYNC = {
         PROJECT_DETAIL: 'request.project.detail',
         PROJECT_UPDATE: 'request.project.update',
         PROJECT_ADD_MEMBER: 'request.project.add-member',
-        PROJECT_REMOVE_MEMBER: 'request.project.remove-member'
+        PROJECT_REMOVE_MEMBER: 'request.project.remove-member',
+        DELETE_WORKFLOW : 'request.delete-workflow',
+        ABOUT_ME : 'request.about-me',
+        GROUP_ADD_MEMBER : 'request.group-add-member',
+        GROUP_REMOVE_MEMBER : 'request.group-remove-member',
+        CREATE_GROUP : 'request.create-group',
+        DELETE_GROUP : 'request.delete-group',
+        BOARD_PAGE : 'request.project.board-page',
+        DADIssue : 'request.project.board-drag-and-drop-issue',
+        FETCH_ISSUE : 'request.fetch-issue',
+        CREATE_SUBTASK: 'request.create-subtask',
+        UPDATE_ISSUE_DESCRIPTION: 'request.update-issue-description',
+        UPDATE_ISSUE_DETAILS : 'request.update-issue-details',
+        BOARD_FILTER_ISSUE: 'request.board-filter-issue',
+        SUBTASK_DETAILS: 'request.subtask-detail',
+        UPDATE_SUBTASK: 'request.update-subtask',
+        LOG_WORK: 'request.log-work',
+        FETCH_VELOCITY_CHART: 'request.fetch.velocity-chart',
+        FETCH_PROJECT: 'full-filled.fetch.single-project',
     }
-   
 }
 export const Router = {
     REDIRECT : "redirect-to",
@@ -90,6 +127,8 @@ export const Auth = {
     SIGN_UP : "auth-sign-up",
     SIGN_UP_SUCCESS : "auth-sign-up-success",
     SIGN_UP_FAILED : "auth-sign-up-failed",
+    LOGOUT: "auth-log-out",
+    LOGOUT_SUCCESS : "auth-log-out-sucess",
 }
 export const UI = {
     CHANGE_CONTEXTUAL_NAVIGATION_BAR : "UI-change-contextual-navigation-bar",

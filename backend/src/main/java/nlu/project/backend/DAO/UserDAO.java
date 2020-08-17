@@ -66,4 +66,13 @@ public class UserDAO {
             throw new InternalException(e.getMessage());
         }
     }
+
+    public User getUserByUserName(String userName) {
+        try {
+            return userRepository.findByUserName(userName);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new InternalException(e.getMessage());
+        }
+    }
 }

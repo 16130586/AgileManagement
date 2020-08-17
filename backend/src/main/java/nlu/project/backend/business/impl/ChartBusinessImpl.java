@@ -3,19 +3,22 @@ package nlu.project.backend.business.impl;
 import nlu.project.backend.DAO.ProjectDAO;
 import nlu.project.backend.business.ChartBusiness;
 import nlu.project.backend.entry.project.WorkFlowParams;
+import nlu.project.backend.model.SprintVelocity;
 import nlu.project.backend.model.WorkFlow;
 import nlu.project.backend.model.WorkFlowItem;
 import nlu.project.backend.model.chart.LinkData;
 import nlu.project.backend.model.chart.NodeData;
 import nlu.project.backend.model.chart.WorkFlowChart;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CharBusinessImpl implements ChartBusiness {
+public class ChartBusinessImpl implements ChartBusiness {
     @Autowired
     ProjectDAO projectDAO;
 
@@ -34,6 +37,7 @@ public class CharBusinessImpl implements ChartBusiness {
             workFlowChart = new WorkFlowChart();
             workFlowChart.setId(workflow.getId());
             workFlowChart.setName(workflow.getName());
+            workFlowChart.setProjectId(workflow.getProject() != null ? workflow.getProject().getId() : null);
             nodeDataArray = parseWorkFlowItemToNodeData(workflow.getItems());
             linkDataArray = parseWorkFlowItemToLinkData(workflow.getItems());
             workFlowChart.setNodeDataArray(nodeDataArray);
@@ -86,6 +90,15 @@ public class CharBusinessImpl implements ChartBusiness {
         // remove Link-Workflow - this behavior just remove link, not add
         updateRemoveWorkFlowLink(workFlow.getItems(), chart.linkDataArray);
         projectDAO.updateWorkFlow(workFlow);
+    }
+
+    @Override
+    public List<SprintVelocity> getVelocityData(UserDetails user, Integer projectId) {
+        // must to implement check user is po or in project
+        boolean isInProject = true;
+        if(!isInProject)
+            throw  new InvalidParameterException("Invalid paramseter!");
+        return projectDAO.getVelocities(projectId);
     }
 
     private void updateWorkFlowItem(List<WorkFlowItem> items, List<NodeData> nodeDataArray, int workflowId) {

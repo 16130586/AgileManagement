@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "issue")
@@ -42,6 +43,8 @@ public class Issue {
     private String description;
     @Column(name = "hours")
     private Double hours;
+    @OneToMany(mappedBy = "issue")
+    private List<SubTask> subTasks;
 
     @Column(name = "story_point")
     private int storyPoint;

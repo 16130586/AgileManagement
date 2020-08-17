@@ -1,19 +1,18 @@
 package nlu.project.backend.business.impl;
 
 import lombok.NoArgsConstructor;
-import nlu.project.backend.DAO.IssueDAO;
-import nlu.project.backend.DAO.ProjectDAO;
-import nlu.project.backend.DAO.SprintDAO;
-import nlu.project.backend.DAO.UserDAO;
+import nlu.project.backend.DAO.*;
 import nlu.project.backend.business.IssueBusiness;
 import nlu.project.backend.business.ProjectBusiness;
 import nlu.project.backend.business.SprintBusiness;
 import nlu.project.backend.entry.filter.SprintFilterParams;
 import nlu.project.backend.entry.sprint.CreateSprintParams;
 import nlu.project.backend.entry.sprint.EditSprintParams;
+import nlu.project.backend.entry.sprint.IssueInSprintSearchParams;
 import nlu.project.backend.entry.sprint.StartSprintParams;
 import nlu.project.backend.model.*;
 import nlu.project.backend.model.security.CustomUserDetails;
+import nlu.project.backend.repository.SprintVelocityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -43,6 +43,9 @@ public class SprintBusinessImp implements SprintBusiness {
 
     @Autowired
     ProjectBusiness productBusiness;
+
+    @Autowired
+    SprintVelocityDAO sprintVelocityDAO;
 
     @Override
     public List<Sprint> findByFilter(SprintFilterParams filter) {
@@ -83,13 +86,42 @@ public class SprintBusinessImp implements SprintBusiness {
         sprint.setDateEnd(new Date(System.currentTimeMillis()));
         sprint.setStatus(2);
         Project project = sprint.getProject();
-        WorkFlowItem endStatus = project.getCurrentWorkFlow().getItems().stream().filter(new Predicate<WorkFlowItem>() {
-            @Override
-            public boolean test(WorkFlowItem workFlowItem) {
-                return workFlowItem.isEnd();
-            }
-        }).findFirst().get();
+
+        WorkFlowItem endStatus = project.getCurrentWorkFlow()
+                .getItems().stream()
+                .filter(status->status.isEnd()).findFirst().get();
+
+        WorkFlowItem startStatus = project.getCurrentWorkFlow()
+                .getItems().stream()
+                .filter(status -> status.isStart())
+                .findFirst().get();
+
         List<Issue> issues = sprint.getIssues();
+
+        //saving velocity
+        List<Issue> doneIssues = sprint.getIssues().stream()
+                .filter(iss -> iss.getStatus().getId() == endStatus.getId())
+                .collect(Collectors.toList());
+
+        int totalStoryPoint = 0;
+        for(Issue doneIssue : doneIssues){
+            totalStoryPoint += doneIssue.getStoryPoint();
+        }
+        int totalExpectStoryPoint = 0;
+        for(Issue issue : issues){
+            totalExpectStoryPoint+=issue.getStoryPoint();
+        }
+        SprintVelocity velocity = new SprintVelocity();
+        velocity.setDate(new Date());
+        velocity.setProjectId(sprint.getProject().getId());
+        velocity.setSprintName(sprint.getName());
+        velocity.setTotalStoryPoint(totalStoryPoint);
+        velocity.setSprintId(sprint.getId());
+        velocity.setTotalExpectStoryPoint(totalExpectStoryPoint);
+        //end saving velocity
+
+
+        // moving the status isn't done to not started
         if (issues.size() > 0)
             issues.forEach(new Consumer<Issue>() {
                 @Override
@@ -99,11 +131,13 @@ public class SprintBusinessImp implements SprintBusiness {
                         issueDAO.update(issue);
                     }
                     if(!issue.getStatus().isStart() && !issue.getStatus().isEnd()){
-                        issue.setStatus(endStatus);
+                        issue.setSprint(null);
+                        issue.setStatus(startStatus);
                         issueDAO.update(issue);
                     }
                 }
             });
+        sprintVelocityDAO.save(velocity);
         sprintDAO.update(sprint);
         return sprint;
     }
@@ -214,6 +248,15 @@ public class SprintBusinessImp implements SprintBusiness {
         sprint.setGoal(entry.goal);
         sprintDAO.update(sprint);
         return sprint;
+    }
+
+    @Override
+    public List<Issue> issueInSprintSearchParams(IssueInSprintSearchParams entry, CustomUserDetails userDetails) {
+        Sprint sprint = sprintDAO.getOne(entry.sprintId);
+        List<Issue> issues = sprint.getIssues();
+        List<Issue> result  = issues.stream().filter(iss -> iss.getIssueType().getId() == entry.issueTypeId)
+                .filter(iss -> iss.getDescription().toUpperCase().contains(entry.name.toUpperCase())).collect(Collectors.toList());
+        return result;
     }
 
 }

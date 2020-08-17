@@ -3,12 +3,15 @@ package nlu.project.backend.DAO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.entry.project.GroupParams;
+import nlu.project.backend.exception.custom.InvalidInputException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
 @NoArgsConstructor
@@ -33,37 +36,46 @@ public class GroupDAO {
     @Autowired
     UserGroupRepository userGroupRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
-    public Group save(GroupParams params) {
+    public Group save(GroupParams params, User owner) {
         Group group = new Group();
         group.setName(params.name);
-        group.setOwner(userRepository.getOne(params.ownerID));
+        group.setOwner(owner);
         group = groupRepository.save(group);
-
-        UserGroup userGroup;
-        for(int userID : params.listUserID) {
-            userGroup = new UserGroup();
-            userGroup.setUser(userRepository.getOne(userID));
-            userGroup.setGroup(group);
-            userGroupRepository.save(userGroup);
-        }
 
         return group;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
     public UserGroup addToGroup(GroupParams params) {
-        UserGroup userGroup = new UserGroup();
-        userGroup.setGroup(groupRepository.getOne(params.groupID));
-        userGroup.setUser(userRepository.getOne(params.addID));
+        Group group = groupRepository.getOne(params.groupId);
+        User user = userRepository.findByNickNameOrEmail(params.dataUser, params.dataUser);
+        // check existed user
+        if (user == null)
+            throw new InvalidInputException("NickName or Email not existed!");
+        // check user already in group
+        UserGroup userGroup = userGroupRepository.findByUserAndGroup(user,group);
+        if (userGroup != null)
+            throw new InvalidInputException("User already existed in Group!");
+        // save
+        userGroup = new UserGroup();
+        userGroup.setGroup(group);
+        userGroup.setUser(user);
         return userGroupRepository.save(userGroup);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor = IllegalArgumentException.class)
-    public void removeFromGroup(GroupParams params) {
-        User user = userRepository.getOne(params.removeID);
-        Group group = groupRepository.getOne(params.groupID);
+    public GroupParams removeFromGroup(GroupParams params) {
+        User user = userRepository.getOne(params.removeId);
+        Group group = groupRepository.getOne(params.groupId);
         UserGroup userGroup = userGroupRepository.findByUserAndGroup(user,group);
         userGroupRepository.delete(userGroup);
+        return params;
+    }
+
+    public List<Group> getGroupsByUser(User user) {
+        return groupRepository.findByOwnerOrMemberContains(user, user);
+    }
+
+    public GroupParams delete(GroupParams params) {
+        groupRepository.deleteById(params.groupId);
+        return params;
     }
 }

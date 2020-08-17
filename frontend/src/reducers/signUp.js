@@ -1,20 +1,24 @@
-import { Auth as AuthEventTypes} from '../constants/index'
+import { Auth as AuthEventTypes } from '../constants/index'
 const init = {
-    userName : null,
-    password : null,
+    userName: null,
+    password: null,
     confirmPassword: null,
-    errorMessage : null
+    errorMessage: null
 }
 const SignUp = function (state = init, action) {
     let nextState = state;
-    switch(action.type){
+    switch (action.type) {
         case AuthEventTypes.SIGN_UP_SUCCESS:
-            nextState = {userName : null , password : null , errorMessage : null};
+            nextState = { userName: null, password: null, errorMessage: null };
             break;
         case AuthEventTypes.SIGN_UP_FAILED:
-            nextState = {...state , errorMessage : action.payload}
+            nextState = { ...state, errorMessage: action.payload }
+            break;
+        case AuthEventTypes.LOGOUT_SUCCESS:
+            nextState = init
             break;
     }
+
     return nextState
 }
 export default SignUp

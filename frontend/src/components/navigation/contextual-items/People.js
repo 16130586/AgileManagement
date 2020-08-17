@@ -13,8 +13,5 @@ function People(props) {
     )
 }
 
-People.propTypes = {
-    changeContext: PropTypes.func.isRequired
-}
 
 export default People;

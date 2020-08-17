@@ -22,6 +22,7 @@ const workFlowReducer = (state = All_WorkFlow, action) => {
             let newWorkflow = {
                 id: action.payload.id,
                 name: action.payload.name,
+                projectId: action.payload.project.id,
                 nodeDataArray: [],
                 linkDataArray: []
             }
@@ -76,10 +77,8 @@ const workFlowReducer = (state = All_WorkFlow, action) => {
             nextState = nextState.map(workFlow => {
                 if (workFlow.id == action.payload.workFlowId) {
                     while (i < workFlow.linkDataArray.length) {
-                        console.log(i + " : " +isExistedInRemovedList(workFlow.linkDataArray[i].key, action.payload.data))
                         if (isExistedInRemovedList(workFlow.linkDataArray[i].key, action.payload.data)) {
                             workFlow.linkDataArray = [...workFlow.linkDataArray.slice(0, i), ...workFlow.linkDataArray.slice(i+1)]
-                            console.log("found item " + i)
                         }
                         else
                             i++
@@ -87,8 +86,12 @@ const workFlowReducer = (state = All_WorkFlow, action) => {
                 }
                 return workFlow;
             })
-            console.log("new state")
-            console.log(nextState)
+            break;
+        case AsynTypes.FULL_FILLED.DELETE_WORKFLOW:
+            nextState.forEach((workFlow, index) => {
+                if (workFlow.id == action.payload)
+                    nextState = [...nextState.slice(0, index), ...nextState.slice(index+1)]
+            })
             break;
         default:
             break;
