@@ -81,6 +81,8 @@ const Common = (state = initState, action) => {
                 case 'BOARDS':
                 case 'WORKFLOW':
                 case 'CHARTS':
+                case 'ISSUE':
+                case 'SUBTASK':
                 case 'SETTINGS':
                     let projectItemsWithData = []
                     for (let i = 0; i < projectNavigationItemsConfig.length; i++) {

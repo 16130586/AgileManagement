@@ -123,7 +123,7 @@ export const updateSubTask = action$ =>
                     subtaskId: action.payload.subTaskId,
                     description: action.payload.description,
                     name: action.payload.name,
-                    workflowStatus: action.payload.workflowStatus,
+                    workFlowStatus: action.payload.workflowStatus,
                     estimateTime: action.payload.estimateTime,
                     assignedId: action.payload.assignment
                 }

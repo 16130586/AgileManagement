@@ -66,6 +66,9 @@
   padding: 9px 0;
   margin-top: 5px;
   border: 1px solid #efefef;
+}
+
+.grid-3c {
   display: grid;
   grid-template-columns: 33.33% 33.33% 33.33%;
 }

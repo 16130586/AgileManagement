@@ -154,19 +154,20 @@ let ListSubTask = (props) => {
     }
     return (
         <div style={{width: '100%', padding: '8px'}}>
-            <div style={{marginTop:'10px', fontWeight:'500'}}>
+            <div className="grid-3c" style={{marginTop:'10px', fontWeight:'500'}}>
                 <span>SubTasks</span>
-                <div style={{display: "inline-block", float:'right'}}>
+                <span style={{textAlign:"right"}}>Assignment</span>
+                <div style={{textAlign:"right"}}>
                     <AddIcon onClick={handleIsFocus} className='custom-hover'/>
                 </div>
             </div>
             <div>
                 {props.subTasks.map((subTask) => (
-                    <div key={subTask.id} className='subTask custom-hover'>
+                    <div key={subTask.id} className='subTask custom-hover grid-3c'>
                         <Link color='inherit' href={`/project/${props.projectId}/issue/${props.issueId}/subtask/${subTask.id}`} style={{paddingLeft:'9px'}}>
                             {subTask.code + " " + subTask.name}
                         </Link>
-                        <span style={{textAlign:"right"}}>{subTask.assignment ? subTask.assignment.name : "Not Assignment" }</span>
+                        <span style={{textAlign:"right"}}>{subTask.assignment ? subTask.assignment.nickName : "Not Assignment" }</span>
                         <span style={{paddingRight:"10px", textAlign:"right"}}>{subTask.status.name}</span>
                     </div>
                 ))}

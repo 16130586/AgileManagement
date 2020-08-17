@@ -2,11 +2,14 @@ import React , {useEffect} from 'react'
 import { connect } from 'react-redux'
 import {createSubTask, fetchIssue, updateIssueDescription, updateIssueDetails} from "../../actions/project";
 import IssueDetailComponent from "../../components/project/issue/IssueDetailComponent";
+import {pageContextualNavigation} from "../../actions/global";
 
 const IssueDetailContainer = function(props){
     const fetchIssue = props.fetchIssueById
-    const projectId = 1;
-    const issueId = 3;
+    const { projectId,issueId } = props.match.params
+    useEffect(() => {
+        props.getNavigation('ISSUE', props.match.params)
+    }, [])
     useEffect(() => {
         fetchIssue(projectId,issueId)
     }, [])
@@ -44,7 +47,8 @@ const mapDispatchToProps = dispatch => {
         fetchIssueById: (projectId, issueId) => dispatch(fetchIssue(projectId, issueId)),
         createSubTask: (data) => dispatch(createSubTask(data)),
         updateIssueDescription: (data) => dispatch(updateIssueDescription(data)),
-        updateIssue: (data) => dispatch(updateIssueDetails(data))
+        updateIssue: (data) => dispatch(updateIssueDetails(data)),
+        getNavigation : (pageName,data) => dispatch(pageContextualNavigation(pageName,data)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(IssueDetailContainer)

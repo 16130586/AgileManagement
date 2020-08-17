@@ -41,8 +41,8 @@ let WorkplaceContainer = function (props) {
                 <Route path="/project/:projectId/charts/burndown" component={BurndownChart} />
                 <Route path="/project/:projectId/charts/velocity" component={VelocityChart} />
                 <Route path="/project/:projectId/settings/details" component={Settings} />
-                <Route path="/project/1/issue/3/subtask/1" component={SubTaskDetail}/>
-                <Route path="/project/1/issue/3" component={IssueDetail}/>
+                <Route path="/project/:projectId/issue/:issueId/subtask/:subTaskId" component={SubTaskDetail}/>
+                <Route path="/project/:projectId/issue/:issueId" component={IssueDetail}/>
                 <Route exact path="/">
                     <div>Welcome</div>
                 </Route>
