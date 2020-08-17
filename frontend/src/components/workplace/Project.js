@@ -92,11 +92,11 @@ let LeadComponent = function (props) {
     }
     return (
         <td style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
+            <div style={{ display: "flex"}}>
                 <img
-                    style={{ width: "24px", height: "24px" }}
-                    src={props.dataItem.avatarUrl} alt="Missing url " />
-                <span>{props.dataItem.leader.userName}</span>
+                    style={{ width: "24px", height: "24px", borderRadius: "3px" }}
+                    src={props.dataItem.leader.avatarUrl} alt="Missing url " />
+                <span className="ml-1">{props.dataItem.leader.userName}</span>
             </div>
             <div>
                 <Icon

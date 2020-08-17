@@ -362,7 +362,12 @@ let IssueAssignment = (props) => {
                         key={dev.id}
                         className="ml-1"
                         value={dev.email}>
-                        {dev.nickName}
+                        <div style={{ display: "flex"}}>
+                            <img
+                                style={{ width: "24px", height: "24px", borderRadius: "3px" }}
+                                src={dev.avatarUrl} alt="Missing url " />
+                            <span className="ml-1">{dev.nickName}</span>
+                        </div>
                     </MenuItem>
                 ))}
             </Select>
