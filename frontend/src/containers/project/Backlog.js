@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
 import BacklogComponent from '../../components/project/BacklogComponent'
-import { pageContextualNavigation } from '../../actions/global'
+import {navigateTo, pageContextualNavigation} from '../../actions/global'
 import {
     fetchBacklogPage, requestDeleteSprint,
     requestTopOfBacklog, requestBottomOfBacklog,
@@ -46,6 +46,7 @@ const Backlog = function (props) {
             createNewIssue={props.createNewIssue}
             completeSprint={props.completeSprint}
             updateDetailIssue={props.updateDetailIssue}
+            navigateTo={props.navigateTo}
         >
         </BacklogComponent>
     )
@@ -76,7 +77,8 @@ const mapDispatchToProps = dispatch => {
         moveIssueToSprint: (fromSprintId, toSprintId, issueId) => dispatch(requestMoveIssueToSprint(fromSprintId, toSprintId, issueId)),
         createNewIssue: (data) => dispatch(requestCreateNewIssue(data)),
         completeSprint: (sprintId) => dispatch(requestCompleteSprint(sprintId)),
-        updateDetailIssue : (data) => dispatch(requestUpdateDetailIssue(data),)
+        updateDetailIssue : (data) => dispatch(requestUpdateDetailIssue(data)),
+        navigateTo: (data) => dispatch(navigateTo(data))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Backlog)

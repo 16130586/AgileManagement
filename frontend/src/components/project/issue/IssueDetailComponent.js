@@ -27,7 +27,7 @@ let MyBreadCrumbs = function (props) {
             <Link color="inherit" href="/projects">
                 Projects
             </Link>
-            <Link color="inherit" href={`/project/${projectId}/settings/details`}>
+            <Link color="inherit" href={`/project/${projectId}/boards`}>
                 {projectCode == null ? projectName : projectCode}
             </Link>
             <Typography color="textPrimary">{issueName}</Typography>

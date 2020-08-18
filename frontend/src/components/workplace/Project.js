@@ -68,7 +68,7 @@ let ProjectNameComponent = function (props) {
             <img
                 style={{ width: "24px", height: "24px", borderRadius: "3px" }}
                 src={props.dataItem.imgUrl} alt="Missing url " />
-            <span onClick={() => props.navigateTo(`/project/${props.dataItem.id}/boards`)} className="ml-1">{props.dataItem.name}</span>
+            <span onClick={() => props.navigateTo(`/project/${props.dataItem.id}/backlog`)} className="ml-1">{props.dataItem.name}</span>
         </td>
     )
 }

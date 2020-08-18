@@ -44,7 +44,7 @@ const Common = (state = initState, action) => {
                 ...state,
                 isAppLoad: false,
                 token: action.payload,
-                forceRedirectTo: "/"
+                forceRedirectTo: "/projects"
             }
             break;
         case AuthEventTypes.LOGOUT_SUCCESS:
@@ -64,7 +64,7 @@ const Common = (state = initState, action) => {
             nextState = { ...state, forceRedirectTo: '/login', isAppLoad: true }
             break;
         case AsyncEventTypes.REQUEST.CREATE_PROJECT_SUCCESS:
-            nextState = { ...state, forceRedirectTo: `/project/${action.payload.id}/roadmap`, isAppLoad: true }
+            nextState = { ...state, forceRedirectTo: `/project/${action.payload.id}/backlog`, isAppLoad: true }
             break;
         case RouterTypes.REDIRECT:
             nextState = { ...state, forceRedirectTo: action.payload }

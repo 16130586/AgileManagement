@@ -34,7 +34,7 @@ let MyBreadCrumbs = function (props) {
             <Link color="inherit" href="/projects">
                 Projects
             </Link>
-            <Link color="inherit" href={`/project/${projectId}/settings/details`}>
+            <Link color="inherit" href={`/project/${projectId}/boards`}>
                 {projectCode == null ? projectName : projectCode}
             </Link>
             <Link color="inherit" href={`/project/${projectId}/issue/${issueId}`}>
@@ -166,9 +166,9 @@ let SubTaskLogWork = (props) => {
         <div>
             {props.logWorkList.map(item => (
             <div key={item.id} style={{width: '100%', marginTop:'10px'}}>
-
+                {item.owner &&
                 <span>{`${item.owner.nickName} logged ${item.hours}h`}</span>
-
+                }
             </div>
             ))}
         </div>
@@ -420,7 +420,7 @@ let SubTaskDetailComponent = function (props) {
                     <div>
                         <SubTaskName hasRightEdit={hasRightEdit} subTaskName={updateSubTaskForm.name || props.subTask.name} setChange={onFormChange}/>
                         <SubTaskDescription hasRightEdit={hasRightEdit} content={updateSubTaskForm.description || props.subTask.description} setChange={onFormChange}/>
-                        <SubTaskActivity logWorkList={props.subTask.logWorkList}/>
+                        {props.subTask.logWorkList && <SubTaskActivity logWorkList={props.subTask.logWorkList}/> }
                     </div>
                     }
                 </div>

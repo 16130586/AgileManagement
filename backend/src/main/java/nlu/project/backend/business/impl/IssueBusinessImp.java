@@ -216,15 +216,14 @@ public class IssueBusinessImp implements IssueBusiness {
             iss.setPriority(priority);
         }
 
-        User assignee= null;
         if(issueParams.assigneeEmail != null){
-            assignee = userDAO.getUser(issueParams.assigneeEmail);
+            User assignee = userDAO.getUser(issueParams.assigneeEmail);
+            iss.setAssignment(assignee);
         }
         if(issueParams.workflowStatus != null && issueParams.workflowStatus > 0){
             WorkFlowItem status = workFlowItemRepository.getOne(issueParams.workflowStatus);
             iss.setStatus(status);
         }
-        iss.setAssignment(assignee);
         return issueDAO.update(iss);
     }
 

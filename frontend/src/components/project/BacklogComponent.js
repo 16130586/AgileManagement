@@ -37,7 +37,7 @@ let MyBreadCrumbs = function (props) {
             <Link color="inherit" href="/projects">
                 Projects
         </Link>
-            <Link color="inherit" href={`/project/${projectId}/settings/details`}>
+            <Link color="inherit" href={`/project/${projectId}/boards`}>
                 {projectCode == null ? projectName : projectCode}
             </Link>
             <Typography color="textPrimary">Backlog</Typography>
@@ -946,7 +946,12 @@ let DetailIssueEdit = function (props) {
                     padding: "1rem"
                 }}>
                     <div>
-                        <Button variant="contained" color="default" size={'small'}>
+                        <Button variant="contained" color="default" size={'small'} onClick={() => {
+                            console.log("-----------------------------")
+                            console.log(projectId)
+                            console.log(props.data.id)
+                            props.navigateTo("/project/".concat(projectId).concat("/issue/").concat(props.data.issueId))
+                        }}>
                             <AccountTreeIcon fontSize="small" color='inherit' ></AccountTreeIcon>
                         </Button>
                     </div>
@@ -1268,11 +1273,12 @@ let BacklogSpaceComponent = function (props) {
                         closeIssueDetail={closeIssueDetail}
                         devTeam={props.project.devTeam}
                         data={issueSelected}
-                        projectId
+                        projectId={projectId}
                         workflow={props.workflow}
                         updateDetailIssue={props.updateDetailIssue}
                         issueTypes={props.issueTypes}
                         updateDetailIssue={props.updateDetailIssue}
+                        navigateTo={props.navigateTo}
                     />
                 }
 
