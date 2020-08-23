@@ -52,5 +52,7 @@ export const BACKEND_API = {
         UPDATE_SUBTASK: '/issue/subTask/update',
         LOG_WORK: '/issue/subTask/logWork',
         VELOCITY_DATA_FEED: '/chart/{projectId}/velocityData',
+        FETCH_COMMENT: '/issue/{issueId}/comment',
+        COMMENT_ISSUE: '/issue/comment',
     }
 }

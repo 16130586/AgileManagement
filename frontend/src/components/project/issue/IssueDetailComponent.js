@@ -194,11 +194,44 @@ let ListSubTask = (props) => {
 let IssueComment = (props) => {
     let [isFocusComment, setIsFocusComment] = React.useState(false)
     let [createCommentForm,setCreateCommentForm] = React.useState({
-        content:''
+        issueId: null,
+        content: ''
     });
+
+    const comment = () => {
+        let newForm = {...createCommentForm, issueId: props.issueId}
+        setCreateCommentForm({issueId: null, content: ''})
+        setIsFocusComment(false)
+        props.comment(newForm)
+    }
+
     return (
         <div style={{width: '100%', marginTop:'10px'}}>
-            <input className='subTask-input' onFocus={() => setIsFocusComment(true)} type="text" onChange={(event) => setCreateCommentForm({...createCommentForm, content:event.target.value})} placeholder="Add a comment..."/>
+            {props.comments.map((comment) => (
+            <div className="comment">
+                <div style={{textAlign:"center"}}>
+                    <img
+                        style={{ width: "40px", height: "40px", borderRadius: "40px" }}
+                        src={comment.owner.avatarUrl} alt="Missing url " />
+                </div>
+                <div>
+                    <div style={{display:"flex"}}>
+                        <div>
+                            <span style={{fontWeight:"500",color:"#333"}}>{comment.owner.nickName}</span>
+                        </div>
+                    </div>
+                    <div style={{padding:'5px 0'}}>
+                        <span>{comment.content}</span>
+                    </div>
+                    <div style={{display:"flex"}}>
+                        <a href="#" className="comment-action">Edit</a>
+                        <span> 	&nbsp;-&nbsp; </span>
+                        <a href="#" className="comment-action">Delete</a>
+                    </div>
+                </div>
+            </div>
+            ))}
+            <input className='subTask-input' value={createCommentForm.content} onFocus={() => setIsFocusComment(true)} type="text" onChange={(event) => setCreateCommentForm({...createCommentForm, content:event.target.value})} placeholder="Add a comment..."/>
             {isFocusComment &&
             <div style={{marginTop: '5px'}}>
                 {createCommentForm.content == '' &&
@@ -206,7 +239,7 @@ let IssueComment = (props) => {
                         style={{backgroundColor: '#e5e5e5', color: 'rgb(174 174 174)'}}>Create</button>
                 }
                 {createCommentForm.content != '' &&
-                <button className='custom-button' style={{backgroundColor: 'blue', color: 'white'}}>Create</button>
+                <button className='custom-button' onClick={comment} style={{backgroundColor: 'blue', color: 'white'}}>Create</button>
                 }
                 <button className='custom-button custom-hover' onClick={() => setIsFocusComment(false)}
                         style={{backgroundColor: 'white', marginLeft: '2px'}}>Cancel
@@ -251,7 +284,7 @@ let IssueActivity = (props) => {
                 >History</button>
             </div>
             {tabComponent.comment &&
-            <IssueComment/>
+            <IssueComment comments={props.comments} comment={props.comment} issueId={props.issueId}/>
             }
             {tabComponent.history &&
             <IssueHistory/>
@@ -466,7 +499,7 @@ let IssueDetailComponent = function (props) {
                         <IssueDescription hasRightEdit={hasRightEdit} content={props.issue.description} issueId={props.issue.id} update={props.updateIssueDescription}/>
                         <ListSubTask hasRightEdit={hasRightEdit} subTasks={props.subTasks} createSubTask={props.createSubTask}
                                      projectId={props.project.id} issueId={props.issue.id}/>
-                        <IssueActivity/>
+                        <IssueActivity comments={props.comments} comment={props.comment} issueId={props.issue.id}/>
                     </div>
                     }
                 </div>

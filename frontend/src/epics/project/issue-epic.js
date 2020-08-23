@@ -7,6 +7,7 @@ import { BACKEND_API } from '../../config/api'
 import {madeRequestFail, madeRequestSuccess} from '../../actions/global'
 import { getToken } from '../../common/localStorage'
 import {
+    fullFilledComment,
     fullFilledCreateSubtask,
     fullFilledFetchIssue,
     fullFilledNewWorkFlow, fullFilledRequestUpdateDetailIssue,
@@ -80,13 +81,24 @@ export const fetchIssue = action$ =>
                 }
             }
 
+            const getCommentUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.FETCH_COMMENT)
+            const getCommentSettings = {
+                url: getCommentUrl.replace("{issueId}", action.payload.issueId),
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            }
+
             return forkJoin({
                 issue: ajax(getIssueSetting),
                 devTeam: ajax(devTeamUrlSettings),
                 priority: ajax(prioritySetting),
                 project: ajax(getProjectSettings),
                 workFlow: ajax(getWorkflowSettings),
-                subTasks: ajax(getSubTaskSettings)
+                subTasks: ajax(getSubTaskSettings),
+                comments: ajax(getCommentSettings)
             }).pipe(
                 mergeMap(ajaxResponse =>
                     rxjsOf({
@@ -99,7 +111,8 @@ export const fetchIssue = action$ =>
                                 priority: ajaxResponse.priority.response.data,
                                 project: ajaxResponse.project.response.data,
                                 workFlow: ajaxResponse.workFlow.response.data,
-                                subTasks: ajaxResponse.subTasks.response.data
+                                subTasks: ajaxResponse.subTasks.response.data,
+                                comments: ajaxResponse.comments.response.data
                             }
                         }
                     })
@@ -230,6 +243,44 @@ export const updateIssue = action$ =>
             else if (ajax.status > 0 && ajax.response.status < 400) {
                 alert(ajax.response.message)
                 return madeRequestSuccess(ajax.response.message)
+            }
+            else
+                return madeRequestFail(ajax.response.data)
+        })
+    );
+
+export const comment = action$ =>
+    action$.pipe(
+        ofType(AsyncTypes.REQUEST.COMMENT_ISSUE),
+        mergeMap(action => {
+            const commentUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.COMMENT_ISSUE)
+
+            const commentSettings = {
+                url: commentUrl,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: {
+                    issueId: action.payload.issueId,
+                    content: action.payload.content,
+                }
+            }
+
+            return ajax(commentSettings)
+                .pipe(
+                    mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
+                    catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message }))
+                )
+        }),
+        map(ajax => {
+            if (ajax.status == 0)
+                return madeRequestFail(ajax.response)
+            if (ajax.response == null)
+                return madeRequestFail('No response from server!')
+            else if (ajax.status > 0 && ajax.response.status < 400) {
+                return fullFilledComment(ajax.response.data)
             }
             else
                 return madeRequestFail(ajax.response.data)

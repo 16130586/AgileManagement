@@ -1,5 +1,6 @@
 package nlu.project.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,13 +22,15 @@ public class Comment {
     private User owner;
     @ManyToOne
     @JoinColumn(name = "issue_id")
+    @JsonIgnore
     private Issue issue;
     @ManyToOne
     @JoinColumn(name = "subtask_id")
+    @JsonIgnore
     private SubTask subTask;
     @Column(name = "content")
     private String content;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "date")
+    @Column(name = "date", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private Date date;
 }

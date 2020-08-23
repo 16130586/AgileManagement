@@ -9,7 +9,8 @@ const init = {
     issue: null,
     workFlow: null,
     project: null,
-    subTasks:[]
+    subTasks:[],
+    comments: []
 }
 
 const IssueReducer = (state = init, action) => {
@@ -26,7 +27,8 @@ const IssueReducer = (state = init, action) => {
                 issueTypes:[
                     {id:'1',name:'Task'},
                     {id:'2',name:'Bug'}
-                ]
+                ],
+                comments: action.payload.comments
             }
             break;
         case AsyncEventTypes.FULL_FILLED.CREATE_SUBTASK:
@@ -35,9 +37,13 @@ const IssueReducer = (state = init, action) => {
         case AsyncEventTypes.FULL_FILLED.UPDATE_ISSUE_DESCRIPTION:
             nextState = {...nextState, issue: action.payload}
             break;
+        case AsyncEventTypes.FULL_FILLED.COMMENT_ISSUE:
+            nextState = {...nextState, comments: [...nextState.comments, action.payload]}
+            break;
         default:
             break;
     }
+    console.log(nextState)
     return nextState;
 }
 

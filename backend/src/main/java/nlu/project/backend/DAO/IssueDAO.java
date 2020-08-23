@@ -3,6 +3,7 @@ package nlu.project.backend.DAO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nlu.project.backend.entry.filter.IssueFilterParams;
+import nlu.project.backend.entry.issue.CommentParams;
 import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.entry.issue.IssueTypeParams;
 import nlu.project.backend.model.*;
@@ -48,6 +49,9 @@ public class IssueDAO {
 
     @Autowired
     WorkFlowItemRepository workFlowItemRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     public Issue save(IssueParams issueParams) {
         Issue toSave = new Issue();
@@ -163,5 +167,19 @@ public class IssueDAO {
 
     public Issue getOne(int issueId) {
         return issueRepository.getOne(issueId);
+    }
+
+    public List<Comment> getComment(int issueId) {
+        Issue issue = issueRepository.getOne(issueId);
+        return commentRepository.findByIssue(issue);
+    }
+
+    public Comment comment(CommentParams params, User user) {
+        Comment comment = new Comment();
+        Issue issue = issueRepository.getOne(params.issueId);
+        comment.setOwner(user);
+        comment.setIssue(issue);
+        comment.setContent(params.content);
+        return commentRepository.save(comment);
     }
 }

@@ -262,4 +262,14 @@ public class IssueBusinessImp implements IssueBusiness {
     public LogWork logWork(SubTaskParams params, User owner) {
         return subTaskDAO.logWork(params, owner);
     }
+
+    @Override
+    public List<Comment> getCommentIssue(int issueId) {
+        return issueDAO.getComment(issueId);
+    }
+
+    @Override
+    public Comment comment(CommentParams params, User user) {
+        return issueDAO.comment(params, user);
+    }
 }

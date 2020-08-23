@@ -44,4 +44,8 @@ public interface IssueBusiness {
     SubTask getSubTaskById(int subTaskId);
 
     LogWork logWork(SubTaskParams params, User owner);
+
+    List<Comment> getCommentIssue(int issueId);
+
+    Comment comment(CommentParams params, User user);
 }

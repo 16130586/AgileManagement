@@ -1,6 +1,6 @@
 import React , {useEffect} from 'react'
 import { connect } from 'react-redux'
-import {createSubTask, fetchIssue, updateIssueDescription, updateIssueDetails} from "../../actions/project";
+import {comment, createSubTask, fetchIssue, updateIssueDescription, updateIssueDetails} from "../../actions/project";
 import IssueDetailComponent from "../../components/project/issue/IssueDetailComponent";
 import {pageContextualNavigation} from "../../actions/global";
 
@@ -26,7 +26,9 @@ const IssueDetailContainer = function(props){
             subTasks={props.subTasks}
             updateIssueDescription={props.updateIssueDescription}
             updateIssue={props.updateIssue}
+            comments={props.comments}
             me={props.me}
+            comment={props.comment}
         />
     )
 }
@@ -39,6 +41,7 @@ const mapStateToProps = state => {
         project: state.IssueReducer.project,
         workFlow: state.IssueReducer.workFlow,
         subTasks: state.IssueReducer.subTasks,
+        comments: state.IssueReducer.comments,
         me: state.Common.user
     }
 }
@@ -49,6 +52,7 @@ const mapDispatchToProps = dispatch => {
         updateIssueDescription: (data) => dispatch(updateIssueDescription(data)),
         updateIssue: (data) => dispatch(updateIssueDetails(data)),
         getNavigation : (pageName,data) => dispatch(pageContextualNavigation(pageName,data)),
+        comment: (data) => dispatch(comment(data)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(IssueDetailContainer)

@@ -182,4 +182,17 @@ public class IssueController extends BaseController{
         Object result = issueBusiness.logWork(params, userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Logged!");
     }
+
+    @GetMapping("/{issueId}/comment")
+    public ApiResponse getComment(@PathVariable Integer issueId) {
+        Object result = issueBusiness.getCommentIssue(issueId);
+        return ApiResponse.OnSuccess(result, "Got Comment");
+    }
+
+    @PostMapping("/comment")
+    public ApiResponse commentIssue(@RequestBody CommentParams params, HttpServletRequest request) {
+        CustomUserDetails userDetails = (CustomUserDetails) getUser(request);
+        Object result = issueBusiness.comment(params, userDetails.getUser());
+        return ApiResponse.OnSuccess(result, "Commented");
+    }
 }

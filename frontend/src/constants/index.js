@@ -62,6 +62,7 @@ export const ASYNC = {
         LOG_WORK: 'full-filled.log-work',
         FETCH_VELOCITY_CHART: 'full-filled.fetch.velocity-chart',
         FETCH_PROJECT: 'full-filled.fetch.single-project',
+        COMMENT_ISSUE: 'full-filled.comment-issue',
         
     },
     REQUEST: {
@@ -111,6 +112,8 @@ export const ASYNC = {
         LOG_WORK: 'request.log-work',
         FETCH_VELOCITY_CHART: 'request.fetch.velocity-chart',
         FETCH_PROJECT: 'full-filled.fetch.single-project',
+        COMMENT_ISSUE: 'request.comment-issue',
+
     }
 }
 export const Router = {

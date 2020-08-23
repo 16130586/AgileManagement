@@ -45,7 +45,7 @@ import {
     fetchSingleProject as Project_Chart_Single_Project,
     fetchVelocityDataFeedChart as Project_Chart_Velocity_Data,
 } from "./project/chart"
-import { createSubTask, fetchIssue, updateDescription, updateIssue } from "./project/issue-epic";
+import {comment, createSubTask, fetchIssue, updateDescription, updateIssue} from "./project/issue-epic";
 import { fetchSubTaskPage, logWork, updateSubTask } from "./project/subtask-epic";
 export default combineEpics(
     login,
@@ -101,5 +101,6 @@ export default combineEpics(
     Project_Board_Filter_Issue,
     fetchSubTaskPage,
     updateSubTask,
-    logWork
+    logWork,
+    comment
 );
