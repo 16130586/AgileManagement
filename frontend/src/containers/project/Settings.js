@@ -22,12 +22,16 @@ const Settings = function(props){
             update={props.requestUpdateProject}
             add={props.requestProjectAddMember}
             remove={props.requestProjectRemoveMember}
+            me={props.me}
+            workFlows={props.workFlows}
         />
     )
 }
 const mapStateToProps = state => {
     return {
-        project: state.Project_Setting.project
+        project: state.Project_Setting.project,
+        workFlows: state.Project_Setting.workFlows,
+        me: state.Common.user
     }
 }
 const mapDispatchToProps = dispatch => {

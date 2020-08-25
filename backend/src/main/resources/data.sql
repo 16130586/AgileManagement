@@ -157,7 +157,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTtxGy67tYnzbu9_weh3S2nIexg8eqVLP1HcA&usqp=CAU','admin@xyz.com','Administrator','$2a$10$Xs4.NukKenO7qIYuM58vAel9Y9eRWyU.BFZKcctydiH5IQR7qXyxK','admin'),(2,'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSS8qtvIlXMXe3Yazw614v0A69ieNBHdBFeeA&usqp=CAU','user@abc.com','Dev A','$2a$10$Xs4.NukKenO7qIYuM58vAel9Y9eRWyU.BFZKcctydiH5IQR7qXyxK','user');
+INSERT INTO `user` VALUES (1,'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTtxGy67tYnzbu9_weh3S2nIexg8eqVLP1HcA&usqp=CAU','admin@xyz.com','Administrator','$2a$10$Xs4.NukKenO7qIYuM58vAel9Y9eRWyU.BFZKcctydiH5IQR7qXyxK','admin@xyz.com'),(2,'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSS8qtvIlXMXe3Yazw614v0A69ieNBHdBFeeA&usqp=CAU','user@abc.com','Dev A','$2a$10$Xs4.NukKenO7qIYuM58vAel9Y9eRWyU.BFZKcctydiH5IQR7qXyxK','user@abc.com');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,7 +177,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1,1,1,1),(2,1,3,2);
+INSERT INTO `user_role` VALUES (1,1,1,1),(2,1,3,2),(3,1,2,1);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

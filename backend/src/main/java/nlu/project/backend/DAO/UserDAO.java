@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import nlu.project.backend.exception.custom.InternalException;
 import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
+import nlu.project.backend.util.constraint.ConstraintRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +40,8 @@ public class UserDAO {
         //BackLog backlog = backlogRepository.getOne(backlogId);
         //Project project = backlog.getProject();
         Project project = projectRepository.getOne(projectId);
-        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
+        Role role = roleRepository.findByName(ConstraintRole.PRODUCT_OWNER);
+        UserRole userRole = userRoleRepository.findByUserAndProjectAndRole(user, project, role);
         if (userRole == null)
             return false;
         return userRole.getRole().getId() == 1;

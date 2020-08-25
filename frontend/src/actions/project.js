@@ -121,3 +121,5 @@ export const fullFilledFetchVelocityChart = (data) => ({type: AsyncEventTypes.FU
 
 export const comment = (data) => ({type: AsyncEventTypes.REQUEST.COMMENT_ISSUE, payload: data})
 export const fullFilledComment = (data) => ({type: AsyncEventTypes.FULL_FILLED.COMMENT_ISSUE, payload: data})
+
+export const fullFilledUpdateProject = (data) => ({type: AsyncEventTypes.FULL_FILLED.UPDATE_PROJECT, payload: data})

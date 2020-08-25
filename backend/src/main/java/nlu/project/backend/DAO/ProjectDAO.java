@@ -118,11 +118,17 @@ public class ProjectDAO {
         } else {
             User creator = userRepository.findById(projectParams.productOwner).get();
             Role poRole = roleRepository.findByName(ConstraintRole.PRODUCT_OWNER);
+            Role leadRole = roleRepository.findByName(ConstraintRole.TEAM_LEAD);
             UserRole productOwner = new UserRole();
             productOwner.setUser(creator);
             productOwner.setRole(poRole);
             productOwner.setProject(project);
             userRoleRepository.save(productOwner);
+            UserRole leader = new UserRole();
+            leader.setUser(creator);
+            leader.setRole(leadRole);
+            leader.setProject(project);
+            userRoleRepository.save(leader);
             project.setOwner(creator);
             project.setLeader(creator);
 
@@ -144,6 +150,10 @@ public class ProjectDAO {
             User newTeamLead = userRepository.getOne(projectParams.leader);
             leader.setUser(newTeamLead);
             userRoleRepository.save(leader);
+        }
+        if (projectParams.workFlow != null) {
+            WorkFlow workFlow = workflowRepository.getOne(projectParams.workFlow);
+            project.setCurrentWorkFlow(workFlow);
         }
         project.setName(projectParams.name);
         project.setCode(projectParams.key);

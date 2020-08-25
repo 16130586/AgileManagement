@@ -54,5 +54,6 @@ export const BACKEND_API = {
         VELOCITY_DATA_FEED: '/chart/{projectId}/velocityData',
         FETCH_COMMENT: '/issue/{issueId}/comment',
         COMMENT_ISSUE: '/issue/comment',
+        ALL_WORKFLOW: '/project/all-workflow/{projectId}',
     }
 }

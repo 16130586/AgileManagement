@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Avatar, TextField } from '@material-ui/core';
 import List from '@material-ui/core/List';
@@ -13,6 +13,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Alert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
+import Select from "@material-ui/core/Select/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 
 const style = makeStyles(() => ({
 	div: {
@@ -80,14 +84,16 @@ const MemberComponent = function (props) {
 					</Avatar>
 				</ListItemAvatar>
 				<ListItemText 
-					primary={dev.nickName}
+					primary={`${dev.nickName} / ${dev.email}`}
 					secondary="member"
 				/>
+				{props.me.id == props.project.owner.id &&
 				<ListItemSecondaryAction>
 					<IconButton edge="end" aria-label="delete">
 						<DeleteIcon onClick={handleRemoveMember}/>
 					</IconButton>
 				</ListItemSecondaryAction>
+				}
 			</ListItem>
 		</div>
 	)
@@ -98,21 +104,8 @@ const ListMember = function (props) {
 	return (
 		<Grid className={classes.grid} item xs={12} md={6}>
             <List>
-				<ListItem>
-					<ListItemAvatar>
-						<Avatar>
-							<FolderIcon></FolderIcon>
-						</Avatar>
-					</ListItemAvatar>
-					<ListItemText className={classes.item}
-						primary="Name"
-						secondary="Role"
-					/>
-					<ListItemSecondaryAction>
-					</ListItemSecondaryAction>
-				</ListItem>
 				{props.project.devTeam.map(function(dev, id){
-					return (<MemberComponent remove={props.remove} dev={dev} project={props.project}></MemberComponent>)
+					return (<MemberComponent me={props.me} remove={props.remove} dev={dev} project={props.project}></MemberComponent>)
 				})}
             </List>
         </Grid>
@@ -134,18 +127,29 @@ let AddMemberForm = function (props) {
 	return (
 		<div>
 			<form className={classes.root} noValidate autoComplete="off">
-				<TextField  onChange={event => setUserName(event.target.value)} value={userName} id="name" label="username" variant="outlined" />
-				<Button className={classes.button} variant="contained" href="#contained-buttons" onClick={handleAddMember}>
+				<TextField onChange={event => setUserName(event.target.value)} value={userName} id="name"
+						   label="email" variant="outlined"/>
+				<Button className={classes.button} variant="contained" href="#contained-buttons"
+						onClick={handleAddMember}>
 					Add member
 				</Button>
 			</form>
 		</div>
+
 	)
 }
 
 let ProjectSetting = function (props) {
-	const [name, setName] = useState(props.project.name);
-	const [description, setDescription] = useState(props.project.description);
+	const [name, setName] = useState('');
+	const [description, setDescription] = useState('');
+	const [workFlow, setWorkFlow] = useState(null)
+	useEffect(() => {
+		if(props.project != null){
+			setName(props.project.name)
+			setDescription(props.project.description)
+		}
+	}, [props.project])
+
 	let classes = style();
 
 	console.log("project", props.project)
@@ -156,17 +160,18 @@ let ProjectSetting = function (props) {
 			name: name,
 			description: description,
 			key: props.project.code,
-			leader: props.project.leader.id
+			leader: props.project.leader.id,
+			workFlow: workFlow
 		}
 		console.log('update data ', data);
 		props.update(data);
 	}
 
 	let saveNoti = <div></div>
-	if (props.project.save !== undefined) {
+	if (props.project != null && props.project.save !== undefined) {
 		saveNoti = <Notification save={props.project.save}></Notification>
 	}
-
+	if(props.project == null) return <div></div>
 	return (
 		<div>
 			<h1>Project Setting</h1>
@@ -188,28 +193,48 @@ let ProjectSetting = function (props) {
 					<TextField onChange={event => setDescription(event.target.value)} id="outlined-basic" label="Description" value={description} variant="outlined" fullWidth multiline rows={4} />
 				</div>
 				<div className={classes.div}>
-					<TextField id="outlined-basic" label="Leader"  value={props.project.leader.nickName} variant="outlined" readonly disabled/>
+					{props.project &&
+					<FormControl className="mt-3">
+						<InputLabel shrink id="label-assignee-email">
+							WorkFlow
+						</InputLabel>
+						<Select
+							onChange={event => setWorkFlow(event.target.value)}
+							labelId="workflow-sl-id"
+							name="workflow"
+							defaultValue={props.project.currentWorkFlow.id}>
+							{props.workFlows && props.workFlows.map((workFlowItem) => (
+								<MenuItem
+									key={workFlowItem.id}
+									className="ml-1"
+									value={workFlowItem.id}
+								>{workFlowItem.name}</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					}
 				</div>
-				<div className={classes.div}>
-					<TextField id="outlined-basic" label="Owner" value={props.project.owner.nickName} variant="outlined" readonly disabled/>
-				</div>
+				{props.me.id == props.project.leader.id &&
 				<div>
 					<Button onClick={() => {
 						{handleUpdateProject()}
 					}} color="primary" variant="contained">Save</Button>
 				</div>
+				}
 			</div>
 			
 			<h3>Team Member</h3>
 			<div className={classes.container}>
+				{props.me.id == props.project.leader.id &&
 				<AddMemberForm
 					add={props.add}
 					project={props.project}>
-
 				</AddMemberForm>
+				}
 				<ListMember
 					project={props.project}
 					remove={props.remove}
+					me={props.me}
 				></ListMember>
 			</div>
 		</div>

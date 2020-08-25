@@ -1,4 +1,4 @@
-import { of as rxjsOf } from 'rxjs';
+import {forkJoin, of as rxjsOf} from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { mergeMap, delay, map, switchMap, catchError } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
@@ -6,7 +6,7 @@ import { ASYNC as AsyncTypes } from '../../constants/index'
 import { BACKEND_API } from '../../config/api'
 import { madeRequestFail } from '../../actions/global'
 import {
-    fullFilledRequestProjectDetail,
+    fullFilledRequestProjectDetail, fullFilledUpdateProject,
 } from '../../actions/project'
 import { getToken } from '../../common/localStorage'
 
@@ -23,11 +23,34 @@ export const getProject = action$ =>
                     'Authorization': `Bearer ${getToken()}`
                 }
             }
+
+            const allWorkFlowUrl = BACKEND_API.BASE_URL.concat(BACKEND_API.ACTIONS.ALL_WORKFLOW)
+            const allWorkFlowSettings = {
+                url: allWorkFlowUrl.replace("{projectId}", action.payload),
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            }
             
-            return ajax(requestSettings)
-                    .pipe(
-                        mergeMap(ajaxResponse => rxjsOf({ status: ajaxResponse.status, response: ajaxResponse.response })),
-                        catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
+            return forkJoin({
+                project: ajax(requestSettings),
+                workFlows: ajax(allWorkFlowSettings)
+            }).pipe(
+                mergeMap(ajaxResponse =>
+                    rxjsOf({
+                        status: 200,
+                        response: {
+                            status: 200,
+                            data: {
+                                project: ajaxResponse.project.response.data,
+                                workFlows : ajaxResponse.workFlows.response.data,
+                            }
+                        }
+                    })
+                ),
+                catchError(ajaxOnError => rxjsOf({ status: ajaxOnError.status, response: ajaxOnError.message })))
         }),
         map(ajax => {
             if (ajax.status == 0)
@@ -60,7 +83,8 @@ export const updateProject = action$ =>
                     name: action.payload.name,
                     key: action.payload.key,
                     description: action.payload.description,
-                    leader: action.payload.leader
+                    leader: action.payload.leader,
+                    workFlow: action.payload.workFlow
                 }
 
             }
@@ -77,7 +101,7 @@ export const updateProject = action$ =>
             else if (ajax.status > 0 && ajax.response.status < 400) {
                 console.log(ajax.response);
                 ajax.response.data.save = "save successful"
-                return fullFilledRequestProjectDetail(ajax.response.data)
+                return fullFilledUpdateProject(ajax.response.data)
             }
             else
                 return madeRequestFail(ajax.response.data)
@@ -117,7 +141,7 @@ export const addMember = action$ =>
             else if (ajax.status > 0 && ajax.response.status < 400) {
                 console.log(ajax.response);
                 ajax.response.data.save = "add member successful"
-                return fullFilledRequestProjectDetail(ajax.response.data)
+                return fullFilledUpdateProject(ajax.response.data)
             }
             else
                 return madeRequestFail(ajax.response.data)
@@ -157,7 +181,7 @@ export const removeMember = action$ =>
             else if (ajax.status > 0 && ajax.response.status < 400) {
                 console.log(ajax.response);
                 ajax.response.data.save = "remove member successful"
-                return fullFilledRequestProjectDetail(ajax.response.data)
+                return fullFilledUpdateProject(ajax.response.data)
             }
             else
                 return madeRequestFail(ajax.response.data)

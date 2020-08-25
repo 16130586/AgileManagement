@@ -5,8 +5,13 @@ const projectSettingReducer = (state = Project, action) => {
     let nextState = state
     switch(action.type){
         case AsynTypes.FULL_FILLED.PROJECT_DETAIL:
-            nextState = {project : action.payload}
-            console.log("project setting reducer", nextState)
+            nextState = {
+                project : action.payload.project,
+                workFlows : action.payload.workFlows}
+            console.log(action.payload)
+            break;
+        case AsynTypes.FULL_FILLED.UPDATE_PROJECT:
+            nextState = {...nextState, project: action.payload}
             break;
         default:
             break;

@@ -63,7 +63,7 @@ export const ASYNC = {
         FETCH_VELOCITY_CHART: 'full-filled.fetch.velocity-chart',
         FETCH_PROJECT: 'full-filled.fetch.single-project',
         COMMENT_ISSUE: 'full-filled.comment-issue',
-        
+        UPDATE_PROJECT: 'full-filled.update-project'
     },
     REQUEST: {
         DELETE_PROJECT : 'request.delete-project',
@@ -111,7 +111,7 @@ export const ASYNC = {
         UPDATE_SUBTASK: 'request.update-subtask',
         LOG_WORK: 'request.log-work',
         FETCH_VELOCITY_CHART: 'request.fetch.velocity-chart',
-        FETCH_PROJECT: 'full-filled.fetch.single-project',
+        FETCH_PROJECT: 'request.fetch.single-project',
         COMMENT_ISSUE: 'request.comment-issue',
 
     }

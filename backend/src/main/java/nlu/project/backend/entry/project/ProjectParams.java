@@ -15,6 +15,7 @@ public class ProjectParams {
     public Integer productOwner;
     public MultipartFile file;
     public String imgUrl;
+    public Integer workFlow;
 
 
 }
