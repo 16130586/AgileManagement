@@ -111,7 +111,7 @@ public class IssueBusinessImp implements IssueBusiness {
     @Override
     public IssueType createIssueType(IssueTypeParams issueTypeParams) throws InvalidParameterException {
 
-        boolean isRight = userDAO.isProductOwnerWithProjectId(issueTypeParams.getProjectId(), issueTypeParams.getCreateByUserId());
+        boolean isRight = userDAO.isProductOwner(issueTypeParams.getProjectId(), issueTypeParams.getCreateByUserId());
         if (!isRight) throw new InvalidParameterException("You can't add new issue type to this project");
         String iconUrl = null;
         if (issueTypeParams.getIconFile() != null)

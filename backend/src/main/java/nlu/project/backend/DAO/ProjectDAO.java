@@ -111,7 +111,8 @@ public class ProjectDAO {
             project.setOwner(creator);
             project.setLeader(teamLead);
 
-            teamLead.getJointProjects().add(project);
+            if(teamLead.getJointProjects() != null)
+                teamLead.getJointProjects().add(project);
             projectRepository.saveAndFlush(project);
 
 
@@ -132,8 +133,8 @@ public class ProjectDAO {
             project.setOwner(creator);
             project.setLeader(creator);
 
-
-            creator.getJointProjects().add(project);
+            if(creator.getJointProjects() != null)
+                creator.getJointProjects().add(project);
             projectRepository.saveAndFlush(project);
 
         }

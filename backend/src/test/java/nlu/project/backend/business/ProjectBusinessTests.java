@@ -1,14 +1,10 @@
 package nlu.project.backend.business;
 
+import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.entry.project.ProjectParams;
 import nlu.project.backend.exception.custom.InvalidInputException;
-import nlu.project.backend.model.Project;
-import nlu.project.backend.model.Role;
-import nlu.project.backend.model.User;
-import nlu.project.backend.model.UserRole;
+import nlu.project.backend.model.*;
 import nlu.project.backend.repository.*;
-import nlu.project.backend.util.constraint.ConstraintRole;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -54,9 +54,16 @@ public class ProjectBusinessTests {
     @MockBean
     IssueTypeRepository issueTypeRepository;
 
+    @MockBean
+    UserDAO userDao;
+
+
+
     @Before
     public void setUp() {
         User user = new User();
+        user.setId(1);
+
         Role role = new Role();
         Project project = new Project();
         UserRole userRole = new UserRole(1, user, role, project);
@@ -97,10 +104,25 @@ public class ProjectBusinessTests {
         when(projectRepository.existsByCode("EXISTED")).thenReturn(true);
         when(projectRepository.getOne(1)).thenReturn(project);
         when(userRepository.getOne(1)).thenReturn(user);
+
+        when(userDao.isProductOwner(1 , 1)).thenReturn(true);
+
+
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+
     }
 
     @Test
     public void testCreateProjectSuccess() {
+        List<WorkFlow> workflows = new ArrayList<>();
+        WorkFlow workFlow = new WorkFlow();
+        workFlow.setName("DEFAULT WORKFLOW");
+        workFlow.setId(1);
+
+        workflows.add(workFlow);
+
+        when(workflowRepository.findDefault()).thenReturn(workflows);
+
         ProjectParams params = new ProjectParams();
         params.name = "Project test";
         params.leader = 1;
@@ -124,32 +146,35 @@ public class ProjectBusinessTests {
 
     @Test
     public void testUpdateProjectSuccess() {
+        User u = userRepository.getOne(1);
         Project project = new Project();
         project.setCode("OLD");
         when(projectRepository.getOne(2)).thenReturn(project);
 
         ProjectParams params = new ProjectParams();
-        params.id = 2;
+        params.id = 1;
         params.leader = 1;
         params.name = "Renamed Project";
         params.key = "OLD";
         params.description="This project is for testing";
-        projectBusiness.update(params);
+        projectBusiness.update(params , u);
     }
 
     @Test(expected = InvalidInputException.class)
     public void testUpdateProjectFail() {
+
+        User u = userRepository.getOne(1);
         Project project = new Project();
         project.setCode("OLD");
         when(projectRepository.getOne(2)).thenReturn(project);
 
         ProjectParams params = new ProjectParams();
-        params.id = 2;
+        params.id = 1;
         params.leader = 1;
         params.name = "Update fail Project";
         params.key = "EXISTED";
         params.description="This project is for testing";
-        projectBusiness.update(params);
+        projectBusiness.update(params, u);
     }
 
 }

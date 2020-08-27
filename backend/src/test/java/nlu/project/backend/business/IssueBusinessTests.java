@@ -1,5 +1,6 @@
 package nlu.project.backend.business;
 
+import nlu.project.backend.DAO.UserDAO;
 import nlu.project.backend.entry.issue.IssueParams;
 import nlu.project.backend.entry.issue.IssueTypeParams;
 import nlu.project.backend.model.*;
@@ -61,6 +62,9 @@ public class IssueBusinessTests {
 
     @MockBean
     WorkFlowItemRepository workFlowItemRepository;
+
+    @MockBean
+    UserDAO userDao;
 
     @Test
     public void testSaveFile() {
@@ -263,18 +267,7 @@ public class IssueBusinessTests {
                 return null;
             }
         });
-    }
 
-    @Test
-    public void testGetUserRole() {
-        User user1 = new User();
-        user1.setId(1);
-
-        Project project1 = new Project();
-        project1.setId(2);
-        UserRole userRole = userRoleRepository.findByUserAndProject(user1, project1);
-
-        Assert.assertEquals(userRole.getRole().getId().intValue(), 1);
-
+        Mockito.when(userDao.isProductOwner(1 , 1)).thenReturn(true);
     }
 }
