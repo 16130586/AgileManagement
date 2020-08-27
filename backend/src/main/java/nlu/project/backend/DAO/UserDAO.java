@@ -48,21 +48,12 @@ public class UserDAO {
     }
 
     public boolean isProductOwnerWithProjectId(int userId, int projectId) {
-        User user = userRepository.getOne(userId);
-        Project project = projectRepository.getOne(projectId);
-        UserRole userRole = userRoleRepository.findByUserAndProject(user, project);
-        if (userRole == null)
-            return false;
-        return userRole.getRole().getId() == 1;
+        return isProductOwner(userId, projectId);
     }
 
     public boolean isInProject(Integer projectId, Integer userId) {
         try {
-            UserRole userRole = userRoleRepository
-                    .findByUserAndProject(userRepository.getOne(userId) , projectRepository.getOne(projectId));
-            if (userRole != null)
-                return true;
-            return false;
+            return userRoleRepository.existsByUserAndProject(userRepository.getOne(userId) , projectRepository.getOne(projectId));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new InternalException(e.getMessage());
