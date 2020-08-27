@@ -53,8 +53,7 @@ public class SprintBusinessImp implements SprintBusiness {
     }
 
     @Override
-    public Sprint create(CreateSprintParams entry, CustomUserDetails userDetails) throws InvalidParameterException {
-        User user = userDetails.getUser();
+    public Sprint create(CreateSprintParams entry, User user) throws InvalidParameterException {
         if (!userDAO.isProductOwner(user.getId(), entry.projectId))
             throw new InvalidParameterException("Invalid parameters!");
         Project project = projectDAO.getProjectById(entry.projectId);
@@ -78,8 +77,8 @@ public class SprintBusinessImp implements SprintBusiness {
     }
 
     @Override
-    public Sprint endSprint(Integer sprintId, CustomUserDetails userDetails) throws InvalidParameterException {
-        User user = userDetails.getUser();
+    public Sprint endSprint(Integer sprintId, User user) throws InvalidParameterException {
+
         Sprint sprint = sprintDAO.getOne(sprintId);
         if (!userDAO.isProductOwner(user.getId(), sprint.getProject().getId()))
             throw new InvalidParameterException("Invalid parameters!");
@@ -143,8 +142,8 @@ public class SprintBusinessImp implements SprintBusiness {
     }
 
     @Override
-    public Sprint startSprint(StartSprintParams entry, CustomUserDetails userDetails) throws InvalidParameterException {
-        User user = userDetails.getUser();
+    public Sprint startSprint(StartSprintParams entry, User user) throws InvalidParameterException {
+
         Sprint sprint = sprintDAO.getOne(entry.sprintId);
         if (!userDAO.isProductOwner(user.getId(), sprint.getProject().getId()))
             throw new InvalidParameterException("Invalid parameters!");
@@ -158,7 +157,7 @@ public class SprintBusinessImp implements SprintBusiness {
     }
 
     @Override
-    public List<Sprint> moveUp(Integer sprintId, CustomUserDetails user) throws InvalidParameterException {
+    public List<Sprint> moveUp(Integer sprintId, User user) throws InvalidParameterException {
         Sprint requestedSprint = sprintDAO.getOne(sprintId);
         Project ownerProject = requestedSprint.getProject();
 
@@ -184,7 +183,7 @@ public class SprintBusinessImp implements SprintBusiness {
     }
 
     @Override
-    public List<Sprint> moveDown(Integer sprintId, CustomUserDetails user) throws InvalidParameterException {
+    public List<Sprint> moveDown(Integer sprintId, User user) throws InvalidParameterException {
         Sprint requestedSprint = sprintDAO.getOne(sprintId);
         Project ownerProject = requestedSprint.getProject();
 
@@ -210,8 +209,8 @@ public class SprintBusinessImp implements SprintBusiness {
     }
 
     @Override
-    public Sprint deleteSprint(Integer sprintId, CustomUserDetails cusUser) throws InvalidParameterException {
-        User user = cusUser.getUser();
+    public Sprint deleteSprint(Integer sprintId, User user) throws InvalidParameterException {
+
         Sprint sprint = sprintDAO.getOne(sprintId);
         Project ownerProject = sprint.getProject();
         if (!userDAO.isProductOwner(user.getId(), ownerProject.getId()))
@@ -239,8 +238,8 @@ public class SprintBusinessImp implements SprintBusiness {
     }
 
     @Override
-    public Sprint updateSprint(EditSprintParams entry, CustomUserDetails cusUser) throws InvalidParameterException {
-        User user = cusUser.getUser();
+    public Sprint updateSprint(EditSprintParams entry, User user) throws InvalidParameterException {
+
         Sprint sprint = sprintDAO.getOne(entry.sprintId);
         if (!userDAO.isProductOwner(user.getId(), sprint.getProject().getId()))
             throw new InvalidParameterException("Invalid parameters!");
@@ -251,7 +250,7 @@ public class SprintBusinessImp implements SprintBusiness {
     }
 
     @Override
-    public List<Issue> issueInSprintSearchParams(IssueInSprintSearchParams entry, CustomUserDetails userDetails) {
+    public List<Issue> issueInSprintSearchParams(IssueInSprintSearchParams entry,User user) {
         Sprint sprint = sprintDAO.getOne(entry.sprintId);
         List<Issue> issues = sprint.getIssues();
         List<Issue> result  = issues.stream().filter(iss -> iss.getIssueType().getId() == entry.issueTypeId)

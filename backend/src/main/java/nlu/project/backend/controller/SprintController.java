@@ -33,51 +33,51 @@ public class SprintController extends  BaseController{
     @PostMapping()
     public ApiResponse createSprint(HttpServletRequest request ,  @RequestBody CreateSprintParams entry){
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
-        Object result = sprintBusiness.create(entry , userDetails);
+        Object result = sprintBusiness.create(entry , userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Create sprint Success!");
     }
 
     @PostMapping("/{id}/end")
     public ApiResponse endSprint(HttpServletRequest request ,  @PathVariable("id") Integer sprintId){
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
-        Object result = sprintBusiness.endSprint(sprintId , userDetails);
+        Object result = sprintBusiness.endSprint(sprintId , userDetails.getUser());
         return ApiResponse.OnSuccess(result, "End sprint Success!");
     }
 
     @PostMapping("/{id}/start")
     public ApiResponse startSprint(HttpServletRequest request , @RequestBody StartSprintParams entryParams){
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
-        Object result = sprintBusiness.startSprint(entryParams , userDetails);
+        Object result = sprintBusiness.startSprint(entryParams , userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Start sprint Success!");
     }
     @PostMapping("/{id}/moveUp")
     public ApiResponse moveUp(HttpServletRequest request , @PathVariable(value="id") Integer sprintId){
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
-        Object result = sprintBusiness.moveUp(sprintId , userDetails);
+        Object result = sprintBusiness.moveUp(sprintId , userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Move up down Success!");
     }
     @PostMapping("/{id}/moveDown")
     public ApiResponse moveDown(HttpServletRequest request , @PathVariable(value="id") Integer sprintId){
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
-        Object result = sprintBusiness.moveDown(sprintId , userDetails);
+        Object result = sprintBusiness.moveDown(sprintId , userDetails.getUser());
         return ApiResponse.OnSuccess(result, "Move up sprint Success!");
     }
     @DeleteMapping("/{id}")
     public ApiResponse deleteSprint(HttpServletRequest request , @PathVariable(value="id") Integer sprintId){
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
-        Object result = sprintBusiness.deleteSprint(sprintId , userDetails);
+        Object result = sprintBusiness.deleteSprint(sprintId , userDetails.getUser());
         return ApiResponse.OnSuccess(result, "delete sprint Success!");
     }
     @PutMapping("/{id}")
     public ApiResponse updateSprint(HttpServletRequest request , @RequestBody EditSprintParams entry){
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
-        Object result = sprintBusiness.updateSprint(entry , userDetails);
+        Object result = sprintBusiness.updateSprint(entry , userDetails.getUser());
         return ApiResponse.OnSuccess(result, "delete sprint Success!");
     }
     @PostMapping("/searchIssueInSprintIssue")
     public ApiResponse searchIssueInSprintIssue(HttpServletRequest request ,@RequestBody IssueInSprintSearchParams entry){
         CustomUserDetails userDetails = (CustomUserDetails) getUser((request));
-        Object result = sprintBusiness.issueInSprintSearchParams(entry , userDetails);
+        Object result = sprintBusiness.issueInSprintSearchParams(entry , userDetails.getUser());
         return ApiResponse.OnSuccess(result, "delete sprint Success!");
     }
 
